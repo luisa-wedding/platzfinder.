@@ -153,9 +153,11 @@
   .lang-checkboxes { display: flex; gap: 0.8rem; flex-wrap: wrap; }
   .lang-checkbox-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; background: #fff; border: 1px solid var(--blush-deep); border-radius: 999px; padding: 0.35rem 0.8rem; }
   .live-card {
-    max-width: 26rem; margin: 1.25rem auto 0; background: linear-gradient(180deg,#fff,#fdf8f5); border: 1px solid var(--blush-deep);
+    position: relative; max-width: 26rem; margin: 1.25rem auto 0; background: linear-gradient(180deg,#fff,#fdf8f5); border: 1px solid var(--blush-deep);
     border-radius: 24px; padding: 2rem 1.8rem; text-align: center; box-shadow: 0 10px 30px -15px rgba(61,52,54,0.18);
   }
+  .lang-switcher-marker { position: absolute; display: flex; gap: 4px; cursor: move; z-index: 5; }
+  .lang-switcher-marker .pill-mock { background: #fff; border: 1px solid var(--blush-deep); border-radius: 999px; padding: 3px 10px; font-size: 0.68rem; color: var(--ink-soft); pointer-events: none; }
   .live-card [contenteditable="true"] { outline: none; border-radius: 6px; transition: background 0.15s; cursor: text; }
   .live-card [contenteditable="true"]:hover { background: rgba(201,123,132,0.08); }
   .live-card [contenteditable="true"]:focus { background: rgba(201,123,132,0.14); box-shadow: 0 0 0 2px var(--rose); }
@@ -235,6 +237,11 @@
 
     <label class="small">Aktive Sprachen</label>
     <div class="lang-checkboxes" id="lang-checkboxes"></div>
+
+    <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; margin-top:1rem;">
+      <input type="checkbox" id="switcherEnabledCheckbox" onchange="toggleSwitcherEnabled(this.checked)" />
+      Sprachregler auf der Willkommens-Seite anzeigen (zieh ihn in der Vorschau unten an die gewünschte Stelle)
+    </label>
 
     <div style="margin-top:1.25rem;">
       <label class="small">Sprache bearbeiten</label>
@@ -449,8 +456,9 @@
     try { const r2 = await freshFetch("./layout.json"); roomObjects = r2.ok ? await r2.json() : []; } catch (e) { roomObjects = []; }
     try { const r3 = await freshFetch("./decorations.json"); decorations = r3.ok ? await r3.json() : []; } catch (e) { decorations = []; }
     try { const r4 = await freshFetch("./content.json"); contentData = r4.ok ? await r4.json() : null; } catch (e) { contentData = null; }
-    if (!contentData) contentData = { activeLanguages: ["de"], monogramImage: null, monogramText: "I & L", de: {} };
+    if (!contentData) contentData = { activeLanguages: ["de"], monogramImage: null, monogramText: "I & L", languageSwitcher: { enabled: false, x: 80, y: 6 }, de: {} };
     if (!contentData.activeLanguages || !contentData.activeLanguages.length) contentData.activeLanguages = ["de"];
+    if (!contentData.languageSwitcher) contentData.languageSwitcher = { enabled: contentData.activeLanguages.length > 1, x: 80, y: 6 };
     editLang = contentData.activeLanguages[0];
 
     roomObjects.forEach((o) => { if (o.rotation === undefined) o.rotation = 0; if (o.w === undefined) o.w = 10; if (o.h === undefined) o.h = 10; });
@@ -469,6 +477,7 @@
 
     renderRoomCanvas(); renderTray(); renderGuestTable(); renderDecorations();
     renderLangCheckboxes(); renderEditLangSelect(); renderMonogramUI(); renderLiveCards(); renderMoreTexts();
+    renderSwitcherCheckbox(); renderLangSwitcherMarker();
   }
 
   function readCol(row, keys) { for (const k of Object.keys(row)) if (keys.includes(k.trim().toLowerCase())) return row[k]; return ""; }
@@ -811,6 +820,7 @@
       if (editLang === code) editLang = contentData.activeLanguages[0];
     }
     renderEditLangSelect(); renderLiveCards(); renderMoreTexts(); renderGuestTable();
+    renderSwitcherCheckbox(); renderLangSwitcherMarker();
   }
   function renderEditLangSelect() {
     const sel = document.getElementById("editLangSelect");
@@ -821,6 +831,39 @@
     }).join("");
   }
   function switchEditLang(code) { editLang = code; renderLiveCards(); renderMoreTexts(); }
+
+  function renderSwitcherCheckbox() {
+    const cb = document.getElementById("switcherEnabledCheckbox");
+    cb.checked = !!contentData.languageSwitcher.enabled;
+    cb.disabled = contentData.activeLanguages.length <= 1;
+  }
+  function toggleSwitcherEnabled(checked) {
+    contentData.languageSwitcher.enabled = checked;
+    renderLangSwitcherMarker();
+  }
+  function renderLangSwitcherMarker() {
+    const old = document.getElementById("lang-switcher-marker");
+    if (old) old.remove();
+    if (!contentData.languageSwitcher.enabled || contentData.activeLanguages.length <= 1) return;
+    const card = document.getElementById("live-card-start");
+    const marker = document.createElement("div");
+    marker.id = "lang-switcher-marker";
+    marker.className = "lang-switcher-marker";
+    marker.style.left = contentData.languageSwitcher.x + "%";
+    marker.style.top = contentData.languageSwitcher.y + "%";
+    marker.style.transform = "translate(-50%,-50%)";
+    marker.innerHTML = contentData.activeLanguages.map((code) => {
+      const found = SUPPORTED_LANGUAGES.find((l) => l.code === code);
+      return `<div class="pill-mock">${found ? found.label : code}</div>`;
+    }).join("");
+    card.appendChild(marker);
+
+    const getRect = () => card.getBoundingClientRect();
+    attachMoveHandler(marker, contentData.languageSwitcher, getRect, () => {
+      marker.style.left = contentData.languageSwitcher.x + "%";
+      marker.style.top = contentData.languageSwitcher.y + "%";
+    }, () => {});
+  }
 
   function ensureLangContent(code) {
     if (!contentData[code]) {
