@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Konfiguration – Hochzeits-Platzfinder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+  :root {
+    --ivory: #fbf7f2;
+    --blush: #f4dfda;
+    --blush-deep: #eac7c0;
+    --rose: #c97b84;
+    --rose-deep: #b25f6b;
+    --sage: #9caf88;
+    --gold: #c9a05c;
+    --gold-soft: #ddbe8c;
+    --ink: #3d3436;
+    --ink-soft: #7a6f6a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Jost", sans-serif;
+    color: var(--ink);
+    background: var(--ivory);
+    min-height: 100vh;
+  }
+  .display { font-family: "Cormorant Garamond", serif; font-style: italic; }
+
+  /* ---------- Passwort-Gate ---------- */
+  #gate {
+    position: fixed; inset: 0; background: var(--ivory);
+    display: flex; align-items: center; justify-content: center; z-index: 100;
+  }
+  #gate .box {
+    background: #fff; border-radius: 20px; padding: 2.5rem 2rem;
+    box-shadow: 0 10px 40px -15px rgba(61,52,54,0.3); text-align: center; width: 90%; max-width: 22rem;
+  }
+  #gate input {
+    width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 1px solid var(--blush-deep);
+    font-family: inherit; font-size: 1rem; margin-top: 1rem;
+  }
+  #gate button, .btn {
+    margin-top: 1rem; width: 100%; border: none; border-radius: 12px; background: var(--rose);
+    color: #fff; padding: 0.8rem 1rem; font-family: inherit; font-size: 1rem; cursor: pointer;
+  }
+  #gate button:hover, .btn:hover { background: var(--rose-deep); }
+  #gate .error { color: var(--rose-deep); font-size: 0.85rem; margin-top: 0.6rem; display: none; }
+
+  /* ---------- Layout ---------- */
+  #app { display: none; max-width: 60rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; }
+  header.top h1 { font-size: 2rem; margin: 0 0 0.25rem; }
+  header.top p { color: var(--ink-soft); margin: 0 0 2rem; }
+
+  section.panel {
+    background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 20px; padding: 1.5rem 1.5rem; margin-bottom: 1.75rem;
+  }
+  section.panel h2 { font-size: 1.3rem; margin: 0 0 0.3rem; }
+  section.panel .hint { color: var(--ink-soft); font-size: 0.85rem; margin: 0 0 1rem; }
+
+  label.small { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); display:block; margin-bottom: 0.3rem; }
+  input[type="text"], input[type="password"], select {
+    width: 100%; padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--blush-deep);
+    font-family: inherit; font-size: 0.95rem; background: #fff; color: var(--ink);
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  .grid-2 > div { margin-bottom: 0.8rem; }
+  .btn-small { background: var(--sage); color: #fff; border: none; border-radius: 10px; padding: 0.5rem 0.9rem; font-family: inherit; cursor: pointer; font-size: 0.85rem; }
+  .btn-small:hover { background: var(--sage-deep, #7e9370); }
+  .btn-outline { background: #fff; border: 1px solid var(--blush-deep); color: var(--ink); border-radius: 10px; padding: 0.5rem 0.9rem; font-family: inherit; cursor: pointer; font-size: 0.85rem; }
+  .btn-outline:hover { border-color: var(--rose); }
+
+  #ghStatus { font-size: 0.85rem; margin-top: 0.6rem; }
+
+  /* ---------- Raum-Baukasten ---------- */
+  .room-toolbar { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  #room-canvas {
+    position: relative; width: 100%; aspect-ratio: 4/3; background: rgba(255,255,255,0.55);
+    border: 1px dashed var(--blush-deep); border-radius: 16px; overflow: hidden;
+  }
+  .rc-table {
+    position: absolute; transform: translate(-50%, -50%);
+    width: 17%; min-width: 90px; border-radius: 16px;
+    background: rgba(156,175,136,0.18); border: 1.5px solid var(--sage);
+    padding: 6px; text-align: center; user-select: none;
+  }
+  .rc-table.round { border-radius: 50%; }
+  .rc-table .rc-handle {
+    cursor: grab; font-size: 0.7rem; color: var(--ink-soft); padding: 2px 0;
+  }
+  .rc-table .rc-name { font-size: 0.8rem; font-weight: 500; margin: 2px 0 4px; }
+  .rc-table .rc-actions { display: flex; justify-content: center; gap: 6px; margin-bottom: 4px; }
+  .rc-table .rc-actions button { border: none; background: none; cursor: pointer; font-size: 0.75rem; color: var(--ink-soft); }
+  .rc-table .rc-actions button:hover { color: var(--rose); }
+  .rc-chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; min-height: 22px; }
+  .chip {
+    background: #fff; border: 1px solid var(--blush-deep); border-radius: 999px;
+    padding: 2px 8px; font-size: 0.7rem; cursor: grab;
+  }
+  .chip:active { cursor: grabbing; }
+
+  #tray {
+    margin-top: 1rem; padding: 0.9rem; border-radius: 14px; background: rgba(244,223,218,0.4);
+    border: 1px solid var(--blush-deep); min-height: 46px; display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  #tray.dragover, .rc-chips.dragover, .rc-table.dragover { outline: 2px dashed var(--rose); outline-offset: 2px; }
+
+  /* ---------- Gästeliste-Tabelle ---------- */
+  table.guest-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  table.guest-table th { text-align: left; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); padding: 0.4rem 0.5rem; }
+  table.guest-table td { padding: 0.3rem 0.5rem; }
+  table.guest-table input, table.guest-table select { padding: 0.4rem 0.5rem; font-size: 0.88rem; }
+  table.guest-table tr:nth-child(even) { background: rgba(244,223,218,0.25); }
+  .row-del { border: none; background: none; color: var(--ink-soft); cursor: pointer; font-size: 1rem; }
+  .row-del:hover { color: var(--rose); }
+
+  /* ---------- Foto ---------- */
+  .heart-preview { width: 130px; height: 117px; margin-top: 1rem; }
+  .heart-preview svg { width: 100%; height: 100%; }
+
+  /* ---------- Veröffentlichen-Leiste ---------- */
+  #publishBar {
+    position: fixed; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(6px); border-top: 1px solid var(--blush-deep);
+    padding: 0.9rem 1.25rem; display: flex; align-items: center; gap: 1rem; z-index: 30;
+  }
+  #publishBar button { white-space: nowrap; }
+  #publishLog { font-size: 0.8rem; color: var(--ink-soft); flex: 1; }
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="box">
+    <h1 class="display" style="font-size:1.8rem;margin:0;">Konfiguration</h1>
+    <p style="color:var(--ink-soft);margin-top:0.5rem;">Bitte Passwort eingeben</p>
+    <input type="password" id="gate-pw" placeholder="Passwort" />
+    <button onclick="checkPassword()">Weiter</button>
+    <p class="error" id="gate-error">Falsches Passwort.</p>
+  </div>
+</div>
+
+<div id="app">
+  <header class="top">
+    <h1 class="display">Hochzeits-Konfiguration</h1>
+    <p>Hier baut ihr den Raum auf, ordnet Gäste den Tischen zu, pflegt die Gästeliste und hinterlegt euer Herzfoto. Ganz unten könnt ihr alles veröffentlichen.</p>
+  </header>
+
+  <!-- GitHub Verbindung -->
+  <section class="panel">
+    <h2>Verbindung zu GitHub</h2>
+    <p class="hint">Einmalig einrichten. Der Token wird nur lokal in diesem Browser gespeichert, nirgendwo sonst.</p>
+    <div class="grid-2">
+      <div><label class="small">Benutzer/Organisation</label><input type="text" id="ghOwner" placeholder="z. B. deinname" /></div>
+      <div><label class="small">Repository</label><input type="text" id="ghRepo" placeholder="z. B. hochzeit-platzfinder" /></div>
+      <div><label class="small">Branch</label><input type="text" id="ghBranch" placeholder="main" /></div>
+      <div><label class="small">Personal Access Token</label><input type="password" id="ghToken" placeholder="ghp_..." /></div>
+    </div>
+    <button class="btn-small" onclick="saveGhConfig()">Verbindung speichern</button>
+    <div id="ghStatus"></div>
+  </section>
+
+  <!-- Raum-Baukasten -->
+  <section class="panel">
+    <h2>Tische anordnen &amp; Gäste zuordnen</h2>
+    <p class="hint">Tische per Ziehen am ⠿-Griff frei positionieren. Gäste unten aus dem Vorrat direkt auf einen Tisch ziehen.</p>
+    <div class="room-toolbar">
+      <button class="btn-small" onclick="addTable('round')">+ Runder Tisch</button>
+      <button class="btn-small" onclick="addTable('rect')">+ Eckiger Tisch</button>
+    </div>
+    <div id="room-canvas"></div>
+    <label class="small" style="margin-top:1rem;">Noch nicht zugeordnete Gäste</label>
+    <div id="tray"></div>
+  </section>
+
+  <!-- Gästeliste -->
+  <section class="panel">
+    <h2>Gästeliste</h2>
+    <p class="hint">Direkt bearbeiten, Zeilen hinzufügen/löschen oder eine bestehende Excel-Datei importieren (überschreibt die aktuelle Liste).</p>
+    <div style="display:flex; gap:0.6rem; margin-bottom:1rem; flex-wrap:wrap;">
+      <button class="btn-small" onclick="addGuestRow()">+ Gast hinzufügen</button>
+      <label class="btn-outline" style="display:inline-block;">
+        Excel importieren
+        <input type="file" id="xlsxImport" accept=".xlsx" style="display:none" onchange="importXlsx(event)" />
+      </label>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="guest-table" id="guestTable">
+        <thead><tr><th>Vorname</th><th>Nachname</th><th>Tisch</th><th></th></tr></thead>
+        <tbody id="guestTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Foto -->
+  <section class="panel">
+    <h2>Herzfoto</h2>
+    <p class="hint">Ein Foto hochladen &ndash; es wird automatisch mittig zugeschnitten und in Herzform gespeichert.</p>
+    <input type="file" accept="image/*" onchange="handlePhoto(event)" />
+    <div class="heart-preview" id="heartPreview"></div>
+  </section>
+</div>
+
+<div id="publishBar" style="display:none;">
+  <span id="publishLog">Bereit zum Veröffentlichen.</span>
+  <button class="btn" style="margin:0;width:auto;" onclick="publish()">Änderungen veröffentlichen</button>
+</div>
+
+<script>
+  // ============ Passwort-Gate ============
+  // Zum Ändern: einfach den Text in Anführungszeichen ersetzen.
+  const CONFIG_PASSWORD = "unserefeier2026";
+
+  function checkPassword() {
+    const val = document.getElementById("gate-pw").value;
+    if (val === CONFIG_PASSWORD) {
+      sessionStorage.setItem("cfg_ok", "1");
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("app").style.display = "block";
+      document.getElementById("publishBar").style.display = "flex";
+      init();
+    } else {
+      document.getElementById("gate-error").style.display = "block";
+    }
+  }
+  if (sessionStorage.getItem("cfg_ok") === "1") {
+    document.getElementById("gate").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    document.getElementById("publishBar").style.display = "flex";
+    init();
+  }
+
+  // ============ State ============
+  let guests = [];   // { vorname, nachname, tisch }
+  let tables = [];   // { id, name, shape, x, y }
+  let croppedHeartDataUrl = null;
+  let tableCounter = 1;
+
+  async function init() {
+    try {
+      const res = await fetch("./guests.xlsx");
+      const buf = await res.arrayBuffer();
+      const wb = XLSX.read(new Uint8Array(buf), { type: "array" });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+      guests = rows.map((r) => ({
+        vorname: String(readCol(r, ["vorname"]) || "").trim(),
+        nachname: String(readCol(r, ["nachname", "name"]) || "").trim(),
+        tisch: String(readCol(r, ["tisch", "platz"]) || "").trim()
+      })).filter((g) => g.vorname || g.nachname);
+    } catch (e) { guests = []; }
+
+    try {
+      const res2 = await fetch("./layout.json");
+      tables = res2.ok ? await res2.json() : [];
+    } catch (e) { tables = []; }
+
+    loadGhConfigIntoForm();
+    renderRoomCanvas();
+    renderTray();
+    renderGuestTable();
+  }
+
+  function readCol(row, keys) {
+    for (const k of Object.keys(row)) {
+      if (keys.includes(k.trim().toLowerCase())) return row[k];
+    }
+    return "";
+  }
+
+  // ============ GitHub Konfiguration ============
+  function saveGhConfig() {
+    localStorage.setItem("cfgGhOwner", document.getElementById("ghOwner").value.trim());
+    localStorage.setItem("cfgGhRepo", document.getElementById("ghRepo").value.trim());
+    localStorage.setItem("cfgGhBranch", document.getElementById("ghBranch").value.trim() || "main");
+    localStorage.setItem("cfgGhToken", document.getElementById("ghToken").value.trim());
+    document.getElementById("ghStatus").textContent = "Gespeichert. Verbunden mit " +
+      localStorage.getItem("cfgGhOwner") + "/" + localStorage.getItem("cfgGhRepo");
+  }
+  function loadGhConfigIntoForm() {
+    document.getElementById("ghOwner").value = localStorage.getItem("cfgGhOwner") || "";
+    document.getElementById("ghRepo").value = localStorage.getItem("cfgGhRepo") || "";
+    document.getElementById("ghBranch").value = localStorage.getItem("cfgGhBranch") || "main";
+    document.getElementById("ghToken").value = localStorage.getItem("cfgGhToken") || "";
+    if (localStorage.getItem("cfgGhOwner")) {
+      document.getElementById("ghStatus").textContent = "Verbunden mit " +
+        localStorage.getItem("cfgGhOwner") + "/" + localStorage.getItem("cfgGhRepo");
+    }
+  }
+
+  // ============ Raum-Baukasten ============
+  function addTable(shape) {
+    const name = prompt("Name des Tisches (z. B. \"Tisch 8 - Ranunkel\"):", "Neuer Tisch");
+    if (!name) return;
+    tables.push({ id: "t" + Date.now() + (tableCounter++), name: name.trim(), shape, x: 50, y: 50 });
+    renderRoomCanvas();
+  }
+  function renameTable(id) {
+    const t = tables.find((x) => x.id === id);
+    if (!t) return;
+    const oldName = t.name;
+    const name = prompt("Neuer Name für diesen Tisch:", t.name);
+    if (!name) return;
+    t.name = name.trim();
+    guests.forEach((g) => { if (g.tisch === oldName) g.tisch = t.name; });
+    renderRoomCanvas(); renderGuestTable();
+  }
+  function deleteTable(id) {
+    const t = tables.find((x) => x.id === id);
+    if (!t) return;
+    if (!confirm(`Tisch "${t.name}" wirklich löschen? Zugeordnete Gäste wandern zurück in den Vorrat.`)) return;
+    guests.forEach((g) => { if (g.tisch === t.name) g.tisch = ""; });
+    tables = tables.filter((x) => x.id !== id);
+    renderRoomCanvas(); renderTray(); renderGuestTable();
+  }
+
+  function renderRoomCanvas() {
+    const canvas = document.getElementById("room-canvas");
+    canvas.innerHTML = "";
+    tables.forEach((t) => {
+      const el = document.createElement("div");
+      el.className = "rc-table " + (t.shape === "round" ? "round" : "");
+      el.style.left = t.x + "%";
+      el.style.top = t.y + "%";
+      el.dataset.tableId = t.id;
+
+      const assigned = guests.filter((g) => g.tisch === t.name);
+      el.innerHTML = `
+        <div class="rc-handle" title="Ziehen zum Verschieben">⠿</div>
+        <div class="rc-actions">
+          <button onclick="renameTable('${t.id}')" title="Umbenennen">✎</button>
+          <button onclick="deleteTable('${t.id}')" title="Löschen">✕</button>
+        </div>
+        <div class="rc-name">${escapeHtml(t.name)}</div>
+        <div class="rc-chips" data-drop-table="${t.name}"></div>
+      `;
+      canvas.appendChild(el);
+
+      const chipsEl = el.querySelector(".rc-chips");
+      assigned.forEach((g) => chipsEl.appendChild(makeChip(g)));
+
+      makeDroppable(chipsEl, t.name);
+      makeDraggableTable(el, t);
+    });
+  }
+
+  function makeChip(guest) {
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.draggable = true;
+    chip.textContent = `${guest.vorname} ${guest.nachname}`;
+    chip.dataset.guestKey = guestKey(guest);
+    chip.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", guestKey(guest));
+    });
+    return chip;
+  }
+
+  function guestKey(g) { return `${g.vorname}||${g.nachname}`; }
+
+  function makeDroppable(el, tableName) {
+    el.addEventListener("dragover", (e) => { e.preventDefault(); el.classList.add("dragover"); });
+    el.addEventListener("dragleave", () => el.classList.remove("dragover"));
+    el.addEventListener("drop", (e) => {
+      e.preventDefault();
+      el.classList.remove("dragover");
+      const key = e.dataTransfer.getData("text/plain");
+      const guest = guests.find((g) => guestKey(g) === key);
+      if (guest) guest.tisch = tableName;
+      renderRoomCanvas(); renderTray(); renderGuestTable();
+    });
+  }
+
+  function makeDraggableTable(el, t) {
+    const handle = el.querySelector(".rc-handle");
+    handle.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      handle.setPointerCapture(e.pointerId);
+      const canvasRect = document.getElementById("room-canvas").getBoundingClientRect();
+
+      function onMove(ev) {
+        let x = ((ev.clientX - canvasRect.left) / canvasRect.width) * 100;
+        let y = ((ev.clientY - canvasRect.top) / canvasRect.height) * 100;
+        x = Math.max(4, Math.min(96, x));
+        y = Math.max(4, Math.min(96, y));
+        el.style.left = x + "%";
+        el.style.top = y + "%";
+        t.x = Math.round(x);
+        t.y = Math.round(y);
+      }
+      function onUp() {
+        handle.removeEventListener("pointermove", onMove);
+        handle.removeEventListener("pointerup", onUp);
+      }
+      handle.addEventListener("pointermove", onMove);
+      handle.addEventListener("pointerup", onUp);
+    });
+  }
+
+  function renderTray() {
+    const tray = document.getElementById("tray");
+    tray.innerHTML = "";
+    const unassigned = guests.filter((g) => !tables.some((t) => t.name === g.tisch));
+    unassigned.forEach((g) => tray.appendChild(makeChip(g)));
+    makeDroppable(tray, "");
+  }
+
+  // ============ Gästeliste-Tabelle ============
+  function renderGuestTable() {
+    const body = document.getElementById("guestTableBody");
+    body.innerHTML = "";
+    guests.forEach((g, i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><input type="text" value="${escapeAttr(g.vorname)}" onchange="updateGuest(${i}, 'vorname', this.value)" /></td>
+        <td><input type="text" value="${escapeAttr(g.nachname)}" onchange="updateGuest(${i}, 'nachname', this.value)" /></td>
+        <td>${tischSelectHtml(i, g.tisch)}</td>
+        <td><button class="row-del" onclick="deleteGuestRow(${i})" title="Löschen">✕</button></td>
+      `;
+      body.appendChild(tr);
+    });
+  }
+  function tischSelectHtml(i, current) {
+    let opts = `<option value="">— kein Tisch —</option>`;
+    tables.forEach((t) => {
+      opts += `<option value="${escapeAttr(t.name)}" ${t.name === current ? "selected" : ""}>${escapeHtml(t.name)}</option>`;
+    });
+    return `<select onchange="updateGuest(${i}, 'tisch', this.value)">${opts}</select>`;
+  }
+  function updateGuest(i, field, value) {
+    guests[i][field] = value;
+    renderRoomCanvas(); renderTray();
+  }
+  function addGuestRow() {
+    guests.push({ vorname: "", nachname: "", tisch: "" });
+    renderGuestTable(); renderTray();
+  }
+  function deleteGuestRow(i) {
+    guests.splice(i, 1);
+    renderGuestTable(); renderRoomCanvas(); renderTray();
+  }
+  function importXlsx(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    if (!confirm("Aktuelle Gästeliste durch diese Excel-Datei ersetzen?")) { evt.target.value = ""; return; }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+      guests = rows.map((r) => ({
+        vorname: String(readCol(r, ["vorname"]) || "").trim(),
+        nachname: String(readCol(r, ["nachname", "name"]) || "").trim(),
+        tisch: String(readCol(r, ["tisch", "platz"]) || "").trim()
+      })).filter((g) => g.vorname || g.nachname);
+      renderGuestTable(); renderRoomCanvas(); renderTray();
+    };
+    reader.readAsArrayBuffer(file);
+    evt.target.value = "";
+  }
+
+  function escapeHtml(s) { return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
+  function escapeAttr(s) { return String(s).replace(/"/g, "&quot;"); }
+
+  // ============ Herzfoto-Zuschnitt ============
+  function handlePhoto(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const size = 600;
+        const canvas = document.createElement("canvas");
+        canvas.width = size; canvas.height = size * 0.9;
+        const ctx = canvas.getContext("2d");
+
+        // Herzform als Clip
+        ctx.save();
+        const path = new Path2D(
+          `M${size*0.5} ${size*0.9*0.94} C ${size*0.15} ${size*0.9*0.66}, 0 ${size*0.9*0.44}, 0 ${size*0.9*0.24}
+           C 0 ${size*0.9*0.04}, ${size*0.2} -${size*0.9*0.04}, ${size*0.35} ${size*0.9*0.09}
+           C ${size*0.42} ${size*0.9*0.16}, ${size*0.5} ${size*0.9*0.27}, ${size*0.5} ${size*0.9*0.27}
+           C ${size*0.5} ${size*0.9*0.27}, ${size*0.58} ${size*0.9*0.16}, ${size*0.65} ${size*0.9*0.09}
+           C ${size*0.8} -${size*0.9*0.04}, ${size} ${size*0.9*0.04}, ${size} ${size*0.9*0.24}
+           C ${size} ${size*0.9*0.44}, ${size*0.85} ${size*0.9*0.66}, ${size*0.5} ${size*0.9*0.94} Z`
+        );
+        ctx.clip(path);
+
+        // Bild zentriert im "cover"-Modus zeichnen
+        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+        const w = img.width * scale, h = img.height * scale;
+        ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+        ctx.restore();
+
+        croppedHeartDataUrl = canvas.toDataURL("image/png");
+        const preview = document.getElementById("heartPreview");
+        preview.innerHTML = `<img src="${croppedHeartDataUrl}" style="width:100%;height:100%;object-fit:contain;" />`;
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ============ Veröffentlichen (GitHub API) ============
+  function b64EncodeUnicode(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+
+  async function ghRequest(path, method, bodyObj, token) {
+    const owner = localStorage.getItem("cfgGhOwner");
+    const repo = localStorage.getItem("cfgGhRepo");
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+    const res = await fetch(url, {
+      method,
+      headers: {
+        "Authorization": "token " + token,
+        "Accept": "application/vnd.github+json"
+      },
+      body: bodyObj ? JSON.stringify(bodyObj) : undefined
+    });
+    return res;
+  }
+
+  async function publishFile(path, base64Content, token, log) {
+    const branch = localStorage.getItem("cfgGhBranch") || "main";
+    let sha = null;
+    const getRes = await ghRequest(`${path}?ref=${branch}`, "GET", null, token);
+    if (getRes.status === 200) {
+      const data = await getRes.json();
+      sha = data.sha;
+    }
+    const putRes = await ghRequest(path, "PUT", {
+      message: "Update " + path + " über Config-Seite",
+      content: base64Content,
+      branch,
+      ...(sha ? { sha } : {})
+    }, token);
+
+    if (putRes.ok) {
+      log(`✅ ${path} veröffentlicht`);
+    } else {
+      const errText = await putRes.text();
+      log(`❌ ${path} fehlgeschlagen: ${putRes.status}`);
+      console.error(errText);
+    }
+    return putRes.ok;
+  }
+
+  async function publish() {
+    const token = localStorage.getItem("cfgGhToken");
+    const owner = localStorage.getItem("cfgGhOwner");
+    const repo = localStorage.getItem("cfgGhRepo");
+    const logEl = document.getElementById("publishLog");
+    const log = (msg) => { logEl.textContent = msg; };
+
+    if (!token || !owner || !repo) {
+      log("Bitte zuerst die GitHub-Verbindung oben ausfüllen und speichern.");
+      return;
+    }
+
+    log("Veröffentliche Gästeliste …");
+    const wsData = guests.map((g) => ({ Vorname: g.vorname, Nachname: g.nachname, Tisch: g.tisch }));
+    const ws = XLSX.utils.json_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Gaesteliste");
+    const xlsxBase64 = XLSX.write(wb, { bookType: "xlsx", type: "base64" });
+    await publishFile("guests.xlsx", xlsxBase64, token, log);
+
+    log("Veröffentliche Raum-Layout …");
+    const layoutBase64 = b64EncodeUnicode(JSON.stringify(tables, null, 2));
+    await publishFile("layout.json", layoutBase64, token, log);
+
+    if (croppedHeartDataUrl) {
+      log("Veröffentliche Herzfoto …");
+      const imgBase64 = croppedHeartDataUrl.split(",")[1];
+      await publishFile("assets/couple-heart.png", imgBase64, token, log);
+    }
+
+    log("✅ Alles veröffentlicht. Vercel deployt in ca. 30–60 Sekunden neu.");
+  }
+</script>
+</body>
+</html>
