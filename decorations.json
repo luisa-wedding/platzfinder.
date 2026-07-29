@@ -22,5 +22,17 @@
     "color": "#658443",
     "image": null,
     "view": "start"
+  },
+  {
+    "id": "deco1785317347730",
+    "shape": "star",
+    "x": 52.9,
+    "y": 75.8,
+    "size": 34,
+    "rotation": 0,
+    "opacity": 100,
+    "color": null,
+    "image": "decoration-deco1785317347730.png",
+    "view": "end"
   }
 ]
