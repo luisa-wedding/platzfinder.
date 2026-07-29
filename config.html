@@ -11,56 +11,25 @@
 
 <style>
   :root {
-    --ivory: #fbf7f2;
-    --blush: #f4dfda;
-    --blush-deep: #eac7c0;
-    --rose: #c97b84;
-    --rose-deep: #b25f6b;
-    --sage: #9caf88;
-    --gold: #c9a05c;
-    --gold-soft: #ddbe8c;
-    --ink: #3d3436;
-    --ink-soft: #7a6f6a;
+    --ivory: #fbf7f2; --blush: #f4dfda; --blush-deep: #eac7c0; --rose: #c97b84; --rose-deep: #b25f6b;
+    --sage: #9caf88; --sage-deep: #7e9370; --gold: #c9a05c; --gold-soft: #ddbe8c; --ink: #3d3436; --ink-soft: #7a6f6a;
   }
   * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: "Jost", sans-serif;
-    color: var(--ink);
-    background: var(--ivory);
-    min-height: 100vh;
-  }
+  body { margin: 0; font-family: "Jost", sans-serif; color: var(--ink); background: var(--ivory); min-height: 100vh; }
   .display { font-family: "Cormorant Garamond", serif; font-style: italic; }
 
-  /* ---------- Passwort-Gate ---------- */
-  #gate {
-    position: fixed; inset: 0; background: var(--ivory);
-    display: flex; align-items: center; justify-content: center; z-index: 100;
-  }
-  #gate .box {
-    background: #fff; border-radius: 20px; padding: 2.5rem 2rem;
-    box-shadow: 0 10px 40px -15px rgba(61,52,54,0.3); text-align: center; width: 90%; max-width: 22rem;
-  }
-  #gate input {
-    width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 1px solid var(--blush-deep);
-    font-family: inherit; font-size: 1rem; margin-top: 1rem;
-  }
-  #gate button, .btn {
-    margin-top: 1rem; width: 100%; border: none; border-radius: 12px; background: var(--rose);
-    color: #fff; padding: 0.8rem 1rem; font-family: inherit; font-size: 1rem; cursor: pointer;
-  }
+  #gate { position: fixed; inset: 0; background: var(--ivory); display: flex; align-items: center; justify-content: center; z-index: 100; }
+  #gate .box { background: #fff; border-radius: 20px; padding: 2.5rem 2rem; box-shadow: 0 10px 40px -15px rgba(61,52,54,0.3); text-align: center; width: 90%; max-width: 22rem; }
+  #gate input { width: 100%; padding: 0.8rem 1rem; border-radius: 12px; border: 1px solid var(--blush-deep); font-family: inherit; font-size: 1rem; margin-top: 1rem; }
+  #gate button, .btn { margin-top: 1rem; width: 100%; border: none; border-radius: 12px; background: var(--rose); color: #fff; padding: 0.8rem 1rem; font-family: inherit; font-size: 1rem; cursor: pointer; }
   #gate button:hover, .btn:hover { background: var(--rose-deep); }
   #gate .error { color: var(--rose-deep); font-size: 0.85rem; margin-top: 0.6rem; display: none; }
 
-  /* ---------- Layout ---------- */
-  #app { display: none; max-width: 60rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; }
+  #app { display: none; max-width: 64rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; }
   header.top h1 { font-size: 2rem; margin: 0 0 0.25rem; }
   header.top p { color: var(--ink-soft); margin: 0 0 2rem; }
 
-  section.panel {
-    background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.6);
-    border-radius: 20px; padding: 1.5rem 1.5rem; margin-bottom: 1.75rem;
-  }
+  section.panel { background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.6); border-radius: 20px; padding: 1.5rem 1.5rem; margin-bottom: 1.75rem; }
   section.panel h2 { font-size: 1.3rem; margin: 0 0 0.3rem; }
   section.panel .hint { color: var(--ink-soft); font-size: 0.85rem; margin: 0 0 1rem; }
 
@@ -69,14 +38,10 @@
     width: 100%; padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--blush-deep);
     font-family: inherit; font-size: 0.95rem; background: #fff; color: var(--ink);
   }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-  .grid-2 > div { margin-bottom: 0.8rem; }
   .btn-small { background: var(--sage); color: #fff; border: none; border-radius: 10px; padding: 0.5rem 0.9rem; font-family: inherit; cursor: pointer; font-size: 0.85rem; }
-  .btn-small:hover { background: var(--sage-deep, #7e9370); }
+  .btn-small:hover { background: var(--sage-deep); }
   .btn-outline { background: #fff; border: 1px solid var(--blush-deep); color: var(--ink); border-radius: 10px; padding: 0.5rem 0.9rem; font-family: inherit; cursor: pointer; font-size: 0.85rem; }
   .btn-outline:hover { border-color: var(--rose); }
-
-  #ghStatus { font-size: 0.85rem; margin-top: 0.6rem; }
 
   /* ---------- Raum-Baukasten ---------- */
   .room-toolbar { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
@@ -84,32 +49,33 @@
     position: relative; width: 100%; aspect-ratio: 4/3; background: rgba(255,255,255,0.55);
     border: 1px dashed var(--blush-deep); border-radius: 16px; overflow: hidden;
   }
-  .rc-table {
+  .rc-obj {
     position: absolute; transform: translate(-50%, -50%);
-    width: 17%; min-width: 90px; border-radius: 16px;
-    background: rgba(156,175,136,0.18); border: 1.5px solid var(--sage);
-    padding: 6px; text-align: center; user-select: none;
+    padding: 4px; text-align: center; user-select: none; overflow: hidden;
   }
-  .rc-table.round { border-radius: 50%; }
-  .rc-table .rc-handle {
-    cursor: grab; font-size: 0.7rem; color: var(--ink-soft); padding: 2px 0;
-  }
-  .rc-table .rc-name { font-size: 0.8rem; font-weight: 500; margin: 2px 0 4px; }
-  .rc-table .rc-actions { display: flex; justify-content: center; gap: 6px; margin-bottom: 4px; }
-  .rc-table .rc-actions button { border: none; background: none; cursor: pointer; font-size: 0.75rem; color: var(--ink-soft); }
-  .rc-table .rc-actions button:hover { color: var(--rose); }
-  .rc-chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; min-height: 22px; }
-  .chip {
-    background: #fff; border: 1px solid var(--blush-deep); border-radius: 999px;
-    padding: 2px 8px; font-size: 0.7rem; cursor: grab;
-  }
+  .rc-obj.table { border-radius: 16px; background: rgba(156,175,136,0.18); border: 1.5px solid var(--sage); }
+  .rc-obj.table.round { border-radius: 50%; }
+  .rc-obj.brautpaar { border-radius: 50%; background: rgba(201,160,92,0.16); border: 1.5px solid var(--gold); }
+  .rc-obj.door { border-radius: 8px; background: rgba(122,111,106,0.10); border: 1px dashed var(--ink-soft); }
+  .rc-obj.toilet { border-radius: 8px; background: rgba(122,111,106,0.10); border: 1px solid var(--ink-soft); }
+
+  .rc-handle { cursor: grab; font-size: 0.7rem; color: var(--ink-soft); padding: 2px 0; }
+  .rc-name { font-size: 0.75rem; font-weight: 500; margin: 2px 0 4px; word-break: break-word; }
+  .rc-actions { display: flex; justify-content: center; gap: 6px; margin-bottom: 2px; }
+  .rc-actions button { border: none; background: none; cursor: pointer; font-size: 0.72rem; color: var(--ink-soft); }
+  .rc-actions button:hover { color: var(--rose); }
+  .rc-chips { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; min-height: 20px; }
+  .chip { background: #fff; border: 1px solid var(--blush-deep); border-radius: 999px; padding: 2px 8px; font-size: 0.68rem; cursor: grab; }
   .chip:active { cursor: grabbing; }
 
-  #tray {
-    margin-top: 1rem; padding: 0.9rem; border-radius: 14px; background: rgba(244,223,218,0.4);
-    border: 1px solid var(--blush-deep); min-height: 46px; display: flex; flex-wrap: wrap; gap: 6px;
+  .rc-resize {
+    position: absolute; right: 2px; bottom: 2px; width: 12px; height: 12px;
+    cursor: nwse-resize; border-right: 2px solid var(--ink-soft); border-bottom: 2px solid var(--ink-soft); opacity: 0.5;
   }
-  #tray.dragover, .rc-chips.dragover, .rc-table.dragover { outline: 2px dashed var(--rose); outline-offset: 2px; }
+  .rc-resize:hover { opacity: 1; }
+
+  #tray { margin-top: 1rem; padding: 0.9rem; border-radius: 14px; background: rgba(244,223,218,0.4); border: 1px solid var(--blush-deep); min-height: 46px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .dragover { outline: 2px dashed var(--rose); outline-offset: 2px; }
 
   /* ---------- Gästeliste-Tabelle ---------- */
   table.guest-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
@@ -120,16 +86,45 @@
   .row-del { border: none; background: none; color: var(--ink-soft); cursor: pointer; font-size: 1rem; }
   .row-del:hover { color: var(--rose); }
 
-  /* ---------- Foto ---------- */
-  .heart-preview { width: 130px; height: 117px; margin-top: 1rem; }
-  .heart-preview svg { width: 100%; height: 100%; }
+  /* ---------- Dekorationen ---------- */
+  .deco-toolbar { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  #deco-preview-wrap { display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start; }
+  #deco-card-preview {
+    position: relative; width: 260px; height: 360px; background: #fff; border-radius: 22px;
+    border: 1px solid var(--blush-deep); flex-shrink: 0; overflow: visible;
+  }
+  #deco-card-preview::after {
+    content: "Willkommens-Karte (Vorschau)"; position: absolute; bottom: 8px; left: 0; right: 0;
+    text-align: center; font-size: 0.65rem; color: var(--ink-soft); letter-spacing: 0.05em;
+  }
+  .deco-marker { position: absolute; transform: translate(-50%, -50%); cursor: grab; }
+  .deco-marker img, .deco-marker .placeholder { width: 100%; height: 100%; display: block; border-radius: 6px; }
+  .deco-marker .placeholder { background: linear-gradient(135deg, var(--blush-deep), var(--rose)); border-radius: 50%; }
+  .deco-marker .deco-del {
+    position: absolute; top: -8px; right: -8px; width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; border: 1px solid var(--blush-deep); font-size: 0.7rem; line-height: 1; cursor: pointer; color: var(--ink-soft);
+  }
+  .deco-resize { position: absolute; right: -4px; bottom: -4px; width: 12px; height: 12px; background: var(--rose); border-radius: 50%; cursor: nwse-resize; }
+  .deco-list { display: flex; flex-direction: column; gap: 0.6rem; flex: 1; min-width: 200px; }
+  .deco-list-item { display: flex; align-items: center; gap: 0.7rem; background: #fff; border: 1px solid var(--blush-deep); border-radius: 12px; padding: 0.5rem 0.7rem; }
+  .deco-list-item img, .deco-list-item .placeholder { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; }
+  .deco-list-item .placeholder { background: linear-gradient(135deg, var(--blush-deep), var(--rose)); border-radius: 50%; }
+  .deco-list-item .grow { flex: 1; font-size: 0.85rem; }
+  .deco-list-item button { border: none; background: none; color: var(--ink-soft); cursor: pointer; font-size: 0.85rem; }
+  .deco-list-item button:hover { color: var(--rose); }
+
+  /* ---------- Crop-Modal ---------- */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(61,52,54,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 1rem; }
+  .modal-box { background: #fff; border-radius: 20px; padding: 1.75rem; width: 100%; max-width: 22rem; text-align: center; }
+  .crop-stage { width: 260px; height: 260px; margin: 0 auto 1rem; position: relative; overflow: hidden; border-radius: 12px; background: #eee; touch-action: none; }
+  .crop-stage img { position: absolute; }
+  .crop-mask-overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .modal-actions { display: flex; gap: 0.7rem; margin-top: 1rem; }
+  .modal-actions button { flex: 1; margin-top: 0; }
+  input[type="range"] { width: 100%; }
 
   /* ---------- Veröffentlichen-Leiste ---------- */
-  #publishBar {
-    position: fixed; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(6px); border-top: 1px solid var(--blush-deep);
-    padding: 0.9rem 1.25rem; display: flex; align-items: center; gap: 1rem; z-index: 30;
-  }
+  #publishBar { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(6px); border-top: 1px solid var(--blush-deep); padding: 0.9rem 1.25rem; display: flex; align-items: center; gap: 1rem; z-index: 30; }
   #publishBar button { white-space: nowrap; }
   #publishLog { font-size: 0.8rem; color: var(--ink-soft); flex: 1; }
 </style>
@@ -149,22 +144,19 @@
 <div id="app">
   <header class="top">
     <h1 class="display">Hochzeits-Konfiguration</h1>
-    <p>Hier baut ihr den Raum auf, ordnet Gäste den Tischen zu, pflegt die Gästeliste und hinterlegt euer Herzfoto. Ganz unten könnt ihr alles veröffentlichen.</p>
+    <p>Raum aufbauen, Gäste zuordnen, Gästeliste pflegen und Fotos hinterlegen. Unten alles veröffentlichen.</p>
   </header>
-
-  <!-- GitHub Verbindung -->
-  <section class="panel">
-    <h2>Verbindung zu GitHub</h2>
-    <p class="hint">Die Verbindung ist bereits fest eingerichtet (über die Vercel-Server-Einstellungen). Du musst hier nichts eintragen – einfach unten konfigurieren und "Änderungen veröffentlichen" klicken.</p>
-  </section>
 
   <!-- Raum-Baukasten -->
   <section class="panel">
-    <h2>Tische anordnen &amp; Gäste zuordnen</h2>
-    <p class="hint">Tische per Ziehen am ⠿-Griff frei positionieren. Gäste unten aus dem Vorrat direkt auf einen Tisch ziehen.</p>
+    <h2>Raum &amp; Sitzordnung</h2>
+    <p class="hint">Am ⠿-Griff frei verschieben, an der Ecke unten rechts frei in der Größe ziehen. Gäste unten aus dem Vorrat direkt auf einen Tisch ziehen.</p>
     <div class="room-toolbar">
-      <button class="btn-small" onclick="addTable('round')">+ Runder Tisch</button>
-      <button class="btn-small" onclick="addTable('rect')">+ Eckiger Tisch</button>
+      <button class="btn-small" onclick="addObject('table','round')">+ Runder Tisch</button>
+      <button class="btn-small" onclick="addObject('table','rect')">+ Eckiger Tisch</button>
+      <button class="btn-outline" onclick="addObject('door')">+ Tür</button>
+      <button class="btn-outline" onclick="addObject('toilet')">+ Toilette</button>
+      <button class="btn-outline" onclick="addObject('brautpaar')">+ Brautpaar-Platz</button>
     </div>
     <div id="room-canvas"></div>
     <label class="small" style="margin-top:1rem;">Noch nicht zugeordnete Gäste</label>
@@ -190,13 +182,38 @@
     </div>
   </section>
 
-  <!-- Foto -->
+  <!-- Foto-Dekorationen -->
   <section class="panel">
-    <h2>Herzfoto</h2>
-    <p class="hint">Ein Foto hochladen &ndash; es wird automatisch mittig zugeschnitten und in Herzform gespeichert.</p>
-    <input type="file" accept="image/*" onchange="handlePhoto(event)" />
-    <div class="heart-preview" id="heartPreview"></div>
+    <h2>Foto-Dekorationen</h2>
+    <p class="hint">Herz, Stern oder Blume hinzufügen, Foto reinziehen und zuschneiden, danach auf der Karte frei platzieren und in der Größe anpassen.</p>
+    <div class="deco-toolbar">
+      <button class="btn-small" onclick="triggerAddDeco('heart')">+ Herz</button>
+      <button class="btn-small" onclick="triggerAddDeco('star')">+ Stern</button>
+      <button class="btn-small" onclick="triggerAddDeco('flower')">+ Blume</button>
+      <input type="file" id="decoFileInput" accept="image/*" style="display:none" onchange="onDecoFileChosen(event)" />
+    </div>
+    <div id="deco-preview-wrap">
+      <div id="deco-card-preview"></div>
+      <div class="deco-list" id="deco-list"></div>
+    </div>
   </section>
+</div>
+
+<!-- Crop-Modal -->
+<div class="modal-overlay" id="cropModal" hidden>
+  <div class="modal-box">
+    <h3 class="display" style="margin:0 0 0.75rem;font-size:1.4rem;">Foto zuschneiden</h3>
+    <div class="crop-stage" id="cropStage">
+      <img id="cropImg" draggable="false" />
+      <svg class="crop-mask-overlay" id="cropMaskOverlay" viewBox="0 0 100 100"></svg>
+    </div>
+    <label class="small">Zoom</label>
+    <input type="range" id="cropZoom" min="100" max="300" value="100" />
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="closeCropModal()">Abbrechen</button>
+      <button class="btn" style="background:var(--rose);" onclick="confirmCrop()">Übernehmen</button>
+    </div>
+  </div>
 </div>
 
 <div id="publishBar" style="display:none;">
@@ -206,33 +223,59 @@
 
 <script>
   // ============ Passwort-Gate ============
-  // Zum Ändern: einfach den Text in Anführungszeichen ersetzen.
   const CONFIG_PASSWORD = "unserefeier2026";
 
   function checkPassword() {
     const val = document.getElementById("gate-pw").value;
     if (val === CONFIG_PASSWORD) {
       sessionStorage.setItem("cfg_ok", "1");
-      document.getElementById("gate").style.display = "none";
-      document.getElementById("app").style.display = "block";
-      document.getElementById("publishBar").style.display = "flex";
-      init();
+      unlock();
     } else {
       document.getElementById("gate-error").style.display = "block";
     }
   }
-  if (sessionStorage.getItem("cfg_ok") === "1") {
+  function unlock() {
     document.getElementById("gate").style.display = "none";
     document.getElementById("app").style.display = "block";
     document.getElementById("publishBar").style.display = "flex";
     init();
   }
+  if (sessionStorage.getItem("cfg_ok") === "1") unlock();
+
+  // ============ Shape-Pfade (0..100 Koordinatenraum) ============
+  const SHAPE_PATHS = {
+    heart: "M50 92 C15 68,0 48,0 28 C0 10,20 2,35 12 C42 17,50 26,50 26 C50 26,58 17,65 12 C80 2,100 10,100 28 C100 48,85 68,50 92 Z",
+    star: "M50 2 L61.8 33.8 L95.6 35.2 L69 56.2 L78.2 88.9 L50 70 L21.8 88.9 L31 56.2 L4.3 35.2 L38.2 33.8 Z"
+  };
+  const FLOWER_GEOM = { cx: 50, cy: 50, dist: 26.4, petalR: 20.16, centerR: 16.8 };
+
+  function flowerCirclesSvg() {
+    const c = FLOWER_GEOM;
+    let out = "";
+    for (let i = 0; i < 6; i++) {
+      const a = (i * 60 * Math.PI) / 180;
+      out += `<circle cx="${c.cx + c.dist * Math.cos(a)}" cy="${c.cy + c.dist * Math.sin(a)}" r="${c.petalR}" />`;
+    }
+    out += `<circle cx="${c.cx}" cy="${c.cy}" r="${c.centerR}" />`;
+    return out;
+  }
+
+  function placeholderSvg(shape) {
+    if (shape === "flower") {
+      return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+        <defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EAC7C0"/><stop offset="1" stop-color="#9CAF88"/></linearGradient></defs>
+        <g fill="url(#pg)">${flowerCirclesSvg()}</g></svg>`;
+    }
+    return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+      <defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EAC7C0"/><stop offset="1" stop-color="#C97B84"/></linearGradient></defs>
+      <path d="${SHAPE_PATHS[shape]}" fill="url(#pg)" /></svg>`;
+  }
 
   // ============ State ============
-  let guests = [];   // { vorname, nachname, tisch }
-  let tables = [];   // { id, name, shape, x, y }
-  let croppedHeartDataUrl = null;
-  let tableCounter = 1;
+  let guests = [];
+  let roomObjects = [];
+  let decorations = [];
+  let objCounter = 1;
 
   async function init() {
     try {
@@ -250,12 +293,18 @@
 
     try {
       const res2 = await fetch("./layout.json");
-      tables = res2.ok ? await res2.json() : [];
-    } catch (e) { tables = []; }
+      roomObjects = res2.ok ? await res2.json() : [];
+    } catch (e) { roomObjects = []; }
+
+    try {
+      const res3 = await fetch("./decorations.json");
+      decorations = res3.ok ? await res3.json() : [];
+    } catch (e) { decorations = []; }
 
     renderRoomCanvas();
     renderTray();
     renderGuestTable();
+    renderDecorations();
   }
 
   function readCol(row, keys) {
@@ -264,60 +313,92 @@
     }
     return "";
   }
+  function escapeHtml(s) { return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
+  function escapeAttr(s) { return String(s).replace(/"/g, "&quot;"); }
 
   // ============ Raum-Baukasten ============
-  function addTable(shape) {
-    const name = prompt("Name des Tisches (z. B. \"Tisch 8 - Ranunkel\"):", "Neuer Tisch");
-    if (!name) return;
-    tables.push({ id: "t" + Date.now() + (tableCounter++), name: name.trim(), shape, x: 50, y: 50 });
+  const DEFAULT_SIZE = { table: 16, brautpaar: 14, door: 8, toilet: 8 };
+  const DEFAULT_LABEL = { door: "Tür", toilet: "WC", brautpaar: "Brautpaar" };
+
+  function addObject(type, shape) {
+    let name = DEFAULT_LABEL[type] || "Tisch";
+    if (type === "table") {
+      name = prompt("Name des Tisches (z. B. \"Tisch 8 - Ranunkel\"):", "Neuer Tisch");
+      if (!name) return;
+    } else if (type === "brautpaar") {
+      const custom = prompt("Beschriftung für den Brautpaar-Platz:", "Brautpaar");
+      if (custom) name = custom;
+    }
+    const size = DEFAULT_SIZE[type] || 14;
+    roomObjects.push({
+      id: type + Date.now() + (objCounter++),
+      type, shape: shape || null,
+      name: name.trim(),
+      x: 50, y: 50, w: size, h: size
+    });
     renderRoomCanvas();
+    if (type === "table") renderTray();
   }
-  function renameTable(id) {
-    const t = tables.find((x) => x.id === id);
-    if (!t) return;
-    const oldName = t.name;
-    const name = prompt("Neuer Name für diesen Tisch:", t.name);
+
+  function renameObject(id) {
+    const o = roomObjects.find((x) => x.id === id);
+    if (!o) return;
+    const oldName = o.name;
+    const name = prompt("Neuer Name:", o.name);
     if (!name) return;
-    t.name = name.trim();
-    guests.forEach((g) => { if (g.tisch === oldName) g.tisch = t.name; });
+    o.name = name.trim();
+    if (o.type === "table") guests.forEach((g) => { if (g.tisch === oldName) g.tisch = o.name; });
     renderRoomCanvas(); renderGuestTable();
   }
-  function deleteTable(id) {
-    const t = tables.find((x) => x.id === id);
-    if (!t) return;
-    if (!confirm(`Tisch "${t.name}" wirklich löschen? Zugeordnete Gäste wandern zurück in den Vorrat.`)) return;
-    guests.forEach((g) => { if (g.tisch === t.name) g.tisch = ""; });
-    tables = tables.filter((x) => x.id !== id);
+
+  function deleteObject(id) {
+    const o = roomObjects.find((x) => x.id === id);
+    if (!o) return;
+    const msg = o.type === "table"
+      ? `Tisch "${o.name}" wirklich löschen? Zugeordnete Gäste wandern zurück in den Vorrat.`
+      : `"${o.name}" wirklich löschen?`;
+    if (!confirm(msg)) return;
+    if (o.type === "table") guests.forEach((g) => { if (g.tisch === o.name) g.tisch = ""; });
+    roomObjects = roomObjects.filter((x) => x.id !== id);
     renderRoomCanvas(); renderTray(); renderGuestTable();
   }
 
   function renderRoomCanvas() {
     const canvas = document.getElementById("room-canvas");
     canvas.innerHTML = "";
-    tables.forEach((t) => {
+    roomObjects.forEach((o) => {
       const el = document.createElement("div");
-      el.className = "rc-table " + (t.shape === "round" ? "round" : "");
-      el.style.left = t.x + "%";
-      el.style.top = t.y + "%";
-      el.dataset.tableId = t.id;
+      let cls = "rc-obj " + o.type;
+      if (o.type === "table" && o.shape === "round") cls += " round";
+      el.className = cls;
+      el.style.left = o.x + "%";
+      el.style.top = o.y + "%";
+      el.style.width = o.w + "%";
+      el.style.height = o.h + "%";
+      el.dataset.objId = o.id;
 
-      const assigned = guests.filter((g) => g.tisch === t.name);
-      el.innerHTML = `
-        <div class="rc-handle" title="Ziehen zum Verschieben">⠿</div>
+      let inner = `<div class="rc-handle" title="Ziehen zum Verschieben">⠿</div>
         <div class="rc-actions">
-          <button onclick="renameTable('${t.id}')" title="Umbenennen">✎</button>
-          <button onclick="deleteTable('${t.id}')" title="Löschen">✕</button>
+          <button onclick="renameObject('${o.id}')" title="Umbenennen">✎</button>
+          <button onclick="deleteObject('${o.id}')" title="Löschen">✕</button>
         </div>
-        <div class="rc-name">${escapeHtml(t.name)}</div>
-        <div class="rc-chips" data-drop-table="${t.name}"></div>
-      `;
+        <div class="rc-name">${escapeHtml(o.name)}</div>`;
+
+      if (o.type === "table") {
+        inner += `<div class="rc-chips" data-drop-table="${escapeAttr(o.name)}"></div>`;
+      }
+      inner += `<div class="rc-resize" title="Größe ändern"></div>`;
+      el.innerHTML = inner;
       canvas.appendChild(el);
 
-      const chipsEl = el.querySelector(".rc-chips");
-      assigned.forEach((g) => chipsEl.appendChild(makeChip(g)));
+      if (o.type === "table") {
+        const chipsEl = el.querySelector(".rc-chips");
+        guests.filter((g) => g.tisch === o.name).forEach((g) => chipsEl.appendChild(makeChip(g)));
+        makeDroppable(chipsEl, o.name);
+      }
 
-      makeDroppable(chipsEl, t.name);
-      makeDraggableTable(el, t);
+      makeDraggableObject(el, o);
+      makeResizableObject(el, o);
     });
   }
 
@@ -327,12 +408,9 @@
     chip.draggable = true;
     chip.textContent = `${guest.vorname} ${guest.nachname}`;
     chip.dataset.guestKey = guestKey(guest);
-    chip.addEventListener("dragstart", (e) => {
-      e.dataTransfer.setData("text/plain", guestKey(guest));
-    });
+    chip.addEventListener("dragstart", (e) => e.dataTransfer.setData("text/plain", guestKey(guest)));
     return chip;
   }
-
   function guestKey(g) { return `${g.vorname}||${g.nachname}`; }
 
   function makeDroppable(el, tableName) {
@@ -348,27 +426,42 @@
     });
   }
 
-  function makeDraggableTable(el, t) {
+  function makeDraggableObject(el, o) {
     const handle = el.querySelector(".rc-handle");
     handle.addEventListener("pointerdown", (e) => {
       e.preventDefault();
       handle.setPointerCapture(e.pointerId);
-      const canvasRect = document.getElementById("room-canvas").getBoundingClientRect();
-
+      const rect = document.getElementById("room-canvas").getBoundingClientRect();
       function onMove(ev) {
-        let x = ((ev.clientX - canvasRect.left) / canvasRect.width) * 100;
-        let y = ((ev.clientY - canvasRect.top) / canvasRect.height) * 100;
-        x = Math.max(4, Math.min(96, x));
-        y = Math.max(4, Math.min(96, y));
-        el.style.left = x + "%";
-        el.style.top = y + "%";
-        t.x = Math.round(x);
-        t.y = Math.round(y);
+        let x = ((ev.clientX - rect.left) / rect.width) * 100;
+        let y = ((ev.clientY - rect.top) / rect.height) * 100;
+        x = Math.max(2, Math.min(98, x));
+        y = Math.max(2, Math.min(98, y));
+        el.style.left = x + "%"; el.style.top = y + "%";
+        o.x = Math.round(x * 10) / 10; o.y = Math.round(y * 10) / 10;
       }
-      function onUp() {
-        handle.removeEventListener("pointermove", onMove);
-        handle.removeEventListener("pointerup", onUp);
+      function onUp() { handle.removeEventListener("pointermove", onMove); handle.removeEventListener("pointerup", onUp); }
+      handle.addEventListener("pointermove", onMove);
+      handle.addEventListener("pointerup", onUp);
+    });
+  }
+
+  function makeResizableObject(el, o) {
+    const handle = el.querySelector(".rc-resize");
+    handle.addEventListener("pointerdown", (e) => {
+      e.preventDefault(); e.stopPropagation();
+      handle.setPointerCapture(e.pointerId);
+      const rect = document.getElementById("room-canvas").getBoundingClientRect();
+      const startW = o.w, startH = o.h;
+      const startX = e.clientX, startY = e.clientY;
+      function onMove(ev) {
+        const dw = ((ev.clientX - startX) / rect.width) * 100 * 2;
+        const dh = ((ev.clientY - startY) / rect.height) * 100 * 2;
+        o.w = Math.max(4, Math.min(70, startW + dw));
+        o.h = Math.max(4, Math.min(70, startH + dh));
+        el.style.width = o.w + "%"; el.style.height = o.h + "%";
       }
+      function onUp() { handle.removeEventListener("pointermove", onMove); handle.removeEventListener("pointerup", onUp); }
       handle.addEventListener("pointermove", onMove);
       handle.addEventListener("pointerup", onUp);
     });
@@ -377,7 +470,8 @@
   function renderTray() {
     const tray = document.getElementById("tray");
     tray.innerHTML = "";
-    const unassigned = guests.filter((g) => !tables.some((t) => t.name === g.tisch));
+    const tableNames = roomObjects.filter((o) => o.type === "table").map((o) => o.name);
+    const unassigned = guests.filter((g) => !tableNames.includes(g.tisch));
     unassigned.forEach((g) => tray.appendChild(makeChip(g)));
     makeDroppable(tray, "");
   }
@@ -399,23 +493,14 @@
   }
   function tischSelectHtml(i, current) {
     let opts = `<option value="">— kein Tisch —</option>`;
-    tables.forEach((t) => {
-      opts += `<option value="${escapeAttr(t.name)}" ${t.name === current ? "selected" : ""}>${escapeHtml(t.name)}</option>`;
+    roomObjects.filter((o) => o.type === "table").forEach((o) => {
+      opts += `<option value="${escapeAttr(o.name)}" ${o.name === current ? "selected" : ""}>${escapeHtml(o.name)}</option>`;
     });
     return `<select onchange="updateGuest(${i}, 'tisch', this.value)">${opts}</select>`;
   }
-  function updateGuest(i, field, value) {
-    guests[i][field] = value;
-    renderRoomCanvas(); renderTray();
-  }
-  function addGuestRow() {
-    guests.push({ vorname: "", nachname: "", tisch: "" });
-    renderGuestTable(); renderTray();
-  }
-  function deleteGuestRow(i) {
-    guests.splice(i, 1);
-    renderGuestTable(); renderRoomCanvas(); renderTray();
-  }
+  function updateGuest(i, field, value) { guests[i][field] = value; renderRoomCanvas(); renderTray(); }
+  function addGuestRow() { guests.push({ vorname: "", nachname: "", tisch: "" }); renderGuestTable(); renderTray(); }
+  function deleteGuestRow(i) { guests.splice(i, 1); renderGuestTable(); renderRoomCanvas(); renderTray(); }
   function importXlsx(evt) {
     const file = evt.target.files[0];
     if (!file) return;
@@ -436,53 +521,258 @@
     evt.target.value = "";
   }
 
-  function escapeHtml(s) { return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
-  function escapeAttr(s) { return String(s).replace(/"/g, "&quot;"); }
+  // ============ Dekorationen ============
+  let pendingDecoShape = null;
+  let editingDecoId = null;
 
-  // ============ Herzfoto-Zuschnitt ============
-  function handlePhoto(evt) {
+  function triggerAddDeco(shape) {
+    pendingDecoShape = shape;
+    editingDecoId = null;
+    document.getElementById("decoFileInput").value = "";
+    document.getElementById("decoFileInput").click();
+  }
+
+  function editDecoPhoto(id) {
+    const d = decorations.find((x) => x.id === id);
+    if (!d) return;
+    pendingDecoShape = d.shape;
+    editingDecoId = id;
+    document.getElementById("decoFileInput").value = "";
+    document.getElementById("decoFileInput").click();
+  }
+
+  function onDecoFileChosen(evt) {
     const file = evt.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const size = 600;
-        const canvas = document.createElement("canvas");
-        canvas.width = size; canvas.height = size * 0.9;
-        const ctx = canvas.getContext("2d");
-
-        // Herzform als Clip
-        ctx.save();
-        const path = new Path2D(
-          `M${size*0.5} ${size*0.9*0.94} C ${size*0.15} ${size*0.9*0.66}, 0 ${size*0.9*0.44}, 0 ${size*0.9*0.24}
-           C 0 ${size*0.9*0.04}, ${size*0.2} -${size*0.9*0.04}, ${size*0.35} ${size*0.9*0.09}
-           C ${size*0.42} ${size*0.9*0.16}, ${size*0.5} ${size*0.9*0.27}, ${size*0.5} ${size*0.9*0.27}
-           C ${size*0.5} ${size*0.9*0.27}, ${size*0.58} ${size*0.9*0.16}, ${size*0.65} ${size*0.9*0.09}
-           C ${size*0.8} -${size*0.9*0.04}, ${size} ${size*0.9*0.04}, ${size} ${size*0.9*0.24}
-           C ${size} ${size*0.9*0.44}, ${size*0.85} ${size*0.9*0.66}, ${size*0.5} ${size*0.9*0.94} Z`
-        );
-        ctx.clip(path);
-
-        // Bild zentriert im "cover"-Modus zeichnen
-        const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
-        const w = img.width * scale, h = img.height * scale;
-        ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
-        ctx.restore();
-
-        croppedHeartDataUrl = canvas.toDataURL("image/png");
-        const preview = document.getElementById("heartPreview");
-        preview.innerHTML = `<img src="${croppedHeartDataUrl}" style="width:100%;height:100%;object-fit:contain;" />`;
-      };
-      img.src = e.target.result;
-    };
+    reader.onload = (e) => openCropModal(e.target.result, pendingDecoShape);
     reader.readAsDataURL(file);
   }
 
-  // ============ Veröffentlichen (über eigene Server-Funktion) ============
-  function b64EncodeUnicode(str) {
-    return btoa(unescape(encodeURIComponent(str)));
+  function deleteDeco(id) {
+    if (!confirm("Diese Dekoration wirklich löschen?")) return;
+    decorations = decorations.filter((d) => d.id !== id);
+    renderDecorations();
   }
+
+  function renderDecorations() {
+    const preview = document.getElementById("deco-card-preview");
+    preview.innerHTML = "";
+    decorations.forEach((d) => {
+      const marker = document.createElement("div");
+      marker.className = "deco-marker";
+      marker.style.left = d.x + "%";
+      marker.style.top = d.y + "%";
+      marker.style.width = (d.size / 100) * 260 + "px";
+      marker.style.height = (d.size / 100) * 260 + "px";
+
+      if (d.image) {
+        marker.innerHTML = `<img src="${d.image}" />`;
+      } else if (d.filename) {
+        marker.innerHTML = `<img src="./assets/${d.filename}" onerror="this.outerHTML=window.__placeholderSvg('${d.shape}')" />`;
+      } else {
+        marker.innerHTML = placeholderSvg(d.shape);
+      }
+      marker.innerHTML += `<div class="deco-del" onclick="deleteDeco('${d.id}')">✕</div><div class="deco-resize"></div>`;
+      preview.appendChild(marker);
+      makeDraggableDeco(marker, d, preview);
+      makeResizableDeco(marker.querySelector(".deco-resize"), marker, d);
+    });
+
+    const list = document.getElementById("deco-list");
+    list.innerHTML = "";
+    if (!decorations.length) {
+      list.innerHTML = `<p style="color:var(--ink-soft);font-size:0.85rem;">Noch keine Dekoration hinzugefügt.</p>`;
+    }
+    decorations.forEach((d) => {
+      const item = document.createElement("div");
+      item.className = "deco-list-item";
+      const thumb = d.image
+        ? `<img src="${d.image}" />`
+        : d.filename
+          ? `<img src="./assets/${d.filename}" onerror="this.outerHTML='<div class=placeholder></div>'" />`
+          : `<div class="placeholder"></div>`;
+      item.innerHTML = `
+        ${thumb}
+        <div class="grow">${shapeLabel(d.shape)}</div>
+        <button onclick="editDecoPhoto('${d.id}')">Foto ändern</button>
+        <button onclick="deleteDeco('${d.id}')">Löschen</button>
+      `;
+      list.appendChild(item);
+    });
+  }
+  window.__placeholderSvg = placeholderSvg;
+  function shapeLabel(s) { return s === "heart" ? "Herz" : s === "star" ? "Stern" : "Blume"; }
+
+  function makeDraggableDeco(marker, d, container) {
+    marker.addEventListener("pointerdown", (e) => {
+      if (e.target.classList.contains("deco-resize") || e.target.classList.contains("deco-del")) return;
+      e.preventDefault();
+      marker.setPointerCapture(e.pointerId);
+      const rect = container.getBoundingClientRect();
+      function onMove(ev) {
+        let x = ((ev.clientX - rect.left) / rect.width) * 100;
+        let y = ((ev.clientY - rect.top) / rect.height) * 100;
+        x = Math.max(-10, Math.min(110, x));
+        y = Math.max(-10, Math.min(110, y));
+        marker.style.left = x + "%"; marker.style.top = y + "%";
+        d.x = Math.round(x * 10) / 10; d.y = Math.round(y * 10) / 10;
+      }
+      function onUp() { marker.removeEventListener("pointermove", onMove); marker.removeEventListener("pointerup", onUp); }
+      marker.addEventListener("pointermove", onMove);
+      marker.addEventListener("pointerup", onUp);
+    });
+  }
+
+  function makeResizableDeco(handle, marker, d) {
+    handle.addEventListener("pointerdown", (e) => {
+      e.preventDefault(); e.stopPropagation();
+      handle.setPointerCapture(e.pointerId);
+      const startSize = d.size;
+      const startX = e.clientX;
+      function onMove(ev) {
+        const delta = ((ev.clientX - startX) / 260) * 100;
+        d.size = Math.max(6, Math.min(45, startSize + delta));
+        marker.style.width = (d.size / 100) * 260 + "px";
+        marker.style.height = (d.size / 100) * 260 + "px";
+      }
+      function onUp() { handle.removeEventListener("pointermove", onMove); handle.removeEventListener("pointerup", onUp); }
+      handle.addEventListener("pointermove", onMove);
+      handle.addEventListener("pointerup", onUp);
+    });
+  }
+
+  // ============ Crop-Modal (WhatsApp-artiges Zuschneiden) ============
+  let cropState = null;
+
+  function openCropModal(dataUrl, shape) {
+    const img = new Image();
+    img.onload = () => {
+      const stageSize = 260;
+      const baseScale = Math.max(stageSize / img.naturalWidth, stageSize / img.naturalHeight);
+      cropState = {
+        shape, img, naturalW: img.naturalWidth, naturalH: img.naturalHeight,
+        baseScale, scale: baseScale, panX: 0, panY: 0
+      };
+      document.getElementById("cropZoom").value = 100;
+      setCropMaskOverlay(shape);
+      const cropImg = document.getElementById("cropImg");
+      cropImg.src = dataUrl;
+      updateCropImgTransform();
+      document.getElementById("cropModal").hidden = false;
+    };
+    img.src = dataUrl;
+  }
+
+  function setCropMaskOverlay(shape) {
+    const svg = document.getElementById("cropMaskOverlay");
+    let hole = "";
+    if (shape === "heart" || shape === "star") hole = `<path d="${SHAPE_PATHS[shape]}" />`;
+    else hole = `<g>${flowerCirclesSvg()}</g>`;
+    svg.innerHTML = `
+      <defs><mask id="cm"><rect width="100" height="100" fill="white"/><g fill="black">${hole}</g></mask></defs>
+      <rect width="100" height="100" fill="rgba(61,52,54,0.55)" mask="url(#cm)" />
+    `;
+  }
+
+  function updateCropImgTransform() {
+    const img = document.getElementById("cropImg");
+    const s = cropState;
+    img.style.width = s.naturalW + "px";
+    img.style.height = s.naturalH + "px";
+    img.style.left = (130 - s.naturalW / 2 + s.panX) + "px";
+    img.style.top = (130 - s.naturalH / 2 + s.panY) + "px";
+    img.style.transform = `scale(${s.scale})`;
+    img.style.transformOrigin = "center center";
+  }
+
+  document.getElementById("cropZoom").addEventListener("input", (e) => {
+    if (!cropState) return;
+    cropState.scale = cropState.baseScale * (e.target.value / 100);
+    updateCropImgTransform();
+  });
+
+  (function setupCropDrag() {
+    const stage = document.getElementById("cropStage");
+    let dragging = false, startX, startY, startPanX, startPanY;
+    stage.addEventListener("pointerdown", (e) => {
+      if (!cropState) return;
+      dragging = true;
+      stage.setPointerCapture(e.pointerId);
+      startX = e.clientX; startY = e.clientY;
+      startPanX = cropState.panX; startPanY = cropState.panY;
+    });
+    stage.addEventListener("pointermove", (e) => {
+      if (!dragging || !cropState) return;
+      cropState.panX = startPanX + (e.clientX - startX);
+      cropState.panY = startPanY + (e.clientY - startY);
+      updateCropImgTransform();
+    });
+    stage.addEventListener("pointerup", () => { dragging = false; });
+  })();
+
+  function closeCropModal() {
+    document.getElementById("cropModal").hidden = true;
+    cropState = null;
+  }
+
+  function clipHeartOrStar(ctx, size, shape) {
+    const factor = size / 100;
+    const scaled = SHAPE_PATHS[shape].replace(/-?\d+\.?\d*/g, (n) => String(parseFloat(n) * factor));
+    ctx.clip(new Path2D(scaled));
+  }
+  function clipFlower(ctx, size) {
+    const factor = size / 100;
+    const c = FLOWER_GEOM;
+    const cx = c.cx * factor, cy = c.cy * factor, dist = c.dist * factor, petalR = c.petalR * factor, centerR = c.centerR * factor;
+    const path = new Path2D();
+    for (let i = 0; i < 6; i++) {
+      const a = (i * 60 * Math.PI) / 180;
+      const px = cx + dist * Math.cos(a), py = cy + dist * Math.sin(a);
+      path.moveTo(px + petalR, py);
+      path.arc(px, py, petalR, 0, Math.PI * 2);
+    }
+    path.moveTo(cx + centerR, cy);
+    path.arc(cx, cy, centerR, 0, Math.PI * 2);
+    ctx.clip(path);
+  }
+
+  function confirmCrop() {
+    const OUT = 500;
+    const canvas = document.createElement("canvas");
+    canvas.width = OUT; canvas.height = OUT;
+    const ctx = canvas.getContext("2d");
+    ctx.save();
+    if (cropState.shape === "flower") clipFlower(ctx, OUT);
+    else clipHeartOrStar(ctx, OUT, cropState.shape);
+
+    const scaleFactor = OUT / 260;
+    const drawW = cropState.naturalW * cropState.scale * scaleFactor;
+    const drawH = cropState.naturalH * cropState.scale * scaleFactor;
+    const drawX = OUT / 2 + cropState.panX * scaleFactor - drawW / 2;
+    const drawY = OUT / 2 + cropState.panY * scaleFactor - drawH / 2;
+    ctx.drawImage(cropState.img, drawX, drawY, drawW, drawH);
+    ctx.restore();
+
+    const dataUrl = canvas.toDataURL("image/png");
+
+    if (editingDecoId) {
+      const d = decorations.find((x) => x.id === editingDecoId);
+      if (d) { d.image = dataUrl; d.filename = null; }
+    } else {
+      decorations.push({
+        id: "deco" + Date.now(),
+        shape: cropState.shape,
+        x: 50, y: 50, size: 16,
+        image: dataUrl, filename: null
+      });
+    }
+    closeCropModal();
+    renderDecorations();
+  }
+
+  // ============ Veröffentlichen ============
+  function b64EncodeUnicode(str) { return btoa(unescape(encodeURIComponent(str))); }
 
   async function publishFile(path, base64Content, log) {
     const res = await fetch("/api/publish", {
@@ -490,16 +780,11 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ path, content: base64Content })
     });
-
-    if (res.ok) {
-      log(`✅ ${path} veröffentlicht`);
-      return true;
-    } else {
-      const data = await res.json().catch(() => ({}));
-      log(`❌ ${path} fehlgeschlagen: ${data.error || res.status}`);
-      console.error(data.error);
-      return false;
-    }
+    if (res.ok) { log(`✅ ${path} veröffentlicht`); return true; }
+    const data = await res.json().catch(() => ({}));
+    log(`❌ ${path} fehlgeschlagen: ${data.error || res.status}`);
+    console.error(data.error);
+    return false;
   }
 
   async function publish() {
@@ -512,22 +797,31 @@
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Gaesteliste");
     const xlsxBase64 = XLSX.write(wb, { bookType: "xlsx", type: "base64" });
-    const ok1 = await publishFile("guests.xlsx", xlsxBase64, log);
-    if (!ok1) return;
+    if (!(await publishFile("guests.xlsx", xlsxBase64, log))) return;
 
     log("Veröffentliche Raum-Layout …");
-    const layoutBase64 = b64EncodeUnicode(JSON.stringify(tables, null, 2));
-    const ok2 = await publishFile("layout.json", layoutBase64, log);
-    if (!ok2) return;
+    const layoutBase64 = b64EncodeUnicode(JSON.stringify(roomObjects, null, 2));
+    if (!(await publishFile("layout.json", layoutBase64, log))) return;
 
-    if (croppedHeartDataUrl) {
-      log("Veröffentliche Herzfoto …");
-      const imgBase64 = croppedHeartDataUrl.split(",")[1];
-      const ok3 = await publishFile("assets/couple-heart.png", imgBase64, log);
-      if (!ok3) return;
+    log("Veröffentliche Dekorations-Fotos …");
+    for (const d of decorations) {
+      if (d.image) {
+        const filename = `decoration-${d.id}.png`;
+        const imgBase64 = d.image.split(",")[1];
+        const ok = await publishFile(`assets/${filename}`, imgBase64, log);
+        if (!ok) return;
+        d.filename = filename;
+        d.image = null;
+      }
     }
 
+    log("Veröffentliche Dekorations-Positionen …");
+    const decoJson = decorations.map((d) => ({ id: d.id, shape: d.shape, x: d.x, y: d.y, size: d.size, image: d.filename || null }));
+    const decoBase64 = b64EncodeUnicode(JSON.stringify(decoJson, null, 2));
+    if (!(await publishFile("decorations.json", decoBase64, log))) return;
+
     log("✅ Alles veröffentlicht. Vercel deployt in ca. 30–60 Sekunden neu.");
+    renderDecorations();
   }
 </script>
 </body>
