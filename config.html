@@ -37,7 +37,7 @@
   section.panel .hint { color: var(--ink-soft); font-size: 0.85rem; margin: 0 0 1rem; }
 
   label.small { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); display:block; margin-bottom: 0.3rem; }
-  input[type="text"], input[type="password"], select {
+  input[type="text"], input[type="password"], select, textarea {
     width: 100%; padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--blush-deep);
     font-family: inherit; font-size: 0.95rem; background: #fff; color: var(--ink);
   }
@@ -50,7 +50,6 @@
   .btn-danger { background: #fff; border: 1px solid var(--rose); color: var(--rose-deep); border-radius: 10px; padding: 0.5rem 0.9rem; font-family: inherit; cursor: pointer; font-size: 0.85rem; }
   .btn-danger:hover { background: var(--rose); color: #fff; }
 
-  /* ---------- Raum-Baukasten: Word-artige Objekte ---------- */
   .room-toolbar { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
   #room-canvas { position: relative; width: 100%; aspect-ratio: 4/3; background: rgba(255,255,255,0.55); border: 1px dashed var(--blush-deep); border-radius: 16px; overflow: visible; }
 
@@ -59,14 +58,15 @@
     position: absolute; inset: 0; cursor: move; display: flex; flex-direction: column;
     align-items: center; justify-content: center; text-align: center; padding: 3px; user-select: none;
   }
-  .manip-outline { position: absolute; inset: -1px; border: 1px dashed rgba(122,111,106,0.3); pointer-events: none; border-radius: inherit; }
+  .manip-outline { position: absolute; inset: -1px; border: 1px dashed rgba(122,111,106,0.3); pointer-events: none; }
 
   .rc-obj.table .manip-body { border-radius: 16px; background: rgba(156,175,136,0.18); border: 1.5px solid var(--sage); }
   .rc-obj.table.round .manip-body { border-radius: 50%; }
   .rc-obj.brautpaar .manip-body, .rc-obj.door .manip-body, .rc-obj.toilet .manip-body { background: transparent; }
+  .rc-obj.table.dragover .manip-body { outline: 3px dashed var(--rose); outline-offset: 3px; }
   .rc-icon { width: 55%; height: 55%; flex-shrink: 0; }
   .rc-obj-label { font-size: 0.62rem; color: var(--ink-soft); margin-top: 2px; word-break: break-word; }
-  .rc-chips { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; margin-top: 2px; }
+  .rc-chips { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; margin-top: 2px; min-height: 20px; min-width: 40px; }
   .chip { background: #fff; border: 1px solid var(--blush-deep); border-radius: 999px; padding: 2px 8px; cursor: grab; }
   .chip:active { cursor: grabbing; }
 
@@ -97,7 +97,6 @@
   #tray { margin-top: 1rem; padding: 0.9rem; border-radius: 14px; background: rgba(244,223,218,0.4); border: 1px solid var(--blush-deep); min-height: 46px; display: flex; flex-wrap: wrap; gap: 6px; }
   .dragover { outline: 2px dashed var(--rose); outline-offset: 2px; }
 
-  /* ---------- Gästeliste-Tabelle ---------- */
   table.guest-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
   table.guest-table th { text-align: left; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); padding: 0.4rem 0.5rem; }
   table.guest-table td { padding: 0.3rem 0.5rem; }
@@ -106,7 +105,6 @@
   .row-del { border: none; background: none; color: var(--ink-soft); cursor: pointer; font-size: 1rem; }
   .row-del:hover { color: var(--rose); }
 
-  /* ---------- Dekorationen ---------- */
   .deco-toolbar { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
   .deco-tabs { display: flex; gap: 0.4rem; margin-bottom: 1rem; }
   .deco-tab { padding: 0.4rem 1rem; border-radius: 999px; border: 1px solid var(--blush-deep); background: #fff; cursor: pointer; font-size: 0.85rem; color: var(--ink-soft); }
@@ -120,13 +118,10 @@
   }
   .deco-mock-title { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 1.5rem; margin-top: 2.2rem; color: var(--ink); }
   .deco-mock-line { height: 8px; background: rgba(122,111,106,0.12); border-radius: 4px; margin: 0.5rem auto; }
-  .deco-mock-input { height: 34px; background: #fff; border: 1px solid var(--blush-deep); border-radius: 10px; margin-top: 1.2rem; }
-  .deco-mock-btn { height: 34px; background: var(--rose); border-radius: 10px; margin-top: 0.6rem; opacity: 0.85; }
+  .deco-mock-input { height: 34px; background: #fff; border: 1px solid var(--blush-deep); border-radius: 10px; margin-top: 1.2rem; display:flex; align-items:center; justify-content:center; font-size:0.7rem; color: var(--ink-soft); }
+  .deco-mock-btn { height: 34px; background: var(--rose); border-radius: 10px; margin-top: 0.6rem; opacity: 0.85; display:flex; align-items:center; justify-content:center; font-size:0.7rem; color:#fff; }
   .deco-mock-seatbox { height: 56px; background: rgba(244,223,218,0.5); border: 1px solid var(--blush-deep); border-radius: 12px; margin-top: 1.2rem; }
-  .deco-mock-roommap {
-    height: 110px; background: rgba(255,255,255,0.6); border: 1px solid var(--blush-deep); border-radius: 12px; margin-top: 0.8rem;
-    display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: var(--ink-soft); letter-spacing: 0.05em;
-  }
+  .deco-mock-roommap { height: 110px; background: rgba(255,255,255,0.6); border: 1px solid var(--blush-deep); border-radius: 12px; margin-top: 0.8rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: var(--ink-soft); letter-spacing: 0.05em; }
 
   .deco-marker .manip-body { border-radius: 0; cursor: move; padding: 0; }
   .deco-marker img, .deco-marker .placeholder-shape { width: 100%; height: 100%; display: block; pointer-events: none; }
@@ -138,7 +133,6 @@
   .deco-list-item button { border: none; background: none; color: var(--ink-soft); cursor: pointer; font-size: 0.8rem; }
   .deco-list-item button:hover { color: var(--rose); }
 
-  /* ---------- Crop-Modal ---------- */
   .modal-overlay { position: fixed; inset: 0; background: rgba(61,52,54,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 1rem; }
   .modal-overlay[hidden] { display: none; }
   .modal-box { background: #fff; border-radius: 20px; padding: 1.75rem; width: 100%; max-width: 22rem; text-align: center; }
@@ -148,7 +142,6 @@
   .modal-actions { display: flex; gap: 0.7rem; margin-top: 1rem; }
   .modal-actions button { flex: 1; margin-top: 0; }
 
-  /* ---------- Seitenmenü (nur nicht-räumliche Eigenschaften) ---------- */
   .side-panel { position: fixed; top: 0; right: 0; height: 100vh; width: 320px; max-width: 90vw; background: #fff; box-shadow: -12px 0 35px -15px rgba(61,52,54,0.35); z-index: 150; padding: 1.75rem; overflow-y: auto; }
   .side-panel[hidden] { display: none; }
   .side-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
@@ -156,6 +149,29 @@
   .side-panel-header button { border: none; background: none; font-size: 1.2rem; cursor: pointer; color: var(--ink-soft); }
   .side-field { margin-bottom: 1.2rem; }
   .side-field .value-badge { float: right; color: var(--ink-soft); font-size: 0.8rem; }
+
+  .lang-checkboxes { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+  .lang-checkbox-item { display: flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; background: #fff; border: 1px solid var(--blush-deep); border-radius: 999px; padding: 0.35rem 0.8rem; }
+  .live-card {
+    max-width: 26rem; margin: 1.25rem auto 0; background: linear-gradient(180deg,#fff,#fdf8f5); border: 1px solid var(--blush-deep);
+    border-radius: 24px; padding: 2rem 1.8rem; text-align: center; box-shadow: 0 10px 30px -15px rgba(61,52,54,0.18);
+  }
+  .live-card [contenteditable="true"] { outline: none; border-radius: 6px; transition: background 0.15s; cursor: text; }
+  .live-card [contenteditable="true"]:hover { background: rgba(201,123,132,0.08); }
+  .live-card [contenteditable="true"]:focus { background: rgba(201,123,132,0.14); box-shadow: 0 0 0 2px var(--rose); }
+  .live-title { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 2.1rem; margin: 0.5rem 0 0; }
+  .live-lede { color: var(--ink-soft); line-height: 1.5; margin-top: 0.6rem; }
+  .live-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); margin: 1.3rem 0 0.4rem; text-align: left; }
+  .live-input { width: 100%; border: 1px solid var(--blush-deep); border-radius: 14px; padding: 0.7rem 1rem; font-family: inherit; font-size: 0.95rem; background: #fff; }
+  .live-btn { width: 100%; margin-top: 0.8rem; border: none; border-radius: 14px; background: var(--rose); color: #fff; padding: 0.8rem; font-family: inherit; }
+  .live-link { margin-top: 1.2rem; color: var(--ink-soft); text-decoration: underline; text-decoration-color: var(--gold-soft); font-size: 0.9rem; display: inline-block; }
+  .live-seatbox { margin-top: 1.2rem; background: rgba(244,223,218,0.5); border: 1px solid var(--blush-deep); border-radius: 14px; padding: 1rem; }
+  .live-seatbox .live-eyebrow { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); }
+  .live-seatbox .live-seatname { font-family: "Cormorant Garamond", serif; font-size: 1.4rem; margin-top: 0.3rem; }
+  .live-roommap { margin-top: 1rem; height: 100px; background: rgba(255,255,255,0.6); border: 1px solid var(--blush-deep); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--ink-soft); }
+  .more-texts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 0.75rem; }
+  @media (max-width: 700px) { .more-texts-grid { grid-template-columns: 1fr; } }
+  .more-texts-grid label { font-size: 0.7rem; color: var(--ink-soft); display: block; margin-bottom: 0.25rem; }
 
   #publishBar { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(6px); border-top: 1px solid var(--blush-deep); padding: 0.9rem 1.25rem; display: flex; align-items: center; gap: 1rem; z-index: 30; }
   #publishBar button { white-space: nowrap; }
@@ -177,13 +193,12 @@
 <div id="app">
   <header class="top">
     <h1 class="display">Hochzeits-Konfiguration</h1>
-    <p>Raum aufbauen, Gäste zuordnen, Gästeliste pflegen und Fotos hinterlegen. Unten alles veröffentlichen.</p>
+    <p>Raum aufbauen, Gäste zuordnen, Gästeliste pflegen, Texte &amp; Sprachen verwalten und Fotos hinterlegen. Unten alles veröffentlichen.</p>
   </header>
 
-  <!-- Raum-Baukasten -->
   <section class="panel">
     <h2>Raum &amp; Sitzordnung</h2>
-    <p class="hint">Objekt zum Verschieben direkt anfassen und ziehen. Rosa Punkt unten rechts = Größe ändern. Goldener Punkt oben = Drehen. ✎ öffnet Umbenennen, ✕ löscht.</p>
+    <p class="hint">Objekt zum Verschieben direkt anfassen und ziehen. Rosa Punkt unten rechts = Größe ändern. Goldener Punkt oben = Drehen (rastet bei 15°-Schritten leicht ein). Gäste aus dem Vorrat irgendwo auf einen Tisch ziehen.</p>
     <div class="room-toolbar">
       <button class="btn-small" onclick="addObject('table','round')">+ Runder Tisch</button>
       <button class="btn-small" onclick="addObject('table','rect')">+ Eckiger Tisch</button>
@@ -196,7 +211,6 @@
     <div id="tray"></div>
   </section>
 
-  <!-- Gästeliste -->
   <section class="panel">
     <h2>Gästeliste</h2>
     <p class="hint">Direkt bearbeiten, Zeilen hinzufügen/löschen oder eine bestehende Excel-Datei importieren (überschreibt die aktuelle Liste).</p>
@@ -209,20 +223,77 @@
     </div>
     <div style="overflow-x:auto;">
       <table class="guest-table" id="guestTable">
-        <thead><tr><th>Vorname</th><th>Nachname</th><th>Tisch</th><th></th></tr></thead>
+        <thead><tr><th>Vorname</th><th>Nachname</th><th>Tisch</th><th>Sprache</th><th></th></tr></thead>
         <tbody id="guestTableBody"></tbody>
       </table>
     </div>
   </section>
 
-  <!-- Foto-Dekorationen -->
+  <section class="panel">
+    <h2>Inhalte &amp; Sprache</h2>
+    <p class="hint">Texte direkt in der Vorschau anklicken und ändern. Sprachen aktivieren, um mehrsprachige Inhalte zu pflegen – jeder Gast bekommt in der Gästeliste eine Sprache zugewiesen und sieht seine Ergebnis-Seite entsprechend.</p>
+
+    <label class="small">Aktive Sprachen</label>
+    <div class="lang-checkboxes" id="lang-checkboxes"></div>
+
+    <div style="margin-top:1.25rem;">
+      <label class="small">Sprache bearbeiten</label>
+      <select id="editLangSelect" onchange="switchEditLang(this.value)" style="max-width:220px;"></select>
+    </div>
+
+    <div style="margin-top:1.25rem;">
+      <label class="small">Monogramm (oben auf der Willkommens-Seite)</label>
+      <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+        <div id="monogram-preview-thumb" style="width:76px;height:54px;border:1px solid var(--blush-deep);border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fff;"></div>
+        <input type="text" id="monogramTextInput" style="max-width:150px;" oninput="updateMonogramText(this.value)" placeholder="Initialen, z. B. I & L" />
+        <button class="btn-outline" onclick="document.getElementById('monogramFileInput').click()">Bild hochladen</button>
+        <button class="btn-outline" onclick="clearMonogramImage()">Bild entfernen</button>
+        <input type="file" id="monogramFileInput" accept="image/*" style="display:none" onchange="onMonogramFileChosen(event)" />
+      </div>
+      <p style="font-size:0.75rem;color:var(--ink-soft);margin-top:0.4rem;">Ohne eigenes Bild wird automatisch der gezeichnete Blumenkranz mit den Initialen gezeigt.</p>
+    </div>
+
+    <div class="deco-tabs" style="margin-top:1.5rem;">
+      <div class="deco-tab active" id="ctab-start" onclick="switchContentTab('start')">Start-Ansicht</div>
+      <div class="deco-tab" id="ctab-end" onclick="switchContentTab('end')">End-Ansicht</div>
+    </div>
+
+    <div class="live-card" id="live-card-start">
+      <div id="live-monogram-slot" style="text-align:center;"></div>
+      <h1 class="live-title" contenteditable="true" data-field="welcomeTitle"></h1>
+      <p class="live-lede" contenteditable="true" data-field="welcomeText"></p>
+      <label class="live-label" contenteditable="true" data-field="nameLabel"></label>
+      <input class="live-input" id="live-namePlaceholder" oninput="updateLiveField('namePlaceholder', this.value)" />
+      <button class="live-btn" contenteditable="true" data-field="buttonText"></button>
+    </div>
+
+    <div class="live-card" id="live-card-end" style="display:none;">
+      <h2 class="live-title" contenteditable="true" data-field="foundGreeting" style="font-size:1.7rem;"></h2>
+      <p class="live-lede" contenteditable="true" data-field="foundText"></p>
+      <div class="live-seatbox">
+        <p class="live-eyebrow" contenteditable="true" data-field="seatLabel"></p>
+        <p class="live-seatname">Tisch 3 - Pfingstrose</p>
+      </div>
+      <p class="live-eyebrow" contenteditable="true" data-field="roomMapLabel" style="margin-top:1rem;text-align:center;"></p>
+      <div class="live-roommap">Raumkarte mit Tischen</div>
+      <div class="live-link" contenteditable="true" data-field="resetLink"></div>
+    </div>
+
+    <div style="margin-top:1.5rem;">
+      <label class="small">Weitere Texte (weniger sichtbare Zustände)</label>
+      <div class="more-texts-grid" id="more-texts-grid"></div>
+    </div>
+  </section>
+
   <section class="panel">
     <h2>Foto-Dekorationen</h2>
-    <p class="hint">Herz, Stern oder Blume hinzufügen – direkt in der Vorschau ziehen, skalieren (rosa Punkt) und drehen (goldener Punkt). Foto/Farbe über ✎.</p>
+    <p class="hint">Herz, Stern, Blume, Kranz oder Siegel hinzufügen – direkt in der Vorschau ziehen, skalieren (rosa Punkt) und drehen (goldener Punkt). Foto/Farbe über ✎.</p>
     <div class="deco-toolbar">
       <button class="btn-small" onclick="addDeco('heart')">+ Herz</button>
       <button class="btn-small" onclick="addDeco('star')">+ Stern</button>
       <button class="btn-small" onclick="addDeco('flower')">+ Blume</button>
+      <button class="btn-small" onclick="addDeco('wreath')">+ Kranz</button>
+      <button class="btn-small" onclick="addDeco('seal')">+ Siegel</button>
       <input type="file" id="decoFileInput" accept="image/*" style="display:none" onchange="onDecoFileChosen(event)" />
     </div>
     <div class="deco-tabs">
@@ -235,8 +306,8 @@
         <div class="deco-mock-title" id="deco-mock-title">Willkommen</div>
         <div class="deco-mock-line" style="width:85%;"></div>
         <div class="deco-mock-line" style="width:70%;"></div>
-        <div class="deco-mock-input" id="deco-mock-input"></div>
-        <div class="deco-mock-btn" id="deco-mock-btn"></div>
+        <div class="deco-mock-input" id="deco-mock-input">Textfeld für den Namen</div>
+        <div class="deco-mock-btn" id="deco-mock-btn">Button</div>
         <div class="deco-mock-seatbox" id="deco-mock-seatbox" style="display:none;"></div>
         <div class="deco-mock-roommap" id="deco-mock-roommap" style="display:none;">Raumkarte mit Tischen</div>
       </div>
@@ -245,7 +316,6 @@
   </section>
 </div>
 
-<!-- Crop-Modal -->
 <div class="modal-overlay" id="cropModal" hidden>
   <div class="modal-box">
     <h3 class="display" style="margin:0 0 0.75rem;font-size:1.4rem;">Foto zuschneiden</h3>
@@ -262,7 +332,6 @@
   </div>
 </div>
 
-<!-- Seitenmenü -->
 <div class="side-panel" id="sidePanel" hidden>
   <div class="side-panel-header">
     <h3 class="display" id="sidePanelTitle">Bearbeiten</h3>
@@ -277,7 +346,6 @@
 </div>
 
 <script>
-  // ============ Passwort-Gate ============
   const CONFIG_PASSWORD = "unserefeier2026";
   function checkPassword() {
     const val = document.getElementById("gate-pw").value;
@@ -292,33 +360,38 @@
   }
   if (sessionStorage.getItem("cfg_ok") === "1") unlock();
 
-  // ============ Shape-Pfade ============
+  const CACHE_BUST = "?v=" + Date.now();
+  function freshFetch(url) { return fetch(url + CACHE_BUST, { cache: "no-store" }); }
+
   const SHAPE_PATHS = {
     heart: "M50 92 C15 68,0 48,0 28 C0 10,20 2,35 12 C42 17,50 26,50 26 C50 26,58 17,65 12 C80 2,100 10,100 28 C100 48,85 68,50 92 Z",
-    star: "M50 2 L61.8 33.8 L95.6 35.2 L69 56.2 L78.2 88.9 L50 70 L21.8 88.9 L31 56.2 L4.3 35.2 L38.2 33.8 Z"
+    star: "M50 2 L61.8 33.8 L95.6 35.2 L69 56.2 L78.2 88.9 L50 70 L21.8 88.9 L31 56.2 L4.3 35.2 L38.2 33.8 Z",
+    flower: "M50,50 Q66,29 50,8 Q34,29 50,50 Q74.9,58.7 89.9,37 Q65,28.3 50,50 Q49.4,76.4 74.7,84 Q75.3,57.6 50,50 Q24.7,57.6 25.3,84 Q50.6,76.4 50,50 Q35,28.3 10,37 Q25.1,58.7 50,50 Z"
   };
-  const FLOWER_GEOM = { cx: 50, cy: 50, dist: 26.4, petalR: 20.16, centerR: 16.8 };
-  function flowerCirclesSvg() {
-    const c = FLOWER_GEOM; let out = "";
-    for (let i = 0; i < 6; i++) {
-      const a = (i * 60 * Math.PI) / 180;
-      out += `<circle cx="${c.cx + c.dist * Math.cos(a)}" cy="${c.cy + c.dist * Math.sin(a)}" r="${c.petalR}" />`;
-    }
-    out += `<circle cx="${c.cx}" cy="${c.cy}" r="${c.centerR}" />`;
-    return out;
-  }
   function shapeFillSvg(shape, color) {
     const fill = color ? color : `url(#pg-${shape})`;
     const grad = color ? "" : `<defs><linearGradient id="pg-${shape}" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#EAC7C0"/><stop offset="1" stop-color="${shape === 'flower' ? '#9CAF88' : '#C97B84'}"/>
     </linearGradient></defs>`;
-    if (shape === "flower") return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="placeholder-shape">${grad}<g fill="${fill}">${flowerCirclesSvg()}</g></svg>`;
     return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="placeholder-shape">${grad}<path d="${SHAPE_PATHS[shape]}" fill="${fill}" /></svg>`;
   }
   function shapeOutlineOverlay(shape, color) {
-    if (!color) return "";
-    if (shape === "flower") return `<svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"><g fill="none" stroke="${color}" stroke-width="2">${flowerCirclesSvg()}</g></svg>`;
     return `<svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"><path d="${SHAPE_PATHS[shape]}" fill="none" stroke="${color}" stroke-width="2" /></svg>`;
+  }
+  function wreathLeavesSvg(color) {
+    let out = "";
+    for (let i = 0; i < 16; i++) {
+      const a = i * (360 / 16);
+      const rad = (a * Math.PI) / 180;
+      const lx = 50 + 42 * Math.cos(rad), ly = 50 + 42 * Math.sin(rad);
+      out += `<ellipse cx="${lx}" cy="${ly}" rx="7" ry="3" fill="${color}" opacity="0.85" transform="rotate(${a + 90} ${lx} ${ly})"/>`;
+    }
+    return out;
+  }
+  function waxSealSvg(color, initials) {
+    return `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="${color}"/>
+      <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(0,0,0,0.15)"/>
+      <text x="50" y="59" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="30" fill="#fff">${initials}</text></svg>`;
   }
   function doorIconSvg(color) {
     return `<svg viewBox="0 0 24 24" class="rc-icon"><path d="M6 3h9a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6" fill="none" stroke="${color}" stroke-width="1.4"/>
@@ -333,16 +406,34 @@
     return `<svg viewBox="0 0 40 24" class="rc-icon" style="width:75%;height:75%;"><circle cx="15" cy="12" r="9" fill="none" stroke="${color}" stroke-width="2.6"/><circle cx="25" cy="12" r="9" fill="none" stroke="${color}" stroke-width="2.6"/></svg>`;
   }
 
-  // ============ State ============
   let guests = [];
   let roomObjects = [];
   let decorations = [];
+  let contentData = null;
+  let pendingMonogramImage = null;
   let objCounter = 1;
   let currentDecoTab = "start";
+  let editLang = "de";
+  let contentTab = "start";
+
+  const SUPPORTED_LANGUAGES = [
+    { code: "de", label: "Deutsch" }, { code: "en", label: "English" }, { code: "fr", label: "Français" },
+    { code: "es", label: "Español" }, { code: "it", label: "Italiano" }, { code: "tr", label: "Türkçe" }
+  ];
+  const MORE_TEXT_FIELDS = [
+    { field: "loadingText", label: "Lade-Text" },
+    { field: "ambiguousTitle", label: "Titel bei mehreren Treffern" },
+    { field: "ambiguousText", label: "Text bei mehreren Treffern" },
+    { field: "ambiguousReset", label: "Link \"Namen neu eingeben\"" },
+    { field: "notFoundTitle", label: "Titel \"nicht gefunden\"" },
+    { field: "notFoundText", label: "Text \"nicht gefunden\"" },
+    { field: "retryButton", label: "Button \"Noch einmal versuchen\"" },
+    { field: "footnote", label: "Fußzeile" }
+  ];
 
   async function init() {
     try {
-      const res = await fetch("./guests.xlsx");
+      const res = await freshFetch("./guests.xlsx");
       const buf = await res.arrayBuffer();
       const wb = XLSX.read(new Uint8Array(buf), { type: "array" });
       const sheet = wb.Sheets[wb.SheetNames[0]];
@@ -350,12 +441,17 @@
       guests = rows.map((r) => ({
         vorname: String(readCol(r, ["vorname"]) || "").trim(),
         nachname: String(readCol(r, ["nachname", "name"]) || "").trim(),
-        tisch: String(readCol(r, ["tisch", "platz"]) || "").trim()
+        tisch: String(readCol(r, ["tisch", "platz"]) || "").trim(),
+        sprache: String(readCol(r, ["sprache", "language"]) || "de").trim()
       })).filter((g) => g.vorname || g.nachname);
     } catch (e) { guests = []; }
 
-    try { const r2 = await fetch("./layout.json"); roomObjects = r2.ok ? await r2.json() : []; } catch (e) { roomObjects = []; }
-    try { const r3 = await fetch("./decorations.json"); decorations = r3.ok ? await r3.json() : []; } catch (e) { decorations = []; }
+    try { const r2 = await freshFetch("./layout.json"); roomObjects = r2.ok ? await r2.json() : []; } catch (e) { roomObjects = []; }
+    try { const r3 = await freshFetch("./decorations.json"); decorations = r3.ok ? await r3.json() : []; } catch (e) { decorations = []; }
+    try { const r4 = await freshFetch("./content.json"); contentData = r4.ok ? await r4.json() : null; } catch (e) { contentData = null; }
+    if (!contentData) contentData = { activeLanguages: ["de"], monogramImage: null, monogramText: "I & L", de: {} };
+    if (!contentData.activeLanguages || !contentData.activeLanguages.length) contentData.activeLanguages = ["de"];
+    editLang = contentData.activeLanguages[0];
 
     roomObjects.forEach((o) => { if (o.rotation === undefined) o.rotation = 0; if (o.w === undefined) o.w = 10; if (o.h === undefined) o.h = 10; });
     decorations.forEach((d) => {
@@ -366,16 +462,13 @@
     });
 
     renderRoomCanvas(); renderTray(); renderGuestTable(); renderDecorations();
+    renderLangCheckboxes(); renderEditLangSelect(); renderMonogramUI(); renderLiveCards(); renderMoreTexts();
   }
 
   function readCol(row, keys) { for (const k of Object.keys(row)) if (keys.includes(k.trim().toLowerCase())) return row[k]; return ""; }
   function escapeHtml(s) { return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
   function escapeAttr(s) { return String(s).replace(/"/g, "&quot;"); }
 
-  // ============ Generische Manipulation: Verschieben, Skalieren (Ecke), Drehen ============
-  // getRect: () => Bounding-Rect des Containers (frisch, damit Größenänderungen des Fensters funktionieren)
-  // obj: Objekt mit x,y (Zentrum in %) und entweder {w,h} oder {size} (Deko: quadratisch)
-  // onChange: wird bei jeder Änderung aufgerufen, um abhängige Dinge neu zu zeichnen
   function attachMoveHandler(bodyEl, obj, getRect, onLiveUpdate, onCommit) {
     bodyEl.addEventListener("pointerdown", (e) => {
       if (e.target.closest(".manip-handle-resize, .manip-handle-rotate, .manip-del, .manip-edit")) return;
@@ -431,7 +524,6 @@
   }
 
   function attachResizeHandlerSquare(handleEl, obj, getRect, onLiveUpdate, onCommit) {
-    // für Dekorationen: quadratisch, Zentrum bleibt fix, Größe = radialer Abstand von der Mitte
     handleEl.addEventListener("pointerdown", (e) => {
       e.preventDefault(); e.stopPropagation();
       handleEl.setPointerCapture(e.pointerId);
@@ -459,18 +551,28 @@
     handleEl.addEventListener("pointerdown", (e) => {
       e.preventDefault(); e.stopPropagation();
       handleEl.setPointerCapture(e.pointerId);
+      const badge = document.createElement("div");
+      badge.style.cssText = "position:fixed;background:#3D3436;color:#fff;font-size:11px;padding:2px 7px;border-radius:6px;pointer-events:none;z-index:999;transform:translate(-50%,-160%);white-space:nowrap;";
+      document.body.appendChild(badge);
       function onMove(ev) {
         const center = getCenterPx();
         const dx = ev.clientX - center.x;
         const dy = ev.clientY - center.y;
         let deg = Math.atan2(dx, -dy) * (180 / Math.PI);
         if (deg < 0) deg += 360;
+        const nearest15 = Math.round(deg / 15) * 15;
+        let snapped = false;
+        if (Math.abs(deg - nearest15) < 4) { deg = nearest15 % 360; snapped = true; }
         obj.rotation = Math.round(deg);
+        badge.textContent = obj.rotation + "°" + (snapped ? " ✓ gerade" : "");
+        badge.style.left = ev.clientX + "px";
+        badge.style.top = ev.clientY + "px";
         onLiveUpdate();
       }
       function onUp() {
         handleEl.removeEventListener("pointermove", onMove);
         handleEl.removeEventListener("pointerup", onUp);
+        badge.remove();
         if (onCommit) onCommit();
       }
       handleEl.addEventListener("pointermove", onMove);
@@ -478,7 +580,6 @@
     });
   }
 
-  // ============ Raum-Baukasten ============
   const DEFAULT_SIZE = { table: 16 };
   const FIXED_SIZE = { brautpaar: { w: 11, h: 7 }, door: { w: 8, h: 8 }, toilet: { w: 8, h: 8 } };
   const DEFAULT_LABEL = { door: "Tür", toilet: "WC", brautpaar: "Brautpaar" };
@@ -547,7 +648,7 @@
 
       let content = "";
       if (o.type === "table") {
-        content = `<div class="rc-obj-label">${escapeHtml(o.name)}</div><div class="rc-chips" data-drop-table="${escapeAttr(o.name)}"></div>`;
+        content = `<div class="rc-obj-label">${escapeHtml(o.name)}</div><div class="rc-chips"></div>`;
       } else {
         content = iconHtml + `<div class="rc-obj-label">${escapeHtml(o.name)}</div>`;
       }
@@ -562,16 +663,17 @@
       `;
       canvas.appendChild(el);
 
+      const body = el.querySelector(".manip-body");
+
       if (o.type === "table") {
         const chipsEl = el.querySelector(".rc-chips");
         const assigned = guests.filter((g) => g.tisch === o.name);
         chipsEl.style.fontSize = chipFontSize(assigned.length);
         assigned.forEach((g) => chipsEl.appendChild(makeChip(g)));
-        makeDroppable(chipsEl, o.name);
+        makeDroppable(body, o.name, el);
       }
 
       const getRect = () => document.getElementById("room-canvas").getBoundingClientRect();
-      const body = el.querySelector(".manip-body");
       const resizeHandle = el.querySelector(".manip-handle-resize");
       const rotateHandle = el.querySelector(".manip-handle-rotate");
 
@@ -595,11 +697,12 @@
   }
   function guestKey(g) { return `${g.vorname}||${g.nachname}`; }
 
-  function makeDroppable(el, tableName) {
-    el.addEventListener("dragover", (e) => { e.preventDefault(); el.classList.add("dragover"); });
-    el.addEventListener("dragleave", () => el.classList.remove("dragover"));
+  function makeDroppable(el, tableName, highlightEl) {
+    const hl = highlightEl || el;
+    el.addEventListener("dragover", (e) => { e.preventDefault(); hl.classList.add("dragover"); });
+    el.addEventListener("dragleave", () => hl.classList.remove("dragover"));
     el.addEventListener("drop", (e) => {
-      e.preventDefault(); el.classList.remove("dragover");
+      e.preventDefault(); hl.classList.remove("dragover");
       const key = e.dataTransfer.getData("text/plain");
       const guest = guests.find((g) => guestKey(g) === key);
       if (guest) guest.tisch = tableName;
@@ -615,7 +718,6 @@
     makeDroppable(tray, "");
   }
 
-  // ============ Gästeliste-Tabelle ============
   function renderGuestTable() {
     const body = document.getElementById("guestTableBody");
     body.innerHTML = "";
@@ -625,6 +727,7 @@
         <td><input type="text" value="${escapeAttr(g.vorname)}" onchange="updateGuest(${i}, 'vorname', this.value)" /></td>
         <td><input type="text" value="${escapeAttr(g.nachname)}" onchange="updateGuest(${i}, 'nachname', this.value)" /></td>
         <td>${tischSelectHtml(i, g.tisch)}</td>
+        <td>${spracheSelectHtml(i, g.sprache)}</td>
         <td><button class="row-del" onclick="deleteGuestRow(${i})" title="Löschen">✕</button></td>
       `;
       body.appendChild(tr);
@@ -637,8 +740,18 @@
     });
     return `<select onchange="updateGuest(${i}, 'tisch', this.value)">${opts}</select>`;
   }
+  function spracheSelectHtml(i, current) {
+    const active = (contentData && contentData.activeLanguages) || ["de"];
+    let opts = "";
+    active.forEach((code) => {
+      const found = SUPPORTED_LANGUAGES.find((l) => l.code === code);
+      const label = found ? found.label : code;
+      opts += `<option value="${code}" ${code === current ? "selected" : ""}>${label}</option>`;
+    });
+    return `<select onchange="updateGuest(${i}, 'sprache', this.value)">${opts}</select>`;
+  }
   function updateGuest(i, field, value) { guests[i][field] = value; renderRoomCanvas(); renderTray(); }
-  function addGuestRow() { guests.push({ vorname: "", nachname: "", tisch: "" }); renderGuestTable(); renderTray(); }
+  function addGuestRow() { guests.push({ vorname: "", nachname: "", tisch: "", sprache: (contentData.activeLanguages || ["de"])[0] }); renderGuestTable(); renderTray(); }
   function deleteGuestRow(i) { guests.splice(i, 1); renderGuestTable(); renderRoomCanvas(); renderTray(); }
   function importXlsx(evt) {
     const file = evt.target.files[0];
@@ -652,7 +765,8 @@
       guests = rows.map((r) => ({
         vorname: String(readCol(r, ["vorname"]) || "").trim(),
         nachname: String(readCol(r, ["nachname", "name"]) || "").trim(),
-        tisch: String(readCol(r, ["tisch", "platz"]) || "").trim()
+        tisch: String(readCol(r, ["tisch", "platz"]) || "").trim(),
+        sprache: String(readCol(r, ["sprache", "language"]) || "de").trim()
       })).filter((g) => g.vorname || g.nachname);
       renderGuestTable(); renderRoomCanvas(); renderTray();
     };
@@ -660,7 +774,6 @@
     evt.target.value = "";
   }
 
-  // ============ Seitenmenü (generisch, nur nicht-räumliche Felder) ============
   function openSidePanel(title, bodyHtml) {
     document.getElementById("sidePanelTitle").textContent = title;
     document.getElementById("sidePanelBody").innerHTML = bodyHtml;
@@ -672,7 +785,119 @@
     document.getElementById("app").classList.remove("panel-open");
   }
 
-  // ============ Dekorationen ============
+  function renderLangCheckboxes() {
+    const el = document.getElementById("lang-checkboxes");
+    el.innerHTML = "";
+    SUPPORTED_LANGUAGES.forEach((lang) => {
+      const active = contentData.activeLanguages.includes(lang.code);
+      const item = document.createElement("label");
+      item.className = "lang-checkbox-item";
+      item.innerHTML = `<input type="checkbox" ${active ? "checked" : ""} onchange="toggleLanguage('${lang.code}', this.checked)" /> ${lang.label}`;
+      el.appendChild(item);
+    });
+  }
+  function toggleLanguage(code, checked) {
+    if (checked) {
+      if (!contentData.activeLanguages.includes(code)) contentData.activeLanguages.push(code);
+    } else {
+      if (contentData.activeLanguages.length <= 1) { renderLangCheckboxes(); alert("Mindestens eine Sprache muss aktiv bleiben."); return; }
+      contentData.activeLanguages = contentData.activeLanguages.filter((c) => c !== code);
+      if (editLang === code) editLang = contentData.activeLanguages[0];
+    }
+    renderEditLangSelect(); renderLiveCards(); renderMoreTexts(); renderGuestTable();
+  }
+  function renderEditLangSelect() {
+    const sel = document.getElementById("editLangSelect");
+    sel.innerHTML = contentData.activeLanguages.map((code) => {
+      const found = SUPPORTED_LANGUAGES.find((l) => l.code === code);
+      const label = found ? found.label : code;
+      return `<option value="${code}" ${code === editLang ? "selected" : ""}>${label}</option>`;
+    }).join("");
+  }
+  function switchEditLang(code) { editLang = code; renderLiveCards(); renderMoreTexts(); }
+
+  function ensureLangContent(code) {
+    if (!contentData[code]) {
+      const fallback = contentData.de || {};
+      const found = SUPPORTED_LANGUAGES.find((l) => l.code === code);
+      contentData[code] = Object.assign({}, fallback, { label: found ? found.label : code });
+    }
+    return contentData[code];
+  }
+
+  function switchContentTab(tab) {
+    contentTab = tab;
+    document.getElementById("ctab-start").classList.toggle("active", tab === "start");
+    document.getElementById("ctab-end").classList.toggle("active", tab === "end");
+    document.getElementById("live-card-start").style.display = tab === "start" ? "block" : "none";
+    document.getElementById("live-card-end").style.display = tab === "end" ? "block" : "none";
+  }
+
+  function renderLiveCards() {
+    const t = ensureLangContent(editLang);
+    document.querySelectorAll('.live-card [data-field]').forEach((el) => {
+      const field = el.dataset.field;
+      if (el.tagName === "INPUT") el.value = t[field] || "";
+      else el.textContent = t[field] || "";
+    });
+    document.getElementById("live-namePlaceholder").value = t.namePlaceholder || "";
+    document.getElementById("live-monogram-slot").innerHTML = monogramPreviewSvg();
+
+    document.querySelectorAll('.live-card [contenteditable="true"]').forEach((el) => {
+      el.oninput = () => { ensureLangContent(editLang)[el.dataset.field] = el.textContent; };
+    });
+  }
+  function updateLiveField(field, value) { ensureLangContent(editLang)[field] = value; }
+
+  function renderMoreTexts() {
+    const t = ensureLangContent(editLang);
+    const grid = document.getElementById("more-texts-grid");
+    grid.innerHTML = MORE_TEXT_FIELDS.map((f) => `
+      <div>
+        <label>${f.label}</label>
+        <textarea rows="2" oninput="updateLiveField('${f.field}', this.value)">${escapeHtml(t[f.field] || "")}</textarea>
+      </div>
+    `).join("");
+  }
+
+  function monogramPreviewSvg() {
+    if (pendingMonogramImage) return `<img src="${pendingMonogramImage}" style="max-width:180px;width:55%;height:auto;" />`;
+    if (contentData.monogramImage) return `<img src="./assets/${contentData.monogramImage}${CACHE_BUST}" style="max-width:180px;width:55%;height:auto;" onerror="this.style.display='none'" />`;
+    const initials = contentData.monogramText || "I & L";
+    return `<svg viewBox="0 0 320 200" width="160" height="100" style="margin:0 auto;display:block">
+      <path d="M160 100 C 120 85, 90 95, 60 75 C 40 62, 35 45, 42 28" stroke="#9CAF88" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M160 100 C 200 85, 230 95, 260 75 C 280 62, 285 45, 278 28" stroke="#9CAF88" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <text x="160" y="82" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="26" fill="#3D3436">${initials}</text>
+    </svg>`;
+  }
+  function renderMonogramUI() {
+    document.getElementById("monogramTextInput").value = contentData.monogramText || "I & L";
+    document.getElementById("monogram-preview-thumb").innerHTML = monogramPreviewSvg();
+  }
+  function updateMonogramText(val) {
+    contentData.monogramText = val;
+    document.getElementById("monogram-preview-thumb").innerHTML = monogramPreviewSvg();
+    renderLiveCards();
+  }
+  function onMonogramFileChosen(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      pendingMonogramImage = e.target.result;
+      document.getElementById("monogram-preview-thumb").innerHTML = monogramPreviewSvg();
+      renderLiveCards();
+    };
+    reader.readAsDataURL(file);
+    evt.target.value = "";
+  }
+  function clearMonogramImage() {
+    pendingMonogramImage = null;
+    contentData.monogramImage = null;
+    document.getElementById("monogram-preview-thumb").innerHTML = monogramPreviewSvg();
+    renderLiveCards();
+  }
+
   function addDeco(shape) {
     decorations.push({
       id: "deco" + Date.now(), shape, x: 50, y: 50, size: 16, rotation: 0, opacity: 100,
@@ -686,8 +911,8 @@
     document.getElementById("tab-start").classList.toggle("active", tab === "start");
     document.getElementById("tab-end").classList.toggle("active", tab === "end");
     document.getElementById("deco-mock-title").textContent = tab === "start" ? "Willkommen" : "Hallo Anna!";
-    document.getElementById("deco-mock-input").style.display = tab === "start" ? "block" : "none";
-    document.getElementById("deco-mock-btn").style.display = tab === "start" ? "block" : "none";
+    document.getElementById("deco-mock-input").style.display = tab === "start" ? "flex" : "none";
+    document.getElementById("deco-mock-btn").style.display = tab === "start" ? "flex" : "none";
     document.getElementById("deco-mock-seatbox").style.display = tab === "end" ? "block" : "none";
     document.getElementById("deco-mock-roommap").style.display = tab === "end" ? "flex" : "none";
     renderDecorations();
@@ -700,12 +925,24 @@
     renderDecorations();
   }
 
-  function decoThumbHtml(d) {
-    if (d.image) return `<img class="thumb" src="${d.image}" />`;
-    if (d.filename) return `<img class="thumb" src="./assets/${d.filename}" onerror="this.outerHTML=window.__shapeFillSvg('${d.shape}', ${d.color ? `'${d.color}'` : "null"})" />`;
-    return shapeFillSvg(d.shape, d.color).replace("<svg", `<svg class="thumb"`);
+  function decoVisualHtml(d) {
+    const photoSrc = d.image ? d.image : (d.filename ? `./assets/${d.filename}${CACHE_BUST}` : null);
+    if (d.shape === "wreath") {
+      const leafColor = d.color || "#9CAF88";
+      const photoLayer = photoSrc ? `<img src="${photoSrc}" style="position:absolute;inset:9%;width:82%;height:82%;border-radius:50%;object-fit:cover;" />` : "";
+      return `<div style="position:relative;width:100%;height:100%;">${photoLayer}<svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;">${wreathLeavesSvg(leafColor)}</svg></div>`;
+    }
+    if (d.shape === "seal") {
+      return waxSealSvg(d.color || "#B25F6B", contentData.monogramText || "I & L");
+    }
+    if (photoSrc) {
+      return `<div style="position:relative;width:100%;height:100%;"><img src="${photoSrc}" style="width:100%;height:100%;" />${d.color ? shapeOutlineOverlay(d.shape, d.color) : ""}</div>`;
+    }
+    return shapeFillSvg(d.shape, d.color);
   }
-  window.__shapeFillSvg = (shape, color) => shapeFillSvg(shape, color).replace("<svg", `<svg class="thumb"`);
+  function decoThumbHtml(d) {
+    return `<div class="thumb" style="width:36px;height:36px;flex-shrink:0;">${decoVisualHtml(d)}</div>`;
+  }
 
   function applyDecoGeometry(el, d, previewSizePx) {
     el.style.left = d.x + "%"; el.style.top = d.y + "%";
@@ -724,10 +961,8 @@
       const marker = document.createElement("div");
       marker.className = "manip deco-marker";
       applyDecoGeometry(marker, d, previewSizePx);
-
-      let inner = `<div class="manip-body">${decoThumbHtml(d).replace('class="thumb"', 'style="width:100%;height:100%;"')}</div>`;
-      if (d.color && (d.image || d.filename)) inner += shapeOutlineOverlay(d.shape, d.color);
-      marker.innerHTML = inner + `
+      marker.innerHTML = `
+        <div class="manip-body">${decoVisualHtml(d)}</div>
         <div class="manip-edit" title="Bearbeiten" onclick="openDecoEditor('${d.id}')">✎</div>
         <div class="manip-del" title="Löschen" onclick="deleteDeco('${d.id}')">✕</div>
         <div class="manip-handle-rotate" title="Drehen"></div>
@@ -764,24 +999,27 @@
       list.appendChild(item);
     });
   }
-  function shapeLabel(s) { return s === "heart" ? "Herz" : s === "star" ? "Stern" : "Blume"; }
+  function shapeLabel(s) { return { heart: "Herz", star: "Stern", flower: "Blume", wreath: "Kranz", seal: "Siegel" }[s] || s; }
+  function decoSupportsPhoto(shape) { return shape !== "seal"; }
 
   function openDecoEditor(id) {
     const d = decorations.find((x) => x.id === id);
     if (!d) return;
     const hasImage = !!(d.image || d.filename);
+    const supportsPhoto = decoSupportsPhoto(d.shape);
     openSidePanel(shapeLabel(d.shape) + " bearbeiten", `
+      ${supportsPhoto ? `
       <div class="side-field">
         <label class="small">Foto</label>
         ${hasImage
           ? `<button class="btn-outline" style="width:100%;margin-bottom:0.5rem;" onclick="triggerDecoPhoto('${id}')">Foto ändern</button>
              <button class="btn-outline" style="width:100%;" onclick="removeDecoPhoto('${id}')">Foto entfernen</button>`
           : `<button class="btn-outline" style="width:100%;" onclick="triggerDecoPhoto('${id}')">Foto hinzufügen</button>`}
-      </div>
+      </div>` : `<p style="font-size:0.8rem;color:var(--ink-soft);">Das Siegel zeigt die Monogramm-Initialen aus "Inhalte &amp; Sprache" – kein Foto nötig.</p>`}
       <div class="side-field">
-        <label class="small">Farbe ${hasImage ? "(Rahmen-Akzent)" : "(Füllung)"}</label>
-        <input type="color" value="${d.color || (d.shape === 'flower' ? '#9CAF88' : '#C97B84')}" oninput="updateDecoField('${id}','color',this.value)" />
-        ${d.color ? `<button class="btn-outline" style="width:100%;margin-top:0.5rem;" onclick="clearDecoColor('${id}')">Standard-Verlauf verwenden</button>` : ""}
+        <label class="small">Farbe ${hasImage && supportsPhoto ? "(Rahmen-Akzent)" : "(Füllung)"}</label>
+        <input type="color" value="${d.color || (d.shape === 'flower' || d.shape === 'wreath' ? '#9CAF88' : '#C97B84')}" oninput="updateDecoField('${id}','color',this.value)" />
+        ${d.color ? `<button class="btn-outline" style="width:100%;margin-top:0.5rem;" onclick="clearDecoColor('${id}')">Standard verwenden</button>` : ""}
       </div>
       <div class="side-field">
         <label class="small">Deckkraft <span class="value-badge" id="decoOpa-val">${d.opacity}%</span></label>
@@ -845,7 +1083,6 @@
     reader.readAsDataURL(file);
   }
 
-  // ============ Crop-Modal ============
   let cropState = null;
   function openCropModal(dataUrl, shape) {
     const img = new Image();
@@ -862,13 +1099,13 @@
   }
   function setCropMaskOverlay(shape) {
     const svg = document.getElementById("cropMaskOverlay");
-    let hole = "", outline = "";
-    if (shape === "heart" || shape === "star") {
+    let hole, outline;
+    if (shape === "wreath") {
+      hole = `<circle cx="50" cy="50" r="42" />`;
+      outline = `<circle cx="50" cy="50" r="42" fill="none" stroke="white" stroke-width="1.4" stroke-opacity="0.95" />`;
+    } else {
       hole = `<path d="${SHAPE_PATHS[shape]}" />`;
       outline = `<path d="${SHAPE_PATHS[shape]}" fill="none" stroke="white" stroke-width="1.4" stroke-opacity="0.95" />`;
-    } else {
-      hole = `<g>${flowerCirclesSvg()}</g>`;
-      outline = `<g fill="none" stroke="white" stroke-width="1.4" stroke-opacity="0.95">${flowerCirclesSvg()}</g>`;
     }
     svg.innerHTML = `<defs><mask id="cm"><rect width="100" height="100" fill="white"/><g fill="black">${hole}</g></mask></defs>
       <rect width="100" height="100" fill="rgba(61,52,54,0.55)" mask="url(#cm)" />${outline}`;
@@ -903,22 +1140,15 @@
   })();
   function closeCropModal() { document.getElementById("cropModal").hidden = true; cropState = null; }
 
-  function clipHeartOrStar(ctx, size, shape) {
+  function clipShapePath(ctx, size, shape) {
     const factor = size / 100;
     const scaled = SHAPE_PATHS[shape].replace(/-?\d+\.?\d*/g, (n) => String(parseFloat(n) * factor));
     ctx.clip(new Path2D(scaled));
   }
-  function clipFlower(ctx, size) {
-    const factor = size / 100; const c = FLOWER_GEOM;
-    const cx = c.cx * factor, cy = c.cy * factor, dist = c.dist * factor, petalR = c.petalR * factor, centerR = c.centerR * factor;
-    const path = new Path2D();
-    for (let i = 0; i < 6; i++) {
-      const a = (i * 60 * Math.PI) / 180;
-      const px = cx + dist * Math.cos(a), py = cy + dist * Math.sin(a);
-      path.moveTo(px + petalR, py); path.arc(px, py, petalR, 0, Math.PI * 2);
-    }
-    path.moveTo(cx + centerR, cy); path.arc(cx, cy, centerR, 0, Math.PI * 2);
-    ctx.clip(path);
+  function clipCircle(ctx, size) {
+    const p = new Path2D();
+    p.arc(size / 2, size / 2, size * 0.42, 0, Math.PI * 2);
+    ctx.clip(p);
   }
   function confirmCrop() {
     const OUT = 500;
@@ -926,7 +1156,7 @@
     canvas.width = OUT; canvas.height = OUT;
     const ctx = canvas.getContext("2d");
     ctx.save();
-    if (cropState.shape === "flower") clipFlower(ctx, OUT); else clipHeartOrStar(ctx, OUT, cropState.shape);
+    if (cropState.shape === "wreath") clipCircle(ctx, OUT); else clipShapePath(ctx, OUT, cropState.shape);
     const scaleFactor = OUT / 260;
     const drawW = cropState.naturalW * cropState.scale * scaleFactor;
     const drawH = cropState.naturalH * cropState.scale * scaleFactor;
@@ -943,7 +1173,6 @@
     if (d) openDecoEditor(d.id);
   }
 
-  // ============ Veröffentlichen ============
   function b64EncodeUnicode(str) { return btoa(unescape(encodeURIComponent(str))); }
   async function publishFile(path, base64Content, log) {
     const res = await fetch("/api/publish", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ path, content: base64Content }) });
@@ -958,7 +1187,7 @@
     const log = (msg) => { logEl.textContent = msg; };
 
     log("Veröffentliche Gästeliste …");
-    const wsData = guests.map((g) => ({ Vorname: g.vorname, Nachname: g.nachname, Tisch: g.tisch }));
+    const wsData = guests.map((g) => ({ Vorname: g.vorname, Nachname: g.nachname, Tisch: g.tisch, Sprache: g.sprache || "de" }));
     const ws = XLSX.utils.json_to_sheet(wsData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Gaesteliste");
@@ -978,17 +1207,26 @@
         d.filename = filename; d.image = null;
       }
     }
-
-    log("Veröffentliche Dekorations-Positionen …");
     const decoJson = decorations.map((d) => ({
       id: d.id, shape: d.shape, x: d.x, y: d.y, size: d.size, rotation: d.rotation,
       opacity: d.opacity, color: d.color, image: d.filename || null, view: d.view
     }));
-    const decoBase64 = b64EncodeUnicode(JSON.stringify(decoJson, null, 2));
-    if (!(await publishFile("decorations.json", decoBase64, log))) return;
+    log("Veröffentliche Dekorations-Positionen …");
+    if (!(await publishFile("decorations.json", b64EncodeUnicode(JSON.stringify(decoJson, null, 2)), log))) return;
+
+    if (pendingMonogramImage) {
+      log("Veröffentliche Monogramm-Bild …");
+      const ok = await publishFile("assets/monogram.png", pendingMonogramImage.split(",")[1], log);
+      if (!ok) return;
+      contentData.monogramImage = "monogram.png";
+      pendingMonogramImage = null;
+    }
+    log("Veröffentliche Inhalte & Sprachen …");
+    if (!(await publishFile("content.json", b64EncodeUnicode(JSON.stringify(contentData, null, 2)), log))) return;
 
     log("✅ Alles veröffentlicht. Vercel deployt in ca. 30–60 Sekunden neu.");
     renderDecorations();
+    renderMonogramUI();
   }
 </script>
 </body>
