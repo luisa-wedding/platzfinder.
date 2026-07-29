@@ -25,8 +25,8 @@
   #gate button:hover, .btn:hover { background: var(--rose-deep); }
   #gate .error { color: var(--rose-deep); font-size: 0.85rem; margin-top: 0.6rem; display: none; }
 
-  #app { display: none; max-width: 64rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; transition: margin-right 0.25s; }
-  #app.panel-open { margin-right: 340px; }
+  #app { display: none; max-width: 64rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; transition: margin-right 0.2s; }
+  #app.panel-open { margin-right: 320px; }
   @media (max-width: 900px) { #app.panel-open { margin-right: 0; } }
 
   header.top h1 { font-size: 2rem; margin: 0 0 0.25rem; }
@@ -50,26 +50,49 @@
   .btn-danger { background: #fff; border: 1px solid var(--rose); color: var(--rose-deep); border-radius: 10px; padding: 0.5rem 0.9rem; font-family: inherit; cursor: pointer; font-size: 0.85rem; }
   .btn-danger:hover { background: var(--rose); color: #fff; }
 
-  /* ---------- Raum-Baukasten ---------- */
+  /* ---------- Raum-Baukasten: Word-artige Objekte ---------- */
   .room-toolbar { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
   #room-canvas { position: relative; width: 100%; aspect-ratio: 4/3; background: rgba(255,255,255,0.55); border: 1px dashed var(--blush-deep); border-radius: 16px; overflow: visible; }
-  .rc-obj { position: absolute; user-select: none; }
-  .rc-obj-inner { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; text-align: center; overflow: hidden; }
-  .rc-obj.table .rc-obj-inner { border-radius: 16px; background: rgba(156,175,136,0.18); border: 1.5px solid var(--sage); }
-  .rc-obj.table.round .rc-obj-inner { border-radius: 50%; }
-  .rc-obj.brautpaar .rc-obj-inner, .rc-obj.door .rc-obj-inner, .rc-obj.toilet .rc-obj-inner { background: transparent; }
-  .rc-icon { width: 55%; height: 55%; }
-  .rc-obj-label { font-size: 0.62rem; color: var(--ink-soft); margin-top: 2px; }
 
-  .rc-toolbtn { position: absolute; top: -11px; width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 1px solid var(--blush-deep); font-size: 0.7rem; line-height: 1; cursor: pointer; color: var(--ink-soft); display:flex; align-items:center; justify-content:center; }
-  .rc-toolbtn:hover { color: var(--rose); border-color: var(--rose); }
-  .rc-toolbtn.edit { right: 18px; }
-  .rc-toolbtn.del { right: -8px; }
-  .rc-handle { position: absolute; top: -11px; left: -8px; width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 1px solid var(--blush-deep); font-size: 0.7rem; cursor: grab; display:flex; align-items:center; justify-content:center; color: var(--ink-soft); }
+  .manip { position: absolute; }
+  .manip-body {
+    position: absolute; inset: 0; cursor: move; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; padding: 3px; user-select: none;
+  }
+  .manip-outline { position: absolute; inset: -1px; border: 1px dashed rgba(122,111,106,0.3); pointer-events: none; border-radius: inherit; }
 
+  .rc-obj.table .manip-body { border-radius: 16px; background: rgba(156,175,136,0.18); border: 1.5px solid var(--sage); }
+  .rc-obj.table.round .manip-body { border-radius: 50%; }
+  .rc-obj.brautpaar .manip-body, .rc-obj.door .manip-body, .rc-obj.toilet .manip-body { background: transparent; }
+  .rc-icon { width: 55%; height: 55%; flex-shrink: 0; }
+  .rc-obj-label { font-size: 0.62rem; color: var(--ink-soft); margin-top: 2px; word-break: break-word; }
   .rc-chips { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; margin-top: 2px; }
   .chip { background: #fff; border: 1px solid var(--blush-deep); border-radius: 999px; padding: 2px 8px; cursor: grab; }
   .chip:active { cursor: grabbing; }
+
+  .manip-handle-resize {
+    position: absolute; right: -7px; bottom: -7px; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--rose); border: 2px solid #fff; box-shadow: 0 0 0 1px var(--rose); cursor: nwse-resize; z-index: 6;
+  }
+  .manip-handle-rotate {
+    position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 15px; height: 15px;
+    border-radius: 50%; background: #fff; border: 2px solid var(--gold); cursor: grab; z-index: 6;
+  }
+  .manip-handle-rotate::after {
+    content: ""; position: absolute; top: 15px; left: 50%; width: 1px; height: 15px; background: var(--gold); transform: translateX(-50%);
+  }
+  .manip-del {
+    position: absolute; top: -9px; right: -9px; width: 20px; height: 20px; border-radius: 50%; background: #fff;
+    border: 1px solid var(--blush-deep); font-size: 0.7rem; line-height: 1; cursor: pointer; color: var(--ink-soft);
+    display: flex; align-items: center; justify-content: center; z-index: 6;
+  }
+  .manip-del:hover { color: var(--rose); border-color: var(--rose); }
+  .manip-edit {
+    position: absolute; top: -9px; left: -9px; width: 20px; height: 20px; border-radius: 50%; background: #fff;
+    border: 1px solid var(--blush-deep); font-size: 0.65rem; cursor: pointer; color: var(--ink-soft);
+    display: flex; align-items: center; justify-content: center; z-index: 6;
+  }
+  .manip-edit:hover { color: var(--rose); border-color: var(--rose); }
 
   #tray { margin-top: 1rem; padding: 0.9rem; border-radius: 14px; background: rgba(244,223,218,0.4); border: 1px solid var(--blush-deep); min-height: 46px; display: flex; flex-wrap: wrap; gap: 6px; }
   .dragover { outline: 2px dashed var(--rose); outline-offset: 2px; }
@@ -89,23 +112,24 @@
   .deco-tab { padding: 0.4rem 1rem; border-radius: 999px; border: 1px solid var(--blush-deep); background: #fff; cursor: pointer; font-size: 0.85rem; color: var(--ink-soft); }
   .deco-tab.active { background: var(--rose); border-color: var(--rose); color: #fff; }
 
+  #deco-preview-wrap { display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start; }
   #deco-card-preview {
-    position: relative; width: 280px; height: 400px; background: linear-gradient(180deg, #fff, #fdf8f5);
+    position: relative; width: 300px; height: 430px; background: linear-gradient(180deg, #fff, #fdf8f5);
     border-radius: 26px; border: 1px solid var(--blush-deep); flex-shrink: 0; overflow: visible;
-    box-shadow: 0 10px 30px -15px rgba(61,52,54,0.2); padding: 1.6rem 1.4rem; text-align: center;
+    box-shadow: 0 10px 30px -15px rgba(61,52,54,0.2); padding: 1.7rem 1.5rem; text-align: center;
   }
-  .deco-mock-title { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 1.4rem; margin-top: 2.2rem; color: var(--ink); }
+  .deco-mock-title { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 1.5rem; margin-top: 2.2rem; color: var(--ink); }
   .deco-mock-line { height: 8px; background: rgba(122,111,106,0.12); border-radius: 4px; margin: 0.5rem auto; }
   .deco-mock-input { height: 34px; background: #fff; border: 1px solid var(--blush-deep); border-radius: 10px; margin-top: 1.2rem; }
   .deco-mock-btn { height: 34px; background: var(--rose); border-radius: 10px; margin-top: 0.6rem; opacity: 0.85; }
-  .deco-mock-seatbox { height: 60px; background: rgba(244,223,218,0.5); border: 1px solid var(--blush-deep); border-radius: 12px; margin-top: 1.4rem; }
+  .deco-mock-seatbox { height: 56px; background: rgba(244,223,218,0.5); border: 1px solid var(--blush-deep); border-radius: 12px; margin-top: 1.2rem; }
+  .deco-mock-roommap {
+    height: 110px; background: rgba(255,255,255,0.6); border: 1px solid var(--blush-deep); border-radius: 12px; margin-top: 0.8rem;
+    display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: var(--ink-soft); letter-spacing: 0.05em;
+  }
 
-  .deco-marker { position: absolute; cursor: grab; }
-  .deco-marker-inner { width: 100%; height: 100%; }
-  .deco-marker img, .deco-marker .placeholder-shape { width: 100%; height: 100%; display: block; }
-  .deco-marker .deco-del { position: absolute; top: -9px; right: -9px; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid var(--blush-deep); font-size: 0.7rem; line-height: 1; cursor: pointer; color: var(--ink-soft); }
-  .deco-marker .deco-edit { position: absolute; top: -9px; left: -9px; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid var(--blush-deep); font-size: 0.65rem; line-height: 1; cursor: pointer; color: var(--ink-soft); }
-  .deco-resize { position: absolute; right: -4px; bottom: -4px; width: 13px; height: 13px; background: var(--rose); border-radius: 50%; cursor: nwse-resize; border: 2px solid #fff; }
+  .deco-marker .manip-body { border-radius: 0; cursor: move; padding: 0; }
+  .deco-marker img, .deco-marker .placeholder-shape { width: 100%; height: 100%; display: block; pointer-events: none; }
 
   .deco-list { display: flex; flex-direction: column; gap: 0.6rem; flex: 1; min-width: 220px; }
   .deco-list-item { display: flex; align-items: center; gap: 0.7rem; background: #fff; border: 1px solid var(--blush-deep); border-radius: 12px; padding: 0.5rem 0.7rem; }
@@ -113,7 +137,6 @@
   .deco-list-item .grow { flex: 1; font-size: 0.85rem; }
   .deco-list-item button { border: none; background: none; color: var(--ink-soft); cursor: pointer; font-size: 0.8rem; }
   .deco-list-item button:hover { color: var(--rose); }
-  #deco-preview-wrap { display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start; }
 
   /* ---------- Crop-Modal ---------- */
   .modal-overlay { position: fixed; inset: 0; background: rgba(61,52,54,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 1rem; }
@@ -125,11 +148,8 @@
   .modal-actions { display: flex; gap: 0.7rem; margin-top: 1rem; }
   .modal-actions button { flex: 1; margin-top: 0; }
 
-  /* ---------- Seitenmenü ---------- */
-  .side-panel {
-    position: fixed; top: 0; right: 0; height: 100vh; width: 340px; max-width: 90vw; background: #fff;
-    box-shadow: -12px 0 35px -15px rgba(61,52,54,0.35); z-index: 150; padding: 1.75rem; overflow-y: auto;
-  }
+  /* ---------- Seitenmenü (nur nicht-räumliche Eigenschaften) ---------- */
+  .side-panel { position: fixed; top: 0; right: 0; height: 100vh; width: 320px; max-width: 90vw; background: #fff; box-shadow: -12px 0 35px -15px rgba(61,52,54,0.35); z-index: 150; padding: 1.75rem; overflow-y: auto; }
   .side-panel[hidden] { display: none; }
   .side-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
   .side-panel-header h3 { font-size: 1.3rem; margin: 0; }
@@ -137,7 +157,6 @@
   .side-field { margin-bottom: 1.2rem; }
   .side-field .value-badge { float: right; color: var(--ink-soft); font-size: 0.8rem; }
 
-  /* ---------- Veröffentlichen-Leiste ---------- */
   #publishBar { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(6px); border-top: 1px solid var(--blush-deep); padding: 0.9rem 1.25rem; display: flex; align-items: center; gap: 1rem; z-index: 30; }
   #publishBar button { white-space: nowrap; }
   #publishLog { font-size: 0.8rem; color: var(--ink-soft); flex: 1; }
@@ -164,7 +183,7 @@
   <!-- Raum-Baukasten -->
   <section class="panel">
     <h2>Raum &amp; Sitzordnung</h2>
-    <p class="hint">Am ⠿-Griff verschieben. Auf das Stift-Symbol klicken, um Größe und Drehung im Seitenmenü einzustellen. Gäste unten aus dem Vorrat direkt auf einen Tisch ziehen.</p>
+    <p class="hint">Objekt zum Verschieben direkt anfassen und ziehen. Rosa Punkt unten rechts = Größe ändern. Goldener Punkt oben = Drehen. ✎ öffnet Umbenennen, ✕ löscht.</p>
     <div class="room-toolbar">
       <button class="btn-small" onclick="addObject('table','round')">+ Runder Tisch</button>
       <button class="btn-small" onclick="addObject('table','rect')">+ Eckiger Tisch</button>
@@ -199,7 +218,7 @@
   <!-- Foto-Dekorationen -->
   <section class="panel">
     <h2>Foto-Dekorationen</h2>
-    <p class="hint">Herz, Stern oder Blume hinzufügen – erscheint sofort farbig, ganz ohne Foto. Foto, Farbe, Größe und Drehung stellst du über "Bearbeiten" ein.</p>
+    <p class="hint">Herz, Stern oder Blume hinzufügen – direkt in der Vorschau ziehen, skalieren (rosa Punkt) und drehen (goldener Punkt). Foto/Farbe über ✎.</p>
     <div class="deco-toolbar">
       <button class="btn-small" onclick="addDeco('heart')">+ Herz</button>
       <button class="btn-small" onclick="addDeco('star')">+ Stern</button>
@@ -219,6 +238,7 @@
         <div class="deco-mock-input" id="deco-mock-input"></div>
         <div class="deco-mock-btn" id="deco-mock-btn"></div>
         <div class="deco-mock-seatbox" id="deco-mock-seatbox" style="display:none;"></div>
+        <div class="deco-mock-roommap" id="deco-mock-roommap" style="display:none;">Raumkarte mit Tischen</div>
       </div>
       <div class="deco-list" id="deco-list"></div>
     </div>
@@ -242,7 +262,7 @@
   </div>
 </div>
 
-<!-- Seitenmenü für Objekt-/Deko-Bearbeitung -->
+<!-- Seitenmenü -->
 <div class="side-panel" id="sidePanel" hidden>
   <div class="side-panel-header">
     <h3 class="display" id="sidePanelTitle">Bearbeiten</h3>
@@ -297,8 +317,8 @@
   }
   function shapeOutlineOverlay(shape, color) {
     if (!color) return "";
-    if (shape === "flower") return `<svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;"><g fill="none" stroke="${color}" stroke-width="2">${flowerCirclesSvg()}</g></svg>`;
-    return `<svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;"><path d="${SHAPE_PATHS[shape]}" fill="none" stroke="${color}" stroke-width="2" /></svg>`;
+    if (shape === "flower") return `<svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"><g fill="none" stroke="${color}" stroke-width="2">${flowerCirclesSvg()}</g></svg>`;
+    return `<svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"><path d="${SHAPE_PATHS[shape]}" fill="none" stroke="${color}" stroke-width="2" /></svg>`;
   }
   function doorIconSvg(color) {
     return `<svg viewBox="0 0 24 24" class="rc-icon"><path d="M6 3h9a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6" fill="none" stroke="${color}" stroke-width="1.4"/>
@@ -337,7 +357,7 @@
     try { const r2 = await fetch("./layout.json"); roomObjects = r2.ok ? await r2.json() : []; } catch (e) { roomObjects = []; }
     try { const r3 = await fetch("./decorations.json"); decorations = r3.ok ? await r3.json() : []; } catch (e) { decorations = []; }
 
-    roomObjects.forEach((o) => { if (o.rotation === undefined) o.rotation = 0; });
+    roomObjects.forEach((o) => { if (o.rotation === undefined) o.rotation = 0; if (o.w === undefined) o.w = 10; if (o.h === undefined) o.h = 10; });
     decorations.forEach((d) => {
       if (d.rotation === undefined) d.rotation = 0;
       if (d.opacity === undefined) d.opacity = 100;
@@ -352,16 +372,110 @@
   function escapeHtml(s) { return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
   function escapeAttr(s) { return String(s).replace(/"/g, "&quot;"); }
 
-  // ============ Seitenmenü (generisch) ============
-  function openSidePanel(title, bodyHtml) {
-    document.getElementById("sidePanelTitle").textContent = title;
-    document.getElementById("sidePanelBody").innerHTML = bodyHtml;
-    document.getElementById("sidePanel").hidden = false;
-    document.getElementById("app").classList.add("panel-open");
+  // ============ Generische Manipulation: Verschieben, Skalieren (Ecke), Drehen ============
+  // getRect: () => Bounding-Rect des Containers (frisch, damit Größenänderungen des Fensters funktionieren)
+  // obj: Objekt mit x,y (Zentrum in %) und entweder {w,h} oder {size} (Deko: quadratisch)
+  // onChange: wird bei jeder Änderung aufgerufen, um abhängige Dinge neu zu zeichnen
+  function attachMoveHandler(bodyEl, obj, getRect, onLiveUpdate, onCommit) {
+    bodyEl.addEventListener("pointerdown", (e) => {
+      if (e.target.closest(".manip-handle-resize, .manip-handle-rotate, .manip-del, .manip-edit")) return;
+      e.preventDefault();
+      bodyEl.setPointerCapture(e.pointerId);
+      const rect = getRect();
+      const startPx = e.clientX, startPy = e.clientY;
+      const startX = obj.x, startY = obj.y;
+      function onMove(ev) {
+        const dxPct = ((ev.clientX - startPx) / rect.width) * 100;
+        const dyPct = ((ev.clientY - startPy) / rect.height) * 100;
+        obj.x = Math.max(-15, Math.min(115, startX + dxPct));
+        obj.y = Math.max(-15, Math.min(115, startY + dyPct));
+        onLiveUpdate();
+      }
+      function onUp() {
+        bodyEl.removeEventListener("pointermove", onMove);
+        bodyEl.removeEventListener("pointerup", onUp);
+        if (onCommit) onCommit();
+      }
+      bodyEl.addEventListener("pointermove", onMove);
+      bodyEl.addEventListener("pointerup", onUp);
+    });
   }
-  function closeSidePanel() {
-    document.getElementById("sidePanel").hidden = true;
-    document.getElementById("app").classList.remove("panel-open");
+
+  function attachResizeHandlerBox(handleEl, obj, getRect, onLiveUpdate, onCommit) {
+    handleEl.addEventListener("pointerdown", (e) => {
+      e.preventDefault(); e.stopPropagation();
+      handleEl.setPointerCapture(e.pointerId);
+      const rect = getRect();
+      const leftEdge = obj.x - obj.w / 2;
+      const topEdge = obj.y - obj.h / 2;
+      function onMove(ev) {
+        const curXPct = ((ev.clientX - rect.left) / rect.width) * 100;
+        const curYPct = ((ev.clientY - rect.top) / rect.height) * 100;
+        let newW = curXPct - leftEdge;
+        let newH = curYPct - topEdge;
+        newW = Math.max(4, Math.min(90, newW));
+        newH = Math.max(4, Math.min(90, newH));
+        obj.w = newW; obj.h = newH;
+        obj.x = leftEdge + newW / 2;
+        obj.y = topEdge + newH / 2;
+        onLiveUpdate();
+      }
+      function onUp() {
+        handleEl.removeEventListener("pointermove", onMove);
+        handleEl.removeEventListener("pointerup", onUp);
+        if (onCommit) onCommit();
+      }
+      handleEl.addEventListener("pointermove", onMove);
+      handleEl.addEventListener("pointerup", onUp);
+    });
+  }
+
+  function attachResizeHandlerSquare(handleEl, obj, getRect, onLiveUpdate, onCommit) {
+    // für Dekorationen: quadratisch, Zentrum bleibt fix, Größe = radialer Abstand von der Mitte
+    handleEl.addEventListener("pointerdown", (e) => {
+      e.preventDefault(); e.stopPropagation();
+      handleEl.setPointerCapture(e.pointerId);
+      const rect = getRect();
+      function onMove(ev) {
+        const curXPct = ((ev.clientX - rect.left) / rect.width) * 100;
+        const curYPct = ((ev.clientY - rect.top) / rect.height) * 100;
+        const dx = curXPct - obj.x;
+        const dy = curYPct - obj.y;
+        const newSize = Math.max(dx, dy) * 2;
+        obj.size = Math.max(5, Math.min(60, newSize));
+        onLiveUpdate();
+      }
+      function onUp() {
+        handleEl.removeEventListener("pointermove", onMove);
+        handleEl.removeEventListener("pointerup", onUp);
+        if (onCommit) onCommit();
+      }
+      handleEl.addEventListener("pointermove", onMove);
+      handleEl.addEventListener("pointerup", onUp);
+    });
+  }
+
+  function attachRotateHandler(handleEl, obj, getCenterPx, onLiveUpdate, onCommit) {
+    handleEl.addEventListener("pointerdown", (e) => {
+      e.preventDefault(); e.stopPropagation();
+      handleEl.setPointerCapture(e.pointerId);
+      function onMove(ev) {
+        const center = getCenterPx();
+        const dx = ev.clientX - center.x;
+        const dy = ev.clientY - center.y;
+        let deg = Math.atan2(dx, -dy) * (180 / Math.PI);
+        if (deg < 0) deg += 360;
+        obj.rotation = Math.round(deg);
+        onLiveUpdate();
+      }
+      function onUp() {
+        handleEl.removeEventListener("pointermove", onMove);
+        handleEl.removeEventListener("pointerup", onUp);
+        if (onCommit) onCommit();
+      }
+      handleEl.addEventListener("pointermove", onMove);
+      handleEl.addEventListener("pointerup", onUp);
+    });
   }
 
   // ============ Raum-Baukasten ============
@@ -375,14 +489,24 @@
       name = prompt("Name des Tisches (z. B. \"Tisch 8 - Ranunkel\"):", "Neuer Tisch");
       if (!name) return;
     }
-    const size = type === "table" ? DEFAULT_SIZE.table : FIXED_SIZE[type];
+    const size = type === "table" ? { w: DEFAULT_SIZE.table, h: DEFAULT_SIZE.table } : FIXED_SIZE[type];
     roomObjects.push({
       id: type + Date.now() + (objCounter++), type, shape: shape || null, name: name.trim(),
-      x: 50, y: 50, w: size.w !== undefined ? size.w : size, h: size.h !== undefined ? size.h : size,
-      rotation: 0
+      x: 50, y: 50, w: size.w, h: size.h, rotation: 0
     });
     renderRoomCanvas();
     if (type === "table") renderTray();
+  }
+
+  function renameObject(id) {
+    const o = roomObjects.find((x) => x.id === id);
+    if (!o) return;
+    const oldName = o.name;
+    const name = prompt("Neuer Name:", o.name);
+    if (!name) return;
+    o.name = name.trim();
+    if (o.type === "table") guests.forEach((g) => { if (g.tisch === oldName) g.tisch = o.name; });
+    renderRoomCanvas(); renderGuestTable();
   }
 
   function deleteObject(id) {
@@ -392,68 +516,7 @@
     if (!confirm(msg)) return;
     if (o.type === "table") guests.forEach((g) => { if (g.tisch === o.name) g.tisch = ""; });
     roomObjects = roomObjects.filter((x) => x.id !== id);
-    closeSidePanel();
     renderRoomCanvas(); renderTray(); renderGuestTable();
-  }
-
-  function openObjectEditor(id) {
-    const o = roomObjects.find((x) => x.id === id);
-    if (!o) return;
-    const typeLabel = { table: "Tisch", door: "Tür", toilet: "Toilette", brautpaar: "Brautpaar-Symbol" }[o.type];
-    let nameField = "";
-    if (o.type !== "brautpaar") {
-      nameField = `
-        <div class="side-field">
-          <label class="small">Name</label>
-          <input type="text" value="${escapeAttr(o.name)}" oninput="updateObjName('${id}', this.value)" />
-        </div>`;
-    }
-    let sizeFields = "";
-    if (o.type === "table") {
-      sizeFields = `
-        <div class="side-field">
-          <label class="small">Breite <span class="value-badge" id="objW-val">${o.w.toFixed(0)}%</span></label>
-          <input type="range" min="6" max="60" value="${o.w}" oninput="updateObjSize('${id}','w',this.value)" />
-        </div>
-        <div class="side-field">
-          <label class="small">Höhe <span class="value-badge" id="objH-val">${o.h.toFixed(0)}%</span></label>
-          <input type="range" min="6" max="60" value="${o.h}" oninput="updateObjSize('${id}','h',this.value)" />
-        </div>`;
-    }
-    const rotField = `
-      <div class="side-field">
-        <label class="small">Drehen <span class="value-badge" id="objRot-val">${o.rotation}°</span></label>
-        <input type="range" min="0" max="359" value="${o.rotation}" oninput="updateObjRotation('${id}',this.value)" />
-      </div>`;
-    openSidePanel(typeLabel + " bearbeiten", `
-      ${nameField}
-      ${sizeFields}
-      ${rotField}
-      <button class="btn-danger" style="width:100%;margin-top:0.5rem;" onclick="deleteObject('${id}')">Löschen</button>
-    `);
-  }
-
-  function updateObjName(id, val) {
-    const o = roomObjects.find((x) => x.id === id);
-    if (!o) return;
-    const oldName = o.name;
-    o.name = val;
-    if (o.type === "table") guests.forEach((g) => { if (g.tisch === oldName) g.tisch = val; });
-    renderRoomCanvas(); renderGuestTable();
-  }
-  function updateObjSize(id, dim, val) {
-    const o = roomObjects.find((x) => x.id === id);
-    if (!o) return;
-    o[dim] = parseFloat(val);
-    document.getElementById(dim === "w" ? "objW-val" : "objH-val").textContent = val + "%";
-    renderRoomCanvas();
-  }
-  function updateObjRotation(id, val) {
-    const o = roomObjects.find((x) => x.id === id);
-    if (!o) return;
-    o.rotation = parseFloat(val);
-    document.getElementById("objRot-val").textContent = val + "°";
-    renderRoomCanvas();
   }
 
   function chipFontSize(count) {
@@ -463,15 +526,19 @@
     return "0.4rem";
   }
 
+  function applyObjGeometry(el, o) {
+    el.style.left = o.x + "%"; el.style.top = o.y + "%";
+    el.style.width = o.w + "%"; el.style.height = o.h + "%";
+    el.style.transform = `translate(-50%,-50%) rotate(${o.rotation || 0}deg)`;
+  }
+
   function renderRoomCanvas() {
     const canvas = document.getElementById("room-canvas");
     canvas.innerHTML = "";
     roomObjects.forEach((o) => {
       const el = document.createElement("div");
-      el.className = "rc-obj " + o.type + (o.type === "table" && o.shape === "round" ? " round" : "");
-      el.style.left = o.x + "%"; el.style.top = o.y + "%";
-      el.style.width = o.w + "%"; el.style.height = o.h + "%";
-      el.style.transform = `translate(-50%,-50%) rotate(${o.rotation || 0}deg)`;
+      el.className = "manip rc-obj " + o.type + (o.type === "table" && o.shape === "round" ? " round" : "");
+      applyObjGeometry(el, o);
 
       let iconHtml = "";
       if (o.type === "door") iconHtml = doorIconSvg("#7A6F6A");
@@ -486,10 +553,12 @@
       }
 
       el.innerHTML = `
-        <div class="rc-handle" title="Verschieben">⠿</div>
-        <div class="rc-toolbtn edit" title="Bearbeiten" onclick="openObjectEditor('${o.id}')">✎</div>
-        <div class="rc-toolbtn del" title="Löschen" onclick="deleteObject('${o.id}')">✕</div>
-        <div class="rc-obj-inner">${content}</div>
+        <div class="manip-body">${content}</div>
+        <div class="manip-outline"></div>
+        <div class="manip-edit" title="Umbenennen" onclick="renameObject('${o.id}')">✎</div>
+        <div class="manip-del" title="Löschen" onclick="deleteObject('${o.id}')">✕</div>
+        <div class="manip-handle-rotate" title="Drehen"></div>
+        <div class="manip-handle-resize" title="Größe ändern"></div>
       `;
       canvas.appendChild(el);
 
@@ -500,7 +569,18 @@
         assigned.forEach((g) => chipsEl.appendChild(makeChip(g)));
         makeDroppable(chipsEl, o.name);
       }
-      makeDraggableObject(el, o);
+
+      const getRect = () => document.getElementById("room-canvas").getBoundingClientRect();
+      const body = el.querySelector(".manip-body");
+      const resizeHandle = el.querySelector(".manip-handle-resize");
+      const rotateHandle = el.querySelector(".manip-handle-rotate");
+
+      attachMoveHandler(body, o, getRect, () => applyObjGeometry(el, o), () => renderRoomCanvas());
+      attachResizeHandlerBox(resizeHandle, o, getRect, () => applyObjGeometry(el, o), () => renderRoomCanvas());
+      attachRotateHandler(rotateHandle, o, () => {
+        const r = getRect();
+        return { x: r.left + (o.x / 100) * r.width, y: r.top + (o.y / 100) * r.height };
+      }, () => applyObjGeometry(el, o), () => renderRoomCanvas());
     });
   }
 
@@ -524,25 +604,6 @@
       const guest = guests.find((g) => guestKey(g) === key);
       if (guest) guest.tisch = tableName;
       renderRoomCanvas(); renderTray(); renderGuestTable();
-    });
-  }
-
-  function makeDraggableObject(el, o) {
-    const handle = el.querySelector(".rc-handle");
-    handle.addEventListener("pointerdown", (e) => {
-      e.preventDefault(); e.stopPropagation();
-      handle.setPointerCapture(e.pointerId);
-      const rect = document.getElementById("room-canvas").getBoundingClientRect();
-      function onMove(ev) {
-        let x = ((ev.clientX - rect.left) / rect.width) * 100;
-        let y = ((ev.clientY - rect.top) / rect.height) * 100;
-        x = Math.max(2, Math.min(98, x)); y = Math.max(2, Math.min(98, y));
-        el.style.left = x + "%"; el.style.top = y + "%";
-        o.x = Math.round(x * 10) / 10; o.y = Math.round(y * 10) / 10;
-      }
-      function onUp() { handle.removeEventListener("pointermove", onMove); handle.removeEventListener("pointerup", onUp); }
-      handle.addEventListener("pointermove", onMove);
-      handle.addEventListener("pointerup", onUp);
     });
   }
 
@@ -599,6 +660,18 @@
     evt.target.value = "";
   }
 
+  // ============ Seitenmenü (generisch, nur nicht-räumliche Felder) ============
+  function openSidePanel(title, bodyHtml) {
+    document.getElementById("sidePanelTitle").textContent = title;
+    document.getElementById("sidePanelBody").innerHTML = bodyHtml;
+    document.getElementById("sidePanel").hidden = false;
+    document.getElementById("app").classList.add("panel-open");
+  }
+  function closeSidePanel() {
+    document.getElementById("sidePanel").hidden = true;
+    document.getElementById("app").classList.remove("panel-open");
+  }
+
   // ============ Dekorationen ============
   function addDeco(shape) {
     decorations.push({
@@ -616,6 +689,7 @@
     document.getElementById("deco-mock-input").style.display = tab === "start" ? "block" : "none";
     document.getElementById("deco-mock-btn").style.display = tab === "start" ? "block" : "none";
     document.getElementById("deco-mock-seatbox").style.display = tab === "end" ? "block" : "none";
+    document.getElementById("deco-mock-roommap").style.display = tab === "end" ? "flex" : "none";
     renderDecorations();
   }
 
@@ -633,27 +707,45 @@
   }
   window.__shapeFillSvg = (shape, color) => shapeFillSvg(shape, color).replace("<svg", `<svg class="thumb"`);
 
+  function applyDecoGeometry(el, d, previewSizePx) {
+    el.style.left = d.x + "%"; el.style.top = d.y + "%";
+    el.style.width = (d.size / 100) * previewSizePx + "px";
+    el.style.height = (d.size / 100) * previewSizePx + "px";
+    el.style.transform = `translate(-50%,-50%) rotate(${d.rotation || 0}deg)`;
+    el.style.opacity = d.opacity / 100;
+  }
+
   function renderDecorations() {
     const preview = document.getElementById("deco-card-preview");
     document.querySelectorAll(".deco-marker").forEach((m) => m.remove());
+    const previewSizePx = 300;
 
     decorations.filter((d) => d.view === currentDecoTab).forEach((d) => {
       const marker = document.createElement("div");
-      marker.className = "deco-marker";
-      marker.style.left = d.x + "%"; marker.style.top = d.y + "%";
-      marker.style.width = (d.size / 100) * 280 + "px";
-      marker.style.height = (d.size / 100) * 280 + "px";
-      marker.style.transform = `translate(-50%,-50%) rotate(${d.rotation || 0}deg)`;
-      marker.style.opacity = d.opacity / 100;
+      marker.className = "manip deco-marker";
+      applyDecoGeometry(marker, d, previewSizePx);
 
-      let inner = `<div class="deco-marker-inner">${decoThumbHtml(d).replace('class="thumb"', 'style="width:100%;height:100%;"')}</div>`;
+      let inner = `<div class="manip-body">${decoThumbHtml(d).replace('class="thumb"', 'style="width:100%;height:100%;"')}</div>`;
       if (d.color && (d.image || d.filename)) inner += shapeOutlineOverlay(d.shape, d.color);
       marker.innerHTML = inner + `
-        <div class="deco-edit" onclick="openDecoEditor('${d.id}')">✎</div>
-        <div class="deco-del" onclick="deleteDeco('${d.id}')">✕</div>
+        <div class="manip-edit" title="Bearbeiten" onclick="openDecoEditor('${d.id}')">✎</div>
+        <div class="manip-del" title="Löschen" onclick="deleteDeco('${d.id}')">✕</div>
+        <div class="manip-handle-rotate" title="Drehen"></div>
+        <div class="manip-handle-resize" title="Größe ändern"></div>
       `;
       preview.appendChild(marker);
-      makeDraggableDeco(marker, d, preview);
+
+      const getRect = () => document.getElementById("deco-card-preview").getBoundingClientRect();
+      const body = marker.querySelector(".manip-body");
+      const resizeHandle = marker.querySelector(".manip-handle-resize");
+      const rotateHandle = marker.querySelector(".manip-handle-rotate");
+
+      attachMoveHandler(body, d, getRect, () => applyDecoGeometry(marker, d, previewSizePx), () => renderDecorations());
+      attachResizeHandlerSquare(resizeHandle, d, getRect, () => applyDecoGeometry(marker, d, previewSizePx), () => renderDecorations());
+      attachRotateHandler(rotateHandle, d, () => {
+        const r = getRect();
+        return { x: r.left + (d.x / 100) * r.width, y: r.top + (d.y / 100) * r.height };
+      }, () => applyDecoGeometry(marker, d, previewSizePx), () => renderDecorations());
     });
 
     const list = document.getElementById("deco-list");
@@ -674,25 +766,6 @@
   }
   function shapeLabel(s) { return s === "heart" ? "Herz" : s === "star" ? "Stern" : "Blume"; }
 
-  function makeDraggableDeco(marker, d, container) {
-    marker.addEventListener("pointerdown", (e) => {
-      if (e.target.classList.contains("deco-del") || e.target.classList.contains("deco-edit")) return;
-      e.preventDefault();
-      marker.setPointerCapture(e.pointerId);
-      const rect = container.getBoundingClientRect();
-      function onMove(ev) {
-        let x = ((ev.clientX - rect.left) / rect.width) * 100;
-        let y = ((ev.clientY - rect.top) / rect.height) * 100;
-        x = Math.max(-10, Math.min(110, x)); y = Math.max(-10, Math.min(110, y));
-        marker.style.left = x + "%"; marker.style.top = y + "%";
-        d.x = Math.round(x * 10) / 10; d.y = Math.round(y * 10) / 10;
-      }
-      function onUp() { marker.removeEventListener("pointermove", onMove); marker.removeEventListener("pointerup", onUp); }
-      marker.addEventListener("pointermove", onMove);
-      marker.addEventListener("pointerup", onUp);
-    });
-  }
-
   function openDecoEditor(id) {
     const d = decorations.find((x) => x.id === id);
     if (!d) return;
@@ -711,14 +784,6 @@
         ${d.color ? `<button class="btn-outline" style="width:100%;margin-top:0.5rem;" onclick="clearDecoColor('${id}')">Standard-Verlauf verwenden</button>` : ""}
       </div>
       <div class="side-field">
-        <label class="small">Größe <span class="value-badge" id="decoSize-val">${d.size.toFixed(0)}%</span></label>
-        <input type="range" min="6" max="45" value="${d.size}" oninput="updateDecoField('${id}','size',parseFloat(this.value))" />
-      </div>
-      <div class="side-field">
-        <label class="small">Drehen <span class="value-badge" id="decoRot-val">${d.rotation}°</span></label>
-        <input type="range" min="0" max="359" value="${d.rotation}" oninput="updateDecoField('${id}','rotation',parseFloat(this.value))" />
-      </div>
-      <div class="side-field">
         <label class="small">Deckkraft <span class="value-badge" id="decoOpa-val">${d.opacity}%</span></label>
         <input type="range" min="20" max="100" value="${d.opacity}" oninput="updateDecoField('${id}','opacity',parseFloat(this.value))" />
       </div>
@@ -729,6 +794,7 @@
           <option value="end" ${d.view === "end" ? "selected" : ""}>Ende (Platz gefunden)</option>
         </select>
       </div>
+      <p style="font-size:0.8rem;color:var(--ink-soft);">Größe und Drehung stellst du direkt in der Vorschau per Ziehpunkt ein.</p>
       <button class="btn-danger" style="width:100%;" onclick="deleteDeco('${id}')">Löschen</button>
     `);
   }
@@ -737,10 +803,9 @@
     const d = decorations.find((x) => x.id === id);
     if (!d) return;
     d[field] = value;
-    const badgeMap = { size: "decoSize-val", rotation: "decoRot-val", opacity: "decoOpa-val" };
-    if (badgeMap[field]) document.getElementById(badgeMap[field]).textContent = value + (field === "rotation" ? "°" : "%");
+    if (field === "opacity") document.getElementById("decoOpa-val").textContent = value + "%";
     renderDecorations();
-    if (field === "color") openDecoEditor(id); // Button-Sichtbarkeit aktualisieren
+    if (field === "color") openDecoEditor(id);
   }
   function clearDecoColor(id) {
     const d = decorations.find((x) => x.id === id);
