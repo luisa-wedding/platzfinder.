@@ -15,12 +15,24 @@
     "id": "deco1785318576124",
     "shape": "star",
     "x": 92.33333333333334,
-    "y": 4.883720930232563,
+    "y": 8.139534883720936,
     "size": 16,
     "rotation": 0,
     "opacity": 100,
     "color": null,
     "image": null,
+    "view": "start"
+  },
+  {
+    "id": "deco1785318700332",
+    "shape": "heart",
+    "x": 53.333333333333336,
+    "y": 78.83720930232558,
+    "size": 41.666666666666686,
+    "rotation": 0,
+    "opacity": 100,
+    "color": null,
+    "image": "decoration-deco1785318700332.png",
     "view": "start"
   }
 ]
