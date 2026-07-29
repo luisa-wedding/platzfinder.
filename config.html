@@ -25,7 +25,10 @@
   #gate button:hover, .btn:hover { background: var(--rose-deep); }
   #gate .error { color: var(--rose-deep); font-size: 0.85rem; margin-top: 0.6rem; display: none; }
 
-  #app { display: none; max-width: 64rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; }
+  #app { display: none; max-width: 64rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; transition: margin-right 0.25s; }
+  #app.panel-open { margin-right: 340px; }
+  @media (max-width: 900px) { #app.panel-open { margin-right: 0; } }
+
   header.top h1 { font-size: 2rem; margin: 0 0 0.25rem; }
   header.top p { color: var(--ink-soft); margin: 0 0 2rem; }
 
@@ -38,41 +41,35 @@
     width: 100%; padding: 0.6rem 0.8rem; border-radius: 10px; border: 1px solid var(--blush-deep);
     font-family: inherit; font-size: 0.95rem; background: #fff; color: var(--ink);
   }
+  input[type="range"] { width: 100%; }
+  input[type="color"] { width: 100%; height: 38px; border: 1px solid var(--blush-deep); border-radius: 10px; padding: 2px; background: #fff; }
   .btn-small { background: var(--sage); color: #fff; border: none; border-radius: 10px; padding: 0.5rem 0.9rem; font-family: inherit; cursor: pointer; font-size: 0.85rem; }
   .btn-small:hover { background: var(--sage-deep); }
   .btn-outline { background: #fff; border: 1px solid var(--blush-deep); color: var(--ink); border-radius: 10px; padding: 0.5rem 0.9rem; font-family: inherit; cursor: pointer; font-size: 0.85rem; }
   .btn-outline:hover { border-color: var(--rose); }
+  .btn-danger { background: #fff; border: 1px solid var(--rose); color: var(--rose-deep); border-radius: 10px; padding: 0.5rem 0.9rem; font-family: inherit; cursor: pointer; font-size: 0.85rem; }
+  .btn-danger:hover { background: var(--rose); color: #fff; }
 
   /* ---------- Raum-Baukasten ---------- */
   .room-toolbar { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
-  #room-canvas {
-    position: relative; width: 100%; aspect-ratio: 4/3; background: rgba(255,255,255,0.55);
-    border: 1px dashed var(--blush-deep); border-radius: 16px; overflow: hidden;
-  }
-  .rc-obj {
-    position: absolute; transform: translate(-50%, -50%);
-    padding: 4px; text-align: center; user-select: none; overflow: hidden;
-  }
-  .rc-obj.table { border-radius: 16px; background: rgba(156,175,136,0.18); border: 1.5px solid var(--sage); }
-  .rc-obj.table.round { border-radius: 50%; }
-  .rc-obj.brautpaar { border-radius: 50%; background: rgba(201,160,92,0.16); border: 1.5px solid var(--gold); }
-  .rc-obj.door { border-radius: 8px; background: rgba(122,111,106,0.10); border: 1px dashed var(--ink-soft); }
-  .rc-obj.toilet { border-radius: 8px; background: rgba(122,111,106,0.10); border: 1px solid var(--ink-soft); }
+  #room-canvas { position: relative; width: 100%; aspect-ratio: 4/3; background: rgba(255,255,255,0.55); border: 1px dashed var(--blush-deep); border-radius: 16px; overflow: visible; }
+  .rc-obj { position: absolute; user-select: none; }
+  .rc-obj-inner { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; text-align: center; overflow: hidden; }
+  .rc-obj.table .rc-obj-inner { border-radius: 16px; background: rgba(156,175,136,0.18); border: 1.5px solid var(--sage); }
+  .rc-obj.table.round .rc-obj-inner { border-radius: 50%; }
+  .rc-obj.brautpaar .rc-obj-inner, .rc-obj.door .rc-obj-inner, .rc-obj.toilet .rc-obj-inner { background: transparent; }
+  .rc-icon { width: 55%; height: 55%; }
+  .rc-obj-label { font-size: 0.62rem; color: var(--ink-soft); margin-top: 2px; }
 
-  .rc-handle { cursor: grab; font-size: 0.7rem; color: var(--ink-soft); padding: 2px 0; }
-  .rc-name { font-size: 0.75rem; font-weight: 500; margin: 2px 0 4px; word-break: break-word; }
-  .rc-actions { display: flex; justify-content: center; gap: 6px; margin-bottom: 2px; }
-  .rc-actions button { border: none; background: none; cursor: pointer; font-size: 0.72rem; color: var(--ink-soft); }
-  .rc-actions button:hover { color: var(--rose); }
-  .rc-chips { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; min-height: 20px; }
-  .chip { background: #fff; border: 1px solid var(--blush-deep); border-radius: 999px; padding: 2px 8px; font-size: 0.68rem; cursor: grab; }
+  .rc-toolbtn { position: absolute; top: -11px; width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 1px solid var(--blush-deep); font-size: 0.7rem; line-height: 1; cursor: pointer; color: var(--ink-soft); display:flex; align-items:center; justify-content:center; }
+  .rc-toolbtn:hover { color: var(--rose); border-color: var(--rose); }
+  .rc-toolbtn.edit { right: 18px; }
+  .rc-toolbtn.del { right: -8px; }
+  .rc-handle { position: absolute; top: -11px; left: -8px; width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 1px solid var(--blush-deep); font-size: 0.7rem; cursor: grab; display:flex; align-items:center; justify-content:center; color: var(--ink-soft); }
+
+  .rc-chips { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; margin-top: 2px; }
+  .chip { background: #fff; border: 1px solid var(--blush-deep); border-radius: 999px; padding: 2px 8px; cursor: grab; }
   .chip:active { cursor: grabbing; }
-
-  .rc-resize {
-    position: absolute; right: 2px; bottom: 2px; width: 12px; height: 12px;
-    cursor: nwse-resize; border-right: 2px solid var(--ink-soft); border-bottom: 2px solid var(--ink-soft); opacity: 0.5;
-  }
-  .rc-resize:hover { opacity: 1; }
 
   #tray { margin-top: 1rem; padding: 0.9rem; border-radius: 14px; background: rgba(244,223,218,0.4); border: 1px solid var(--blush-deep); min-height: 46px; display: flex; flex-wrap: wrap; gap: 6px; }
   .dragover { outline: 2px dashed var(--rose); outline-offset: 2px; }
@@ -87,31 +84,36 @@
   .row-del:hover { color: var(--rose); }
 
   /* ---------- Dekorationen ---------- */
-  .deco-toolbar { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
-  #deco-preview-wrap { display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start; }
+  .deco-toolbar { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+  .deco-tabs { display: flex; gap: 0.4rem; margin-bottom: 1rem; }
+  .deco-tab { padding: 0.4rem 1rem; border-radius: 999px; border: 1px solid var(--blush-deep); background: #fff; cursor: pointer; font-size: 0.85rem; color: var(--ink-soft); }
+  .deco-tab.active { background: var(--rose); border-color: var(--rose); color: #fff; }
+
   #deco-card-preview {
-    position: relative; width: 260px; height: 360px; background: #fff; border-radius: 22px;
-    border: 1px solid var(--blush-deep); flex-shrink: 0; overflow: visible;
+    position: relative; width: 280px; height: 400px; background: linear-gradient(180deg, #fff, #fdf8f5);
+    border-radius: 26px; border: 1px solid var(--blush-deep); flex-shrink: 0; overflow: visible;
+    box-shadow: 0 10px 30px -15px rgba(61,52,54,0.2); padding: 1.6rem 1.4rem; text-align: center;
   }
-  #deco-card-preview::after {
-    content: "Willkommens-Karte (Vorschau)"; position: absolute; bottom: 8px; left: 0; right: 0;
-    text-align: center; font-size: 0.65rem; color: var(--ink-soft); letter-spacing: 0.05em;
-  }
-  .deco-marker { position: absolute; transform: translate(-50%, -50%); cursor: grab; }
-  .deco-marker img, .deco-marker .placeholder { width: 100%; height: 100%; display: block; border-radius: 6px; }
-  .deco-marker .placeholder { background: linear-gradient(135deg, var(--blush-deep), var(--rose)); border-radius: 50%; }
-  .deco-marker .deco-del {
-    position: absolute; top: -8px; right: -8px; width: 18px; height: 18px; border-radius: 50%;
-    background: #fff; border: 1px solid var(--blush-deep); font-size: 0.7rem; line-height: 1; cursor: pointer; color: var(--ink-soft);
-  }
-  .deco-resize { position: absolute; right: -4px; bottom: -4px; width: 12px; height: 12px; background: var(--rose); border-radius: 50%; cursor: nwse-resize; }
-  .deco-list { display: flex; flex-direction: column; gap: 0.6rem; flex: 1; min-width: 200px; }
+  .deco-mock-title { font-family: "Cormorant Garamond", serif; font-style: italic; font-size: 1.4rem; margin-top: 2.2rem; color: var(--ink); }
+  .deco-mock-line { height: 8px; background: rgba(122,111,106,0.12); border-radius: 4px; margin: 0.5rem auto; }
+  .deco-mock-input { height: 34px; background: #fff; border: 1px solid var(--blush-deep); border-radius: 10px; margin-top: 1.2rem; }
+  .deco-mock-btn { height: 34px; background: var(--rose); border-radius: 10px; margin-top: 0.6rem; opacity: 0.85; }
+  .deco-mock-seatbox { height: 60px; background: rgba(244,223,218,0.5); border: 1px solid var(--blush-deep); border-radius: 12px; margin-top: 1.4rem; }
+
+  .deco-marker { position: absolute; cursor: grab; }
+  .deco-marker-inner { width: 100%; height: 100%; }
+  .deco-marker img, .deco-marker .placeholder-shape { width: 100%; height: 100%; display: block; }
+  .deco-marker .deco-del { position: absolute; top: -9px; right: -9px; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid var(--blush-deep); font-size: 0.7rem; line-height: 1; cursor: pointer; color: var(--ink-soft); }
+  .deco-marker .deco-edit { position: absolute; top: -9px; left: -9px; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid var(--blush-deep); font-size: 0.65rem; line-height: 1; cursor: pointer; color: var(--ink-soft); }
+  .deco-resize { position: absolute; right: -4px; bottom: -4px; width: 13px; height: 13px; background: var(--rose); border-radius: 50%; cursor: nwse-resize; border: 2px solid #fff; }
+
+  .deco-list { display: flex; flex-direction: column; gap: 0.6rem; flex: 1; min-width: 220px; }
   .deco-list-item { display: flex; align-items: center; gap: 0.7rem; background: #fff; border: 1px solid var(--blush-deep); border-radius: 12px; padding: 0.5rem 0.7rem; }
-  .deco-list-item img, .deco-list-item .placeholder { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; }
-  .deco-list-item .placeholder { background: linear-gradient(135deg, var(--blush-deep), var(--rose)); border-radius: 50%; }
+  .deco-list-item .thumb { width: 36px; height: 36px; flex-shrink: 0; }
   .deco-list-item .grow { flex: 1; font-size: 0.85rem; }
-  .deco-list-item button { border: none; background: none; color: var(--ink-soft); cursor: pointer; font-size: 0.85rem; }
+  .deco-list-item button { border: none; background: none; color: var(--ink-soft); cursor: pointer; font-size: 0.8rem; }
   .deco-list-item button:hover { color: var(--rose); }
+  #deco-preview-wrap { display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start; }
 
   /* ---------- Crop-Modal ---------- */
   .modal-overlay { position: fixed; inset: 0; background: rgba(61,52,54,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 1rem; }
@@ -122,7 +124,18 @@
   .crop-mask-overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .modal-actions { display: flex; gap: 0.7rem; margin-top: 1rem; }
   .modal-actions button { flex: 1; margin-top: 0; }
-  input[type="range"] { width: 100%; }
+
+  /* ---------- Seitenmenü ---------- */
+  .side-panel {
+    position: fixed; top: 0; right: 0; height: 100vh; width: 340px; max-width: 90vw; background: #fff;
+    box-shadow: -12px 0 35px -15px rgba(61,52,54,0.35); z-index: 150; padding: 1.75rem; overflow-y: auto;
+  }
+  .side-panel[hidden] { display: none; }
+  .side-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .side-panel-header h3 { font-size: 1.3rem; margin: 0; }
+  .side-panel-header button { border: none; background: none; font-size: 1.2rem; cursor: pointer; color: var(--ink-soft); }
+  .side-field { margin-bottom: 1.2rem; }
+  .side-field .value-badge { float: right; color: var(--ink-soft); font-size: 0.8rem; }
 
   /* ---------- Veröffentlichen-Leiste ---------- */
   #publishBar { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(6px); border-top: 1px solid var(--blush-deep); padding: 0.9rem 1.25rem; display: flex; align-items: center; gap: 1rem; z-index: 30; }
@@ -151,13 +164,13 @@
   <!-- Raum-Baukasten -->
   <section class="panel">
     <h2>Raum &amp; Sitzordnung</h2>
-    <p class="hint">Am ⠿-Griff frei verschieben, an der Ecke unten rechts frei in der Größe ziehen. Gäste unten aus dem Vorrat direkt auf einen Tisch ziehen.</p>
+    <p class="hint">Am ⠿-Griff verschieben. Auf das Stift-Symbol klicken, um Größe und Drehung im Seitenmenü einzustellen. Gäste unten aus dem Vorrat direkt auf einen Tisch ziehen.</p>
     <div class="room-toolbar">
       <button class="btn-small" onclick="addObject('table','round')">+ Runder Tisch</button>
       <button class="btn-small" onclick="addObject('table','rect')">+ Eckiger Tisch</button>
       <button class="btn-outline" onclick="addObject('door')">+ Tür</button>
       <button class="btn-outline" onclick="addObject('toilet')">+ Toilette</button>
-      <button class="btn-outline" onclick="addObject('brautpaar')">+ Brautpaar-Platz</button>
+      <button class="btn-outline" onclick="addObject('brautpaar')">+ Brautpaar-Symbol</button>
     </div>
     <div id="room-canvas"></div>
     <label class="small" style="margin-top:1rem;">Noch nicht zugeordnete Gäste</label>
@@ -186,15 +199,27 @@
   <!-- Foto-Dekorationen -->
   <section class="panel">
     <h2>Foto-Dekorationen</h2>
-    <p class="hint">Herz, Stern oder Blume hinzufügen, Foto reinziehen und zuschneiden, danach auf der Karte frei platzieren und in der Größe anpassen.</p>
+    <p class="hint">Herz, Stern oder Blume hinzufügen – erscheint sofort farbig, ganz ohne Foto. Foto, Farbe, Größe und Drehung stellst du über "Bearbeiten" ein.</p>
     <div class="deco-toolbar">
-      <button class="btn-small" onclick="triggerAddDeco('heart')">+ Herz</button>
-      <button class="btn-small" onclick="triggerAddDeco('star')">+ Stern</button>
-      <button class="btn-small" onclick="triggerAddDeco('flower')">+ Blume</button>
+      <button class="btn-small" onclick="addDeco('heart')">+ Herz</button>
+      <button class="btn-small" onclick="addDeco('star')">+ Stern</button>
+      <button class="btn-small" onclick="addDeco('flower')">+ Blume</button>
       <input type="file" id="decoFileInput" accept="image/*" style="display:none" onchange="onDecoFileChosen(event)" />
     </div>
+    <div class="deco-tabs">
+      <div class="deco-tab active" id="tab-start" onclick="switchDecoTab('start')">Start-Ansicht</div>
+      <div class="deco-tab" id="tab-end" onclick="switchDecoTab('end')">End-Ansicht</div>
+    </div>
     <div id="deco-preview-wrap">
-      <div id="deco-card-preview"></div>
+      <div id="deco-card-preview">
+        <div class="deco-mock-line" style="width:60%;"></div>
+        <div class="deco-mock-title" id="deco-mock-title">Willkommen</div>
+        <div class="deco-mock-line" style="width:85%;"></div>
+        <div class="deco-mock-line" style="width:70%;"></div>
+        <div class="deco-mock-input" id="deco-mock-input"></div>
+        <div class="deco-mock-btn" id="deco-mock-btn"></div>
+        <div class="deco-mock-seatbox" id="deco-mock-seatbox" style="display:none;"></div>
+      </div>
       <div class="deco-list" id="deco-list"></div>
     </div>
   </section>
@@ -217,6 +242,15 @@
   </div>
 </div>
 
+<!-- Seitenmenü für Objekt-/Deko-Bearbeitung -->
+<div class="side-panel" id="sidePanel" hidden>
+  <div class="side-panel-header">
+    <h3 class="display" id="sidePanelTitle">Bearbeiten</h3>
+    <button onclick="closeSidePanel()">✕</button>
+  </div>
+  <div id="sidePanelBody"></div>
+</div>
+
 <div id="publishBar" style="display:none;">
   <span id="publishLog">Bereit zum Veröffentlichen.</span>
   <button class="btn" style="margin:0;width:auto;" onclick="publish()">Änderungen veröffentlichen</button>
@@ -225,15 +259,10 @@
 <script>
   // ============ Passwort-Gate ============
   const CONFIG_PASSWORD = "unserefeier2026";
-
   function checkPassword() {
     const val = document.getElementById("gate-pw").value;
-    if (val === CONFIG_PASSWORD) {
-      sessionStorage.setItem("cfg_ok", "1");
-      unlock();
-    } else {
-      document.getElementById("gate-error").style.display = "block";
-    }
+    if (val === CONFIG_PASSWORD) { sessionStorage.setItem("cfg_ok", "1"); unlock(); }
+    else document.getElementById("gate-error").style.display = "block";
   }
   function unlock() {
     document.getElementById("gate").style.display = "none";
@@ -243,16 +272,14 @@
   }
   if (sessionStorage.getItem("cfg_ok") === "1") unlock();
 
-  // ============ Shape-Pfade (0..100 Koordinatenraum) ============
+  // ============ Shape-Pfade ============
   const SHAPE_PATHS = {
     heart: "M50 92 C15 68,0 48,0 28 C0 10,20 2,35 12 C42 17,50 26,50 26 C50 26,58 17,65 12 C80 2,100 10,100 28 C100 48,85 68,50 92 Z",
     star: "M50 2 L61.8 33.8 L95.6 35.2 L69 56.2 L78.2 88.9 L50 70 L21.8 88.9 L31 56.2 L4.3 35.2 L38.2 33.8 Z"
   };
   const FLOWER_GEOM = { cx: 50, cy: 50, dist: 26.4, petalR: 20.16, centerR: 16.8 };
-
   function flowerCirclesSvg() {
-    const c = FLOWER_GEOM;
-    let out = "";
+    const c = FLOWER_GEOM; let out = "";
     for (let i = 0; i < 6; i++) {
       const a = (i * 60 * Math.PI) / 180;
       out += `<circle cx="${c.cx + c.dist * Math.cos(a)}" cy="${c.cy + c.dist * Math.sin(a)}" r="${c.petalR}" />`;
@@ -260,16 +287,30 @@
     out += `<circle cx="${c.cx}" cy="${c.cy}" r="${c.centerR}" />`;
     return out;
   }
-
-  function placeholderSvg(shape) {
-    if (shape === "flower") {
-      return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
-        <defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EAC7C0"/><stop offset="1" stop-color="#9CAF88"/></linearGradient></defs>
-        <g fill="url(#pg)">${flowerCirclesSvg()}</g></svg>`;
-    }
-    return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
-      <defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EAC7C0"/><stop offset="1" stop-color="#C97B84"/></linearGradient></defs>
-      <path d="${SHAPE_PATHS[shape]}" fill="url(#pg)" /></svg>`;
+  function shapeFillSvg(shape, color) {
+    const fill = color ? color : `url(#pg-${shape})`;
+    const grad = color ? "" : `<defs><linearGradient id="pg-${shape}" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EAC7C0"/><stop offset="1" stop-color="${shape === 'flower' ? '#9CAF88' : '#C97B84'}"/>
+    </linearGradient></defs>`;
+    if (shape === "flower") return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="placeholder-shape">${grad}<g fill="${fill}">${flowerCirclesSvg()}</g></svg>`;
+    return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="placeholder-shape">${grad}<path d="${SHAPE_PATHS[shape]}" fill="${fill}" /></svg>`;
+  }
+  function shapeOutlineOverlay(shape, color) {
+    if (!color) return "";
+    if (shape === "flower") return `<svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;"><g fill="none" stroke="${color}" stroke-width="2">${flowerCirclesSvg()}</g></svg>`;
+    return `<svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;"><path d="${SHAPE_PATHS[shape]}" fill="none" stroke="${color}" stroke-width="2" /></svg>`;
+  }
+  function doorIconSvg(color) {
+    return `<svg viewBox="0 0 24 24" class="rc-icon"><path d="M6 3h9a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6" fill="none" stroke="${color}" stroke-width="1.4"/>
+      <path d="M15 4 A16 16 0 0 1 15 20" fill="none" stroke="${color}" stroke-width="0.8" stroke-dasharray="2 2" opacity="0.6"/>
+      <circle cx="13" cy="12" r="0.7" fill="${color}"/></svg>`;
+  }
+  function toiletIconSvg(color) {
+    return `<svg viewBox="0 0 24 24" class="rc-icon"><path d="M8 3h8a2 2 0 0 1 2 2v2H6V5a2 2 0 0 1 2-2z" fill="${color}"/>
+      <path d="M6 8h12l-1.3 9.5A3 3 0 0 1 13.7 20h-3.4a3 3 0 0 1-3-2.5L6 8z" fill="none" stroke="${color}" stroke-width="1.3"/></svg>`;
+  }
+  function ringsIconSvg(color) {
+    return `<svg viewBox="0 0 40 24" class="rc-icon" style="width:75%;height:75%;"><circle cx="15" cy="12" r="9" fill="none" stroke="${color}" stroke-width="2.6"/><circle cx="25" cy="12" r="9" fill="none" stroke="${color}" stroke-width="2.6"/></svg>`;
   }
 
   // ============ State ============
@@ -277,6 +318,7 @@
   let roomObjects = [];
   let decorations = [];
   let objCounter = 1;
+  let currentDecoTab = "start";
 
   async function init() {
     try {
@@ -292,33 +334,39 @@
       })).filter((g) => g.vorname || g.nachname);
     } catch (e) { guests = []; }
 
-    try {
-      const res2 = await fetch("./layout.json");
-      roomObjects = res2.ok ? await res2.json() : [];
-    } catch (e) { roomObjects = []; }
+    try { const r2 = await fetch("./layout.json"); roomObjects = r2.ok ? await r2.json() : []; } catch (e) { roomObjects = []; }
+    try { const r3 = await fetch("./decorations.json"); decorations = r3.ok ? await r3.json() : []; } catch (e) { decorations = []; }
 
-    try {
-      const res3 = await fetch("./decorations.json");
-      decorations = res3.ok ? await res3.json() : [];
-    } catch (e) { decorations = []; }
+    roomObjects.forEach((o) => { if (o.rotation === undefined) o.rotation = 0; });
+    decorations.forEach((d) => {
+      if (d.rotation === undefined) d.rotation = 0;
+      if (d.opacity === undefined) d.opacity = 100;
+      if (d.color === undefined) d.color = null;
+      if (d.view === undefined) d.view = "start";
+    });
 
-    renderRoomCanvas();
-    renderTray();
-    renderGuestTable();
-    renderDecorations();
+    renderRoomCanvas(); renderTray(); renderGuestTable(); renderDecorations();
   }
 
-  function readCol(row, keys) {
-    for (const k of Object.keys(row)) {
-      if (keys.includes(k.trim().toLowerCase())) return row[k];
-    }
-    return "";
-  }
+  function readCol(row, keys) { for (const k of Object.keys(row)) if (keys.includes(k.trim().toLowerCase())) return row[k]; return ""; }
   function escapeHtml(s) { return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
   function escapeAttr(s) { return String(s).replace(/"/g, "&quot;"); }
 
+  // ============ Seitenmenü (generisch) ============
+  function openSidePanel(title, bodyHtml) {
+    document.getElementById("sidePanelTitle").textContent = title;
+    document.getElementById("sidePanelBody").innerHTML = bodyHtml;
+    document.getElementById("sidePanel").hidden = false;
+    document.getElementById("app").classList.add("panel-open");
+  }
+  function closeSidePanel() {
+    document.getElementById("sidePanel").hidden = true;
+    document.getElementById("app").classList.remove("panel-open");
+  }
+
   // ============ Raum-Baukasten ============
-  const DEFAULT_SIZE = { table: 16, brautpaar: 14, door: 8, toilet: 8 };
+  const DEFAULT_SIZE = { table: 16 };
+  const FIXED_SIZE = { brautpaar: { w: 11, h: 7 }, door: { w: 8, h: 8 }, toilet: { w: 8, h: 8 } };
   const DEFAULT_LABEL = { door: "Tür", toilet: "WC", brautpaar: "Brautpaar" };
 
   function addObject(type, shape) {
@@ -326,42 +374,93 @@
     if (type === "table") {
       name = prompt("Name des Tisches (z. B. \"Tisch 8 - Ranunkel\"):", "Neuer Tisch");
       if (!name) return;
-    } else if (type === "brautpaar") {
-      const custom = prompt("Beschriftung für den Brautpaar-Platz:", "Brautpaar");
-      if (custom) name = custom;
     }
-    const size = DEFAULT_SIZE[type] || 14;
+    const size = type === "table" ? DEFAULT_SIZE.table : FIXED_SIZE[type];
     roomObjects.push({
-      id: type + Date.now() + (objCounter++),
-      type, shape: shape || null,
-      name: name.trim(),
-      x: 50, y: 50, w: size, h: size
+      id: type + Date.now() + (objCounter++), type, shape: shape || null, name: name.trim(),
+      x: 50, y: 50, w: size.w !== undefined ? size.w : size, h: size.h !== undefined ? size.h : size,
+      rotation: 0
     });
     renderRoomCanvas();
     if (type === "table") renderTray();
   }
 
-  function renameObject(id) {
-    const o = roomObjects.find((x) => x.id === id);
-    if (!o) return;
-    const oldName = o.name;
-    const name = prompt("Neuer Name:", o.name);
-    if (!name) return;
-    o.name = name.trim();
-    if (o.type === "table") guests.forEach((g) => { if (g.tisch === oldName) g.tisch = o.name; });
-    renderRoomCanvas(); renderGuestTable();
-  }
-
   function deleteObject(id) {
     const o = roomObjects.find((x) => x.id === id);
     if (!o) return;
-    const msg = o.type === "table"
-      ? `Tisch "${o.name}" wirklich löschen? Zugeordnete Gäste wandern zurück in den Vorrat.`
-      : `"${o.name}" wirklich löschen?`;
+    const msg = o.type === "table" ? `Tisch "${o.name}" wirklich löschen? Zugeordnete Gäste wandern zurück in den Vorrat.` : `"${o.name}" wirklich löschen?`;
     if (!confirm(msg)) return;
     if (o.type === "table") guests.forEach((g) => { if (g.tisch === o.name) g.tisch = ""; });
     roomObjects = roomObjects.filter((x) => x.id !== id);
+    closeSidePanel();
     renderRoomCanvas(); renderTray(); renderGuestTable();
+  }
+
+  function openObjectEditor(id) {
+    const o = roomObjects.find((x) => x.id === id);
+    if (!o) return;
+    const typeLabel = { table: "Tisch", door: "Tür", toilet: "Toilette", brautpaar: "Brautpaar-Symbol" }[o.type];
+    let nameField = "";
+    if (o.type !== "brautpaar") {
+      nameField = `
+        <div class="side-field">
+          <label class="small">Name</label>
+          <input type="text" value="${escapeAttr(o.name)}" oninput="updateObjName('${id}', this.value)" />
+        </div>`;
+    }
+    let sizeFields = "";
+    if (o.type === "table") {
+      sizeFields = `
+        <div class="side-field">
+          <label class="small">Breite <span class="value-badge" id="objW-val">${o.w.toFixed(0)}%</span></label>
+          <input type="range" min="6" max="60" value="${o.w}" oninput="updateObjSize('${id}','w',this.value)" />
+        </div>
+        <div class="side-field">
+          <label class="small">Höhe <span class="value-badge" id="objH-val">${o.h.toFixed(0)}%</span></label>
+          <input type="range" min="6" max="60" value="${o.h}" oninput="updateObjSize('${id}','h',this.value)" />
+        </div>`;
+    }
+    const rotField = `
+      <div class="side-field">
+        <label class="small">Drehen <span class="value-badge" id="objRot-val">${o.rotation}°</span></label>
+        <input type="range" min="0" max="359" value="${o.rotation}" oninput="updateObjRotation('${id}',this.value)" />
+      </div>`;
+    openSidePanel(typeLabel + " bearbeiten", `
+      ${nameField}
+      ${sizeFields}
+      ${rotField}
+      <button class="btn-danger" style="width:100%;margin-top:0.5rem;" onclick="deleteObject('${id}')">Löschen</button>
+    `);
+  }
+
+  function updateObjName(id, val) {
+    const o = roomObjects.find((x) => x.id === id);
+    if (!o) return;
+    const oldName = o.name;
+    o.name = val;
+    if (o.type === "table") guests.forEach((g) => { if (g.tisch === oldName) g.tisch = val; });
+    renderRoomCanvas(); renderGuestTable();
+  }
+  function updateObjSize(id, dim, val) {
+    const o = roomObjects.find((x) => x.id === id);
+    if (!o) return;
+    o[dim] = parseFloat(val);
+    document.getElementById(dim === "w" ? "objW-val" : "objH-val").textContent = val + "%";
+    renderRoomCanvas();
+  }
+  function updateObjRotation(id, val) {
+    const o = roomObjects.find((x) => x.id === id);
+    if (!o) return;
+    o.rotation = parseFloat(val);
+    document.getElementById("objRot-val").textContent = val + "°";
+    renderRoomCanvas();
+  }
+
+  function chipFontSize(count) {
+    if (count <= 3) return "0.62rem";
+    if (count <= 5) return "0.54rem";
+    if (count <= 8) return "0.46rem";
+    return "0.4rem";
   }
 
   function renderRoomCanvas() {
@@ -369,37 +468,39 @@
     canvas.innerHTML = "";
     roomObjects.forEach((o) => {
       const el = document.createElement("div");
-      let cls = "rc-obj " + o.type;
-      if (o.type === "table" && o.shape === "round") cls += " round";
-      el.className = cls;
-      el.style.left = o.x + "%";
-      el.style.top = o.y + "%";
-      el.style.width = o.w + "%";
-      el.style.height = o.h + "%";
-      el.dataset.objId = o.id;
+      el.className = "rc-obj " + o.type + (o.type === "table" && o.shape === "round" ? " round" : "");
+      el.style.left = o.x + "%"; el.style.top = o.y + "%";
+      el.style.width = o.w + "%"; el.style.height = o.h + "%";
+      el.style.transform = `translate(-50%,-50%) rotate(${o.rotation || 0}deg)`;
 
-      let inner = `<div class="rc-handle" title="Ziehen zum Verschieben">⠿</div>
-        <div class="rc-actions">
-          <button onclick="renameObject('${o.id}')" title="Umbenennen">✎</button>
-          <button onclick="deleteObject('${o.id}')" title="Löschen">✕</button>
-        </div>
-        <div class="rc-name">${escapeHtml(o.name)}</div>`;
+      let iconHtml = "";
+      if (o.type === "door") iconHtml = doorIconSvg("#7A6F6A");
+      else if (o.type === "toilet") iconHtml = toiletIconSvg("#7A6F6A");
+      else if (o.type === "brautpaar") iconHtml = ringsIconSvg("#C9A05C");
 
+      let content = "";
       if (o.type === "table") {
-        inner += `<div class="rc-chips" data-drop-table="${escapeAttr(o.name)}"></div>`;
+        content = `<div class="rc-obj-label">${escapeHtml(o.name)}</div><div class="rc-chips" data-drop-table="${escapeAttr(o.name)}"></div>`;
+      } else {
+        content = iconHtml + `<div class="rc-obj-label">${escapeHtml(o.name)}</div>`;
       }
-      inner += `<div class="rc-resize" title="Größe ändern"></div>`;
-      el.innerHTML = inner;
+
+      el.innerHTML = `
+        <div class="rc-handle" title="Verschieben">⠿</div>
+        <div class="rc-toolbtn edit" title="Bearbeiten" onclick="openObjectEditor('${o.id}')">✎</div>
+        <div class="rc-toolbtn del" title="Löschen" onclick="deleteObject('${o.id}')">✕</div>
+        <div class="rc-obj-inner">${content}</div>
+      `;
       canvas.appendChild(el);
 
       if (o.type === "table") {
         const chipsEl = el.querySelector(".rc-chips");
-        guests.filter((g) => g.tisch === o.name).forEach((g) => chipsEl.appendChild(makeChip(g)));
+        const assigned = guests.filter((g) => g.tisch === o.name);
+        chipsEl.style.fontSize = chipFontSize(assigned.length);
+        assigned.forEach((g) => chipsEl.appendChild(makeChip(g)));
         makeDroppable(chipsEl, o.name);
       }
-
       makeDraggableObject(el, o);
-      makeResizableObject(el, o);
     });
   }
 
@@ -418,8 +519,7 @@
     el.addEventListener("dragover", (e) => { e.preventDefault(); el.classList.add("dragover"); });
     el.addEventListener("dragleave", () => el.classList.remove("dragover"));
     el.addEventListener("drop", (e) => {
-      e.preventDefault();
-      el.classList.remove("dragover");
+      e.preventDefault(); el.classList.remove("dragover");
       const key = e.dataTransfer.getData("text/plain");
       const guest = guests.find((g) => guestKey(g) === key);
       if (guest) guest.tisch = tableName;
@@ -430,37 +530,15 @@
   function makeDraggableObject(el, o) {
     const handle = el.querySelector(".rc-handle");
     handle.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
+      e.preventDefault(); e.stopPropagation();
       handle.setPointerCapture(e.pointerId);
       const rect = document.getElementById("room-canvas").getBoundingClientRect();
       function onMove(ev) {
         let x = ((ev.clientX - rect.left) / rect.width) * 100;
         let y = ((ev.clientY - rect.top) / rect.height) * 100;
-        x = Math.max(2, Math.min(98, x));
-        y = Math.max(2, Math.min(98, y));
+        x = Math.max(2, Math.min(98, x)); y = Math.max(2, Math.min(98, y));
         el.style.left = x + "%"; el.style.top = y + "%";
         o.x = Math.round(x * 10) / 10; o.y = Math.round(y * 10) / 10;
-      }
-      function onUp() { handle.removeEventListener("pointermove", onMove); handle.removeEventListener("pointerup", onUp); }
-      handle.addEventListener("pointermove", onMove);
-      handle.addEventListener("pointerup", onUp);
-    });
-  }
-
-  function makeResizableObject(el, o) {
-    const handle = el.querySelector(".rc-resize");
-    handle.addEventListener("pointerdown", (e) => {
-      e.preventDefault(); e.stopPropagation();
-      handle.setPointerCapture(e.pointerId);
-      const rect = document.getElementById("room-canvas").getBoundingClientRect();
-      const startW = o.w, startH = o.h;
-      const startX = e.clientX, startY = e.clientY;
-      function onMove(ev) {
-        const dw = ((ev.clientX - startX) / rect.width) * 100 * 2;
-        const dh = ((ev.clientY - startY) / rect.height) * 100 * 2;
-        o.w = Math.max(4, Math.min(70, startW + dw));
-        o.h = Math.max(4, Math.min(70, startH + dh));
-        el.style.width = o.w + "%"; el.style.height = o.h + "%";
       }
       function onUp() { handle.removeEventListener("pointermove", onMove); handle.removeEventListener("pointerup", onUp); }
       handle.addEventListener("pointermove", onMove);
@@ -472,8 +550,7 @@
     const tray = document.getElementById("tray");
     tray.innerHTML = "";
     const tableNames = roomObjects.filter((o) => o.type === "table").map((o) => o.name);
-    const unassigned = guests.filter((g) => !tableNames.includes(g.tisch));
-    unassigned.forEach((g) => tray.appendChild(makeChip(g)));
+    guests.filter((g) => !tableNames.includes(g.tisch)).forEach((g) => tray.appendChild(makeChip(g)));
     makeDroppable(tray, "");
   }
 
@@ -523,99 +600,90 @@
   }
 
   // ============ Dekorationen ============
-  let pendingDecoShape = null;
-  let editingDecoId = null;
-
-  function triggerAddDeco(shape) {
-    pendingDecoShape = shape;
-    editingDecoId = null;
-    document.getElementById("decoFileInput").value = "";
-    document.getElementById("decoFileInput").click();
+  function addDeco(shape) {
+    decorations.push({
+      id: "deco" + Date.now(), shape, x: 50, y: 50, size: 16, rotation: 0, opacity: 100,
+      color: null, image: null, filename: null, view: currentDecoTab
+    });
+    renderDecorations();
   }
 
-  function editDecoPhoto(id) {
-    const d = decorations.find((x) => x.id === id);
-    if (!d) return;
-    pendingDecoShape = d.shape;
-    editingDecoId = id;
-    document.getElementById("decoFileInput").value = "";
-    document.getElementById("decoFileInput").click();
-  }
-
-  function onDecoFileChosen(evt) {
-    const file = evt.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => openCropModal(e.target.result, pendingDecoShape);
-    reader.readAsDataURL(file);
+  function switchDecoTab(tab) {
+    currentDecoTab = tab;
+    document.getElementById("tab-start").classList.toggle("active", tab === "start");
+    document.getElementById("tab-end").classList.toggle("active", tab === "end");
+    document.getElementById("deco-mock-title").textContent = tab === "start" ? "Willkommen" : "Hallo Anna!";
+    document.getElementById("deco-mock-input").style.display = tab === "start" ? "block" : "none";
+    document.getElementById("deco-mock-btn").style.display = tab === "start" ? "block" : "none";
+    document.getElementById("deco-mock-seatbox").style.display = tab === "end" ? "block" : "none";
+    renderDecorations();
   }
 
   function deleteDeco(id) {
     if (!confirm("Diese Dekoration wirklich löschen?")) return;
     decorations = decorations.filter((d) => d.id !== id);
+    closeSidePanel();
     renderDecorations();
   }
 
+  function decoThumbHtml(d) {
+    if (d.image) return `<img class="thumb" src="${d.image}" />`;
+    if (d.filename) return `<img class="thumb" src="./assets/${d.filename}" onerror="this.outerHTML=window.__shapeFillSvg('${d.shape}', ${d.color ? `'${d.color}'` : "null"})" />`;
+    return shapeFillSvg(d.shape, d.color).replace("<svg", `<svg class="thumb"`);
+  }
+  window.__shapeFillSvg = (shape, color) => shapeFillSvg(shape, color).replace("<svg", `<svg class="thumb"`);
+
   function renderDecorations() {
     const preview = document.getElementById("deco-card-preview");
-    preview.innerHTML = "";
-    decorations.forEach((d) => {
+    document.querySelectorAll(".deco-marker").forEach((m) => m.remove());
+
+    decorations.filter((d) => d.view === currentDecoTab).forEach((d) => {
       const marker = document.createElement("div");
       marker.className = "deco-marker";
-      marker.style.left = d.x + "%";
-      marker.style.top = d.y + "%";
-      marker.style.width = (d.size / 100) * 260 + "px";
-      marker.style.height = (d.size / 100) * 260 + "px";
+      marker.style.left = d.x + "%"; marker.style.top = d.y + "%";
+      marker.style.width = (d.size / 100) * 280 + "px";
+      marker.style.height = (d.size / 100) * 280 + "px";
+      marker.style.transform = `translate(-50%,-50%) rotate(${d.rotation || 0}deg)`;
+      marker.style.opacity = d.opacity / 100;
 
-      if (d.image) {
-        marker.innerHTML = `<img src="${d.image}" />`;
-      } else if (d.filename) {
-        marker.innerHTML = `<img src="./assets/${d.filename}" onerror="this.outerHTML=window.__placeholderSvg('${d.shape}')" />`;
-      } else {
-        marker.innerHTML = placeholderSvg(d.shape);
-      }
-      marker.innerHTML += `<div class="deco-del" onclick="deleteDeco('${d.id}')">✕</div><div class="deco-resize"></div>`;
+      let inner = `<div class="deco-marker-inner">${decoThumbHtml(d).replace('class="thumb"', 'style="width:100%;height:100%;"')}</div>`;
+      if (d.color && (d.image || d.filename)) inner += shapeOutlineOverlay(d.shape, d.color);
+      marker.innerHTML = inner + `
+        <div class="deco-edit" onclick="openDecoEditor('${d.id}')">✎</div>
+        <div class="deco-del" onclick="deleteDeco('${d.id}')">✕</div>
+      `;
       preview.appendChild(marker);
       makeDraggableDeco(marker, d, preview);
-      makeResizableDeco(marker.querySelector(".deco-resize"), marker, d);
     });
 
     const list = document.getElementById("deco-list");
     list.innerHTML = "";
-    if (!decorations.length) {
-      list.innerHTML = `<p style="color:var(--ink-soft);font-size:0.85rem;">Noch keine Dekoration hinzugefügt.</p>`;
-    }
-    decorations.forEach((d) => {
+    const visible = decorations.filter((d) => d.view === currentDecoTab);
+    if (!visible.length) list.innerHTML = `<p style="color:var(--ink-soft);font-size:0.85rem;">Noch keine Dekoration in dieser Ansicht.</p>`;
+    visible.forEach((d) => {
       const item = document.createElement("div");
       item.className = "deco-list-item";
-      const thumb = d.image
-        ? `<img src="${d.image}" />`
-        : d.filename
-          ? `<img src="./assets/${d.filename}" onerror="this.outerHTML='<div class=placeholder></div>'" />`
-          : `<div class="placeholder"></div>`;
       item.innerHTML = `
-        ${thumb}
+        ${decoThumbHtml(d)}
         <div class="grow">${shapeLabel(d.shape)}</div>
-        <button onclick="editDecoPhoto('${d.id}')">Foto ändern</button>
+        <button onclick="openDecoEditor('${d.id}')">Bearbeiten</button>
         <button onclick="deleteDeco('${d.id}')">Löschen</button>
       `;
       list.appendChild(item);
     });
   }
-  window.__placeholderSvg = placeholderSvg;
   function shapeLabel(s) { return s === "heart" ? "Herz" : s === "star" ? "Stern" : "Blume"; }
 
   function makeDraggableDeco(marker, d, container) {
     marker.addEventListener("pointerdown", (e) => {
-      if (e.target.classList.contains("deco-resize") || e.target.classList.contains("deco-del")) return;
+      if (e.target.classList.contains("deco-del") || e.target.classList.contains("deco-edit")) return;
       e.preventDefault();
       marker.setPointerCapture(e.pointerId);
       const rect = container.getBoundingClientRect();
       function onMove(ev) {
         let x = ((ev.clientX - rect.left) / rect.width) * 100;
         let y = ((ev.clientY - rect.top) / rect.height) * 100;
-        x = Math.max(-10, Math.min(110, x));
-        y = Math.max(-10, Math.min(110, y));
+        x = Math.max(-10, Math.min(110, x)); y = Math.max(-10, Math.min(110, y));
         marker.style.left = x + "%"; marker.style.top = y + "%";
         d.x = Math.round(x * 10) / 10; d.y = Math.round(y * 10) / 10;
       }
@@ -625,90 +693,140 @@
     });
   }
 
-  function makeResizableDeco(handle, marker, d) {
-    handle.addEventListener("pointerdown", (e) => {
-      e.preventDefault(); e.stopPropagation();
-      handle.setPointerCapture(e.pointerId);
-      const startSize = d.size;
-      const startX = e.clientX;
-      function onMove(ev) {
-        const delta = ((ev.clientX - startX) / 260) * 100;
-        d.size = Math.max(6, Math.min(45, startSize + delta));
-        marker.style.width = (d.size / 100) * 260 + "px";
-        marker.style.height = (d.size / 100) * 260 + "px";
-      }
-      function onUp() { handle.removeEventListener("pointermove", onMove); handle.removeEventListener("pointerup", onUp); }
-      handle.addEventListener("pointermove", onMove);
-      handle.addEventListener("pointerup", onUp);
-    });
+  function openDecoEditor(id) {
+    const d = decorations.find((x) => x.id === id);
+    if (!d) return;
+    const hasImage = !!(d.image || d.filename);
+    openSidePanel(shapeLabel(d.shape) + " bearbeiten", `
+      <div class="side-field">
+        <label class="small">Foto</label>
+        ${hasImage
+          ? `<button class="btn-outline" style="width:100%;margin-bottom:0.5rem;" onclick="triggerDecoPhoto('${id}')">Foto ändern</button>
+             <button class="btn-outline" style="width:100%;" onclick="removeDecoPhoto('${id}')">Foto entfernen</button>`
+          : `<button class="btn-outline" style="width:100%;" onclick="triggerDecoPhoto('${id}')">Foto hinzufügen</button>`}
+      </div>
+      <div class="side-field">
+        <label class="small">Farbe ${hasImage ? "(Rahmen-Akzent)" : "(Füllung)"}</label>
+        <input type="color" value="${d.color || (d.shape === 'flower' ? '#9CAF88' : '#C97B84')}" oninput="updateDecoField('${id}','color',this.value)" />
+        ${d.color ? `<button class="btn-outline" style="width:100%;margin-top:0.5rem;" onclick="clearDecoColor('${id}')">Standard-Verlauf verwenden</button>` : ""}
+      </div>
+      <div class="side-field">
+        <label class="small">Größe <span class="value-badge" id="decoSize-val">${d.size.toFixed(0)}%</span></label>
+        <input type="range" min="6" max="45" value="${d.size}" oninput="updateDecoField('${id}','size',parseFloat(this.value))" />
+      </div>
+      <div class="side-field">
+        <label class="small">Drehen <span class="value-badge" id="decoRot-val">${d.rotation}°</span></label>
+        <input type="range" min="0" max="359" value="${d.rotation}" oninput="updateDecoField('${id}','rotation',parseFloat(this.value))" />
+      </div>
+      <div class="side-field">
+        <label class="small">Deckkraft <span class="value-badge" id="decoOpa-val">${d.opacity}%</span></label>
+        <input type="range" min="20" max="100" value="${d.opacity}" oninput="updateDecoField('${id}','opacity',parseFloat(this.value))" />
+      </div>
+      <div class="side-field">
+        <label class="small">Ansicht</label>
+        <select onchange="updateDecoView('${id}', this.value)">
+          <option value="start" ${d.view === "start" ? "selected" : ""}>Start (Willkommen)</option>
+          <option value="end" ${d.view === "end" ? "selected" : ""}>Ende (Platz gefunden)</option>
+        </select>
+      </div>
+      <button class="btn-danger" style="width:100%;" onclick="deleteDeco('${id}')">Löschen</button>
+    `);
   }
 
-  // ============ Crop-Modal (WhatsApp-artiges Zuschneiden) ============
-  let cropState = null;
+  function updateDecoField(id, field, value) {
+    const d = decorations.find((x) => x.id === id);
+    if (!d) return;
+    d[field] = value;
+    const badgeMap = { size: "decoSize-val", rotation: "decoRot-val", opacity: "decoOpa-val" };
+    if (badgeMap[field]) document.getElementById(badgeMap[field]).textContent = value + (field === "rotation" ? "°" : "%");
+    renderDecorations();
+    if (field === "color") openDecoEditor(id); // Button-Sichtbarkeit aktualisieren
+  }
+  function clearDecoColor(id) {
+    const d = decorations.find((x) => x.id === id);
+    if (!d) return;
+    d.color = null;
+    renderDecorations();
+    openDecoEditor(id);
+  }
+  function updateDecoView(id, view) {
+    const d = decorations.find((x) => x.id === id);
+    if (!d) return;
+    d.view = view;
+    closeSidePanel();
+    renderDecorations();
+  }
 
+  let pendingDecoId = null;
+  function triggerDecoPhoto(id) {
+    pendingDecoId = id;
+    document.getElementById("decoFileInput").value = "";
+    document.getElementById("decoFileInput").click();
+  }
+  function removeDecoPhoto(id) {
+    const d = decorations.find((x) => x.id === id);
+    if (!d) return;
+    d.image = null; d.filename = null;
+    renderDecorations();
+    openDecoEditor(id);
+  }
+  function onDecoFileChosen(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    const d = decorations.find((x) => x.id === pendingDecoId);
+    if (!d) return;
+    const reader = new FileReader();
+    reader.onload = (e) => openCropModal(e.target.result, d.shape);
+    reader.readAsDataURL(file);
+  }
+
+  // ============ Crop-Modal ============
+  let cropState = null;
   function openCropModal(dataUrl, shape) {
     const img = new Image();
     img.onload = () => {
-      const stageSize = 260;
-      const baseScale = Math.max(stageSize / img.naturalWidth, stageSize / img.naturalHeight);
-      cropState = {
-        shape, img, naturalW: img.naturalWidth, naturalH: img.naturalHeight,
-        baseScale, scale: baseScale, panX: 0, panY: 0
-      };
+      const baseScale = Math.max(260 / img.naturalWidth, 260 / img.naturalHeight);
+      cropState = { shape, img, naturalW: img.naturalWidth, naturalH: img.naturalHeight, baseScale, scale: baseScale, panX: 0, panY: 0 };
       document.getElementById("cropZoom").value = 100;
       setCropMaskOverlay(shape);
-      const cropImg = document.getElementById("cropImg");
-      cropImg.src = dataUrl;
+      document.getElementById("cropImg").src = dataUrl;
       updateCropImgTransform();
       document.getElementById("cropModal").hidden = false;
     };
     img.src = dataUrl;
   }
-
   function setCropMaskOverlay(shape) {
     const svg = document.getElementById("cropMaskOverlay");
-    let holeMask = "";
-    let outline = "";
+    let hole = "", outline = "";
     if (shape === "heart" || shape === "star") {
-      holeMask = `<path d="${SHAPE_PATHS[shape]}" />`;
+      hole = `<path d="${SHAPE_PATHS[shape]}" />`;
       outline = `<path d="${SHAPE_PATHS[shape]}" fill="none" stroke="white" stroke-width="1.4" stroke-opacity="0.95" />`;
     } else {
-      holeMask = `<g>${flowerCirclesSvg()}</g>`;
+      hole = `<g>${flowerCirclesSvg()}</g>`;
       outline = `<g fill="none" stroke="white" stroke-width="1.4" stroke-opacity="0.95">${flowerCirclesSvg()}</g>`;
     }
-    svg.innerHTML = `
-      <defs><mask id="cm"><rect width="100" height="100" fill="white"/><g fill="black">${holeMask}</g></mask></defs>
-      <rect width="100" height="100" fill="rgba(61,52,54,0.55)" mask="url(#cm)" />
-      ${outline}
-    `;
+    svg.innerHTML = `<defs><mask id="cm"><rect width="100" height="100" fill="white"/><g fill="black">${hole}</g></mask></defs>
+      <rect width="100" height="100" fill="rgba(61,52,54,0.55)" mask="url(#cm)" />${outline}`;
   }
-
   function updateCropImgTransform() {
-    const img = document.getElementById("cropImg");
-    const s = cropState;
-    img.style.width = s.naturalW + "px";
-    img.style.height = s.naturalH + "px";
+    const img = document.getElementById("cropImg"); const s = cropState;
+    img.style.width = s.naturalW + "px"; img.style.height = s.naturalH + "px";
     img.style.left = (130 - s.naturalW / 2 + s.panX) + "px";
     img.style.top = (130 - s.naturalH / 2 + s.panY) + "px";
-    img.style.transform = `scale(${s.scale})`;
-    img.style.transformOrigin = "center center";
+    img.style.transform = `scale(${s.scale})`; img.style.transformOrigin = "center center";
   }
-
   document.getElementById("cropZoom").addEventListener("input", (e) => {
     if (!cropState) return;
     cropState.scale = cropState.baseScale * (e.target.value / 100);
     updateCropImgTransform();
   });
-
   (function setupCropDrag() {
     const stage = document.getElementById("cropStage");
     let dragging = false, startX, startY, startPanX, startPanY;
     stage.addEventListener("pointerdown", (e) => {
       if (!cropState) return;
-      dragging = true;
-      stage.setPointerCapture(e.pointerId);
-      startX = e.clientX; startY = e.clientY;
-      startPanX = cropState.panX; startPanY = cropState.panY;
+      dragging = true; stage.setPointerCapture(e.pointerId);
+      startX = e.clientX; startY = e.clientY; startPanX = cropState.panX; startPanY = cropState.panY;
     });
     stage.addEventListener("pointermove", (e) => {
       if (!dragging || !cropState) return;
@@ -718,11 +836,7 @@
     });
     stage.addEventListener("pointerup", () => { dragging = false; });
   })();
-
-  function closeCropModal() {
-    document.getElementById("cropModal").hidden = true;
-    cropState = null;
-  }
+  function closeCropModal() { document.getElementById("cropModal").hidden = true; cropState = null; }
 
   function clipHeartOrStar(ctx, size, shape) {
     const factor = size / 100;
@@ -730,30 +844,24 @@
     ctx.clip(new Path2D(scaled));
   }
   function clipFlower(ctx, size) {
-    const factor = size / 100;
-    const c = FLOWER_GEOM;
+    const factor = size / 100; const c = FLOWER_GEOM;
     const cx = c.cx * factor, cy = c.cy * factor, dist = c.dist * factor, petalR = c.petalR * factor, centerR = c.centerR * factor;
     const path = new Path2D();
     for (let i = 0; i < 6; i++) {
       const a = (i * 60 * Math.PI) / 180;
       const px = cx + dist * Math.cos(a), py = cy + dist * Math.sin(a);
-      path.moveTo(px + petalR, py);
-      path.arc(px, py, petalR, 0, Math.PI * 2);
+      path.moveTo(px + petalR, py); path.arc(px, py, petalR, 0, Math.PI * 2);
     }
-    path.moveTo(cx + centerR, cy);
-    path.arc(cx, cy, centerR, 0, Math.PI * 2);
+    path.moveTo(cx + centerR, cy); path.arc(cx, cy, centerR, 0, Math.PI * 2);
     ctx.clip(path);
   }
-
   function confirmCrop() {
     const OUT = 500;
     const canvas = document.createElement("canvas");
     canvas.width = OUT; canvas.height = OUT;
     const ctx = canvas.getContext("2d");
     ctx.save();
-    if (cropState.shape === "flower") clipFlower(ctx, OUT);
-    else clipHeartOrStar(ctx, OUT, cropState.shape);
-
+    if (cropState.shape === "flower") clipFlower(ctx, OUT); else clipHeartOrStar(ctx, OUT, cropState.shape);
     const scaleFactor = OUT / 260;
     const drawW = cropState.naturalW * cropState.scale * scaleFactor;
     const drawH = cropState.naturalH * cropState.scale * scaleFactor;
@@ -761,40 +869,25 @@
     const drawY = OUT / 2 + cropState.panY * scaleFactor - drawH / 2;
     ctx.drawImage(cropState.img, drawX, drawY, drawW, drawH);
     ctx.restore();
-
     const dataUrl = canvas.toDataURL("image/png");
 
-    if (editingDecoId) {
-      const d = decorations.find((x) => x.id === editingDecoId);
-      if (d) { d.image = dataUrl; d.filename = null; }
-    } else {
-      decorations.push({
-        id: "deco" + Date.now(),
-        shape: cropState.shape,
-        x: 50, y: 50, size: 16,
-        image: dataUrl, filename: null
-      });
-    }
+    const d = decorations.find((x) => x.id === pendingDecoId);
+    if (d) { d.image = dataUrl; d.filename = null; }
     closeCropModal();
     renderDecorations();
+    if (d) openDecoEditor(d.id);
   }
 
   // ============ Veröffentlichen ============
   function b64EncodeUnicode(str) { return btoa(unescape(encodeURIComponent(str))); }
-
   async function publishFile(path, base64Content, log) {
-    const res = await fetch("/api/publish", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ path, content: base64Content })
-    });
+    const res = await fetch("/api/publish", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ path, content: base64Content }) });
     if (res.ok) { log(`✅ ${path} veröffentlicht`); return true; }
     const data = await res.json().catch(() => ({}));
     log(`❌ ${path} fehlgeschlagen: ${data.error || res.status}`);
     console.error(data.error);
     return false;
   }
-
   async function publish() {
     const logEl = document.getElementById("publishLog");
     const log = (msg) => { logEl.textContent = msg; };
@@ -815,16 +908,17 @@
     for (const d of decorations) {
       if (d.image) {
         const filename = `decoration-${d.id}.png`;
-        const imgBase64 = d.image.split(",")[1];
-        const ok = await publishFile(`assets/${filename}`, imgBase64, log);
+        const ok = await publishFile(`assets/${filename}`, d.image.split(",")[1], log);
         if (!ok) return;
-        d.filename = filename;
-        d.image = null;
+        d.filename = filename; d.image = null;
       }
     }
 
     log("Veröffentliche Dekorations-Positionen …");
-    const decoJson = decorations.map((d) => ({ id: d.id, shape: d.shape, x: d.x, y: d.y, size: d.size, image: d.filename || null }));
+    const decoJson = decorations.map((d) => ({
+      id: d.id, shape: d.shape, x: d.x, y: d.y, size: d.size, rotation: d.rotation,
+      opacity: d.opacity, color: d.color, image: d.filename || null, view: d.view
+    }));
     const decoBase64 = b64EncodeUnicode(JSON.stringify(decoJson, null, 2));
     if (!(await publishFile("decorations.json", decoBase64, log))) return;
 
