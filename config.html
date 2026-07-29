@@ -115,6 +115,7 @@
 
   /* ---------- Crop-Modal ---------- */
   .modal-overlay { position: fixed; inset: 0; background: rgba(61,52,54,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 1rem; }
+  .modal-overlay[hidden] { display: none; }
   .modal-box { background: #fff; border-radius: 20px; padding: 1.75rem; width: 100%; max-width: 22rem; text-align: center; }
   .crop-stage { width: 260px; height: 260px; margin: 0 auto 1rem; position: relative; overflow: hidden; border-radius: 12px; background: #eee; touch-action: none; }
   .crop-stage img { position: absolute; }
@@ -666,12 +667,19 @@
 
   function setCropMaskOverlay(shape) {
     const svg = document.getElementById("cropMaskOverlay");
-    let hole = "";
-    if (shape === "heart" || shape === "star") hole = `<path d="${SHAPE_PATHS[shape]}" />`;
-    else hole = `<g>${flowerCirclesSvg()}</g>`;
+    let holeMask = "";
+    let outline = "";
+    if (shape === "heart" || shape === "star") {
+      holeMask = `<path d="${SHAPE_PATHS[shape]}" />`;
+      outline = `<path d="${SHAPE_PATHS[shape]}" fill="none" stroke="white" stroke-width="1.4" stroke-opacity="0.95" />`;
+    } else {
+      holeMask = `<g>${flowerCirclesSvg()}</g>`;
+      outline = `<g fill="none" stroke="white" stroke-width="1.4" stroke-opacity="0.95">${flowerCirclesSvg()}</g>`;
+    }
     svg.innerHTML = `
-      <defs><mask id="cm"><rect width="100" height="100" fill="white"/><g fill="black">${hole}</g></mask></defs>
+      <defs><mask id="cm"><rect width="100" height="100" fill="white"/><g fill="black">${holeMask}</g></mask></defs>
       <rect width="100" height="100" fill="rgba(61,52,54,0.55)" mask="url(#cm)" />
+      ${outline}
     `;
   }
 
