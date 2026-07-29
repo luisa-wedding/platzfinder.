@@ -72,10 +72,6 @@
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; } }
   :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
 
-  .lang-switch { display: flex; justify-content: center; gap: 0.4rem; margin-bottom: 1.1rem; flex-wrap: wrap; }
-  .lang-pill { border: 1px solid var(--blush-deep); background: #fff; color: var(--ink-soft); border-radius: 999px; padding: 0.25rem 0.75rem; font-size: 0.75rem; cursor: pointer; }
-  .lang-pill.active { background: var(--rose); border-color: var(--rose); color: #fff; }
-
   #decorations-layer { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 15; }
   .deco { position: absolute; filter: drop-shadow(0 6px 14px rgba(61, 52, 54, 0.22)); }
   .deco img, .deco svg { width: 100%; height: 100%; display: block; }
@@ -105,7 +101,6 @@
 
     <!-- Willkommen -->
     <div class="view active" id="view-welcome">
-      <div class="lang-switch" id="lang-switch"></div>
       <div id="monogram-slot" style="margin:0 auto;display:block;text-align:center;"></div>
 
       <h1 class="title display" id="t-welcomeTitle">Willkommen</h1>
@@ -248,25 +243,11 @@
       if (!content) return;
       monogramText = content.monogramText || "I & L";
       currentLang = (content.activeLanguages && content.activeLanguages[0]) || "de";
-      renderLangSwitch();
       applyLanguage(currentLang);
       renderMonogram();
     })
     .catch(() => {});
 
-  function renderLangSwitch() {
-    const el = document.getElementById("lang-switch");
-    const langs = (content && content.activeLanguages) || [];
-    if (langs.length <= 1) { el.innerHTML = ""; return; }
-    el.innerHTML = langs.map((code) =>
-      `<button type="button" class="lang-pill ${code === currentLang ? "active" : ""}" onclick="setLanguage('${code}')">${(content[code] && content[code].label) || code}</button>`
-    ).join("");
-  }
-  function setLanguage(code) {
-    currentLang = code;
-    renderLangSwitch();
-    applyLanguage(code);
-  }
   function applyLanguage(code, guestName) {
     if (!content || !content[code]) return;
     const t = content[code];
@@ -481,7 +462,7 @@
   function resetView() {
     document.getElementById("guest-name").value = "";
     document.getElementById("submit-btn").disabled = true;
-    if (content && content.activeLanguages) { currentLang = content.activeLanguages[0]; renderLangSwitch(); applyLanguage(currentLang); }
+    if (content && content.activeLanguages) { currentLang = content.activeLanguages[0]; applyLanguage(currentLang); }
     showView("welcome");
     renderDecorationsForView("start");
     document.getElementById("guest-name").focus();
