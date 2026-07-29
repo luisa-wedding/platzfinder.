@@ -477,7 +477,7 @@
 
   function attachMoveHandler(bodyEl, obj, getRect, onLiveUpdate, onCommit) {
     bodyEl.addEventListener("pointerdown", (e) => {
-      if (e.target.closest(".manip-handle-resize, .manip-handle-rotate, .manip-del, .manip-edit")) return;
+      if (e.target.closest(".manip-handle-resize, .manip-handle-rotate, .manip-del, .manip-edit, .chip")) return;
       e.preventDefault();
       bodyEl.setPointerCapture(e.pointerId);
       const rect = getRect();
