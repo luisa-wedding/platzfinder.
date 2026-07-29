@@ -1,3 +1,26 @@
 [
-  { "id": "main-heart", "shape": "heart", "x": 90, "y": 2, "size": 17, "rotation": 0, "opacity": 100, "color": null, "image": null, "view": "start" }
+  {
+    "id": "main-heart",
+    "shape": "heart",
+    "x": 90.5,
+    "y": 6.8,
+    "size": 17,
+    "rotation": 0,
+    "opacity": 100,
+    "color": null,
+    "image": "decoration-main-heart.png",
+    "view": "start"
+  },
+  {
+    "id": "deco1785317269789",
+    "shape": "flower",
+    "x": 8.9,
+    "y": 94.5,
+    "size": 19,
+    "rotation": 0,
+    "opacity": 100,
+    "color": "#658443",
+    "image": null,
+    "view": "start"
+  }
 ]
