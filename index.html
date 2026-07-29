@@ -72,6 +72,10 @@
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; } }
   :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
 
+  .lang-pill { border: 1px solid var(--blush-deep); background: #fff; color: var(--ink-soft); border-radius: 999px; padding: 0.3rem 0.85rem; font-size: 0.75rem; cursor: pointer; font-family: inherit; }
+  .lang-pill.active { background: var(--rose); border-color: var(--rose); color: #fff; }
+  #lang-switcher-el { display: flex; gap: 0.35rem; z-index: 16; filter: drop-shadow(0 4px 10px rgba(61,52,54,0.15)); }
+
   #decorations-layer { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 15; }
   .deco { position: absolute; filter: drop-shadow(0 6px 14px rgba(61, 52, 54, 0.22)); }
   .deco img, .deco svg { width: 100%; height: 100%; display: block; }
@@ -245,8 +249,32 @@
       currentLang = (content.activeLanguages && content.activeLanguages[0]) || "de";
       applyLanguage(currentLang);
       renderMonogram();
+      renderLangSwitcher();
     })
     .catch(() => {});
+
+  function renderLangSwitcher() {
+    const existing = document.getElementById("lang-switcher-el");
+    if (existing) existing.remove();
+    if (!content || !content.languageSwitcher || !content.languageSwitcher.enabled) return;
+    if (!content.activeLanguages || content.activeLanguages.length <= 1) return;
+    const pos = content.languageSwitcher;
+    const el = document.createElement("div");
+    el.id = "lang-switcher-el";
+    el.style.position = "absolute";
+    el.style.left = pos.x + "%";
+    el.style.top = pos.y + "%";
+    el.style.transform = "translate(-50%, -50%)";
+    content.activeLanguages.forEach((code) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "lang-pill" + (code === currentLang ? " active" : "");
+      btn.textContent = (content[code] && content[code].label) || code;
+      btn.onclick = () => { currentLang = code; applyLanguage(code); renderLangSwitcher(); };
+      el.appendChild(btn);
+    });
+    document.querySelector(".wrap").appendChild(el);
+  }
 
   function applyLanguage(code, guestName) {
     if (!content || !content[code]) return;
@@ -462,7 +490,7 @@
   function resetView() {
     document.getElementById("guest-name").value = "";
     document.getElementById("submit-btn").disabled = true;
-    if (content && content.activeLanguages) { currentLang = content.activeLanguages[0]; applyLanguage(currentLang); }
+    if (content && content.activeLanguages) { currentLang = content.activeLanguages[0]; applyLanguage(currentLang); renderLangSwitcher(); }
     showView("welcome");
     renderDecorationsForView("start");
     document.getElementById("guest-name").focus();
