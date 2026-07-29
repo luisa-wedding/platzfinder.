@@ -1,38 +1,26 @@
 [
   {
-    "id": "main-heart",
-    "shape": "heart",
-    "x": 90.5,
-    "y": 6.8,
-    "size": 17,
-    "rotation": 0,
-    "opacity": 100,
-    "color": null,
-    "image": "decoration-main-heart.png",
-    "view": "start"
-  },
-  {
     "id": "deco1785317269789",
     "shape": "flower",
-    "x": 8.9,
-    "y": 94.5,
+    "x": 13.566666666666668,
+    "y": 92.17441860465115,
     "size": 19,
     "rotation": 0,
     "opacity": 100,
     "color": "#658443",
-    "image": null,
-    "view": "start"
+    "image": "decoration-deco1785317269789.png",
+    "view": "end"
   },
   {
-    "id": "deco1785317347730",
+    "id": "deco1785318576124",
     "shape": "star",
-    "x": 52.9,
-    "y": 75.8,
-    "size": 34,
+    "x": 92.33333333333334,
+    "y": 4.883720930232563,
+    "size": 16,
     "rotation": 0,
     "opacity": 100,
     "color": null,
-    "image": "decoration-deco1785317347730.png",
-    "view": "end"
+    "image": null,
+    "view": "start"
   }
 ]
