@@ -1,3 +1,10 @@
 [
-  { "id": "main-heart", "shape": "heart", "x": 90, "y": 2, "size": 17, "image": null }
+  {
+    "id": "main-heart",
+    "shape": "heart",
+    "x": 5.2,
+    "y": 93,
+    "size": 17,
+    "image": "decoration-main-heart.png"
+  }
 ]
