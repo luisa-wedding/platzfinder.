@@ -34,5 +34,17 @@
     "color": null,
     "image": "decoration-deco1785318700332.png",
     "view": "start"
+  },
+  {
+    "id": "deco1785328709311",
+    "shape": "wreath",
+    "x": 8.333333333333329,
+    "y": 93.95348837209303,
+    "size": 16,
+    "rotation": 0,
+    "opacity": 100,
+    "color": null,
+    "image": "decoration-deco1785328709311.png",
+    "view": "start"
   }
 ]
