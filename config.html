@@ -155,15 +155,7 @@
   <!-- GitHub Verbindung -->
   <section class="panel">
     <h2>Verbindung zu GitHub</h2>
-    <p class="hint">Einmalig einrichten. Der Token wird nur lokal in diesem Browser gespeichert, nirgendwo sonst.</p>
-    <div class="grid-2">
-      <div><label class="small">Benutzer/Organisation</label><input type="text" id="ghOwner" placeholder="z. B. deinname" /></div>
-      <div><label class="small">Repository</label><input type="text" id="ghRepo" placeholder="z. B. hochzeit-platzfinder" /></div>
-      <div><label class="small">Branch</label><input type="text" id="ghBranch" placeholder="main" /></div>
-      <div><label class="small">Personal Access Token</label><input type="password" id="ghToken" placeholder="ghp_..." /></div>
-    </div>
-    <button class="btn-small" onclick="saveGhConfig()">Verbindung speichern</button>
-    <div id="ghStatus"></div>
+    <p class="hint">Die Verbindung ist bereits fest eingerichtet (über die Vercel-Server-Einstellungen). Du musst hier nichts eintragen – einfach unten konfigurieren und "Änderungen veröffentlichen" klicken.</p>
   </section>
 
   <!-- Raum-Baukasten -->
@@ -261,7 +253,6 @@
       tables = res2.ok ? await res2.json() : [];
     } catch (e) { tables = []; }
 
-    loadGhConfigIntoForm();
     renderRoomCanvas();
     renderTray();
     renderGuestTable();
@@ -272,26 +263,6 @@
       if (keys.includes(k.trim().toLowerCase())) return row[k];
     }
     return "";
-  }
-
-  // ============ GitHub Konfiguration ============
-  function saveGhConfig() {
-    localStorage.setItem("cfgGhOwner", document.getElementById("ghOwner").value.trim());
-    localStorage.setItem("cfgGhRepo", document.getElementById("ghRepo").value.trim());
-    localStorage.setItem("cfgGhBranch", document.getElementById("ghBranch").value.trim() || "main");
-    localStorage.setItem("cfgGhToken", document.getElementById("ghToken").value.trim());
-    document.getElementById("ghStatus").textContent = "Gespeichert. Verbunden mit " +
-      localStorage.getItem("cfgGhOwner") + "/" + localStorage.getItem("cfgGhRepo");
-  }
-  function loadGhConfigIntoForm() {
-    document.getElementById("ghOwner").value = localStorage.getItem("cfgGhOwner") || "";
-    document.getElementById("ghRepo").value = localStorage.getItem("cfgGhRepo") || "";
-    document.getElementById("ghBranch").value = localStorage.getItem("cfgGhBranch") || "main";
-    document.getElementById("ghToken").value = localStorage.getItem("cfgGhToken") || "";
-    if (localStorage.getItem("cfgGhOwner")) {
-      document.getElementById("ghStatus").textContent = "Verbunden mit " +
-        localStorage.getItem("cfgGhOwner") + "/" + localStorage.getItem("cfgGhRepo");
-    }
   }
 
   // ============ Raum-Baukasten ============
@@ -508,62 +479,32 @@
     reader.readAsDataURL(file);
   }
 
-  // ============ Veröffentlichen (GitHub API) ============
+  // ============ Veröffentlichen (über eigene Server-Funktion) ============
   function b64EncodeUnicode(str) {
     return btoa(unescape(encodeURIComponent(str)));
   }
 
-  async function ghRequest(path, method, bodyObj, token) {
-    const owner = localStorage.getItem("cfgGhOwner");
-    const repo = localStorage.getItem("cfgGhRepo");
-    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-    const res = await fetch(url, {
-      method,
-      headers: {
-        "Authorization": "token " + token,
-        "Accept": "application/vnd.github+json"
-      },
-      body: bodyObj ? JSON.stringify(bodyObj) : undefined
+  async function publishFile(path, base64Content, log) {
+    const res = await fetch("/api/publish", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path, content: base64Content })
     });
-    return res;
-  }
 
-  async function publishFile(path, base64Content, token, log) {
-    const branch = localStorage.getItem("cfgGhBranch") || "main";
-    let sha = null;
-    const getRes = await ghRequest(`${path}?ref=${branch}`, "GET", null, token);
-    if (getRes.status === 200) {
-      const data = await getRes.json();
-      sha = data.sha;
-    }
-    const putRes = await ghRequest(path, "PUT", {
-      message: "Update " + path + " über Config-Seite",
-      content: base64Content,
-      branch,
-      ...(sha ? { sha } : {})
-    }, token);
-
-    if (putRes.ok) {
+    if (res.ok) {
       log(`✅ ${path} veröffentlicht`);
+      return true;
     } else {
-      const errText = await putRes.text();
-      log(`❌ ${path} fehlgeschlagen: ${putRes.status}`);
-      console.error(errText);
+      const data = await res.json().catch(() => ({}));
+      log(`❌ ${path} fehlgeschlagen: ${data.error || res.status}`);
+      console.error(data.error);
+      return false;
     }
-    return putRes.ok;
   }
 
   async function publish() {
-    const token = localStorage.getItem("cfgGhToken");
-    const owner = localStorage.getItem("cfgGhOwner");
-    const repo = localStorage.getItem("cfgGhRepo");
     const logEl = document.getElementById("publishLog");
     const log = (msg) => { logEl.textContent = msg; };
-
-    if (!token || !owner || !repo) {
-      log("Bitte zuerst die GitHub-Verbindung oben ausfüllen und speichern.");
-      return;
-    }
 
     log("Veröffentliche Gästeliste …");
     const wsData = guests.map((g) => ({ Vorname: g.vorname, Nachname: g.nachname, Tisch: g.tisch }));
@@ -571,16 +512,19 @@
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Gaesteliste");
     const xlsxBase64 = XLSX.write(wb, { bookType: "xlsx", type: "base64" });
-    await publishFile("guests.xlsx", xlsxBase64, token, log);
+    const ok1 = await publishFile("guests.xlsx", xlsxBase64, log);
+    if (!ok1) return;
 
     log("Veröffentliche Raum-Layout …");
     const layoutBase64 = b64EncodeUnicode(JSON.stringify(tables, null, 2));
-    await publishFile("layout.json", layoutBase64, token, log);
+    const ok2 = await publishFile("layout.json", layoutBase64, log);
+    if (!ok2) return;
 
     if (croppedHeartDataUrl) {
       log("Veröffentliche Herzfoto …");
       const imgBase64 = croppedHeartDataUrl.split(",")[1];
-      await publishFile("assets/couple-heart.png", imgBase64, token, log);
+      const ok3 = await publishFile("assets/couple-heart.png", imgBase64, log);
+      if (!ok3) return;
     }
 
     log("✅ Alles veröffentlicht. Vercel deployt in ca. 30–60 Sekunden neu.");
