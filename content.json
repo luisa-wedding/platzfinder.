@@ -1,8 +1,15 @@
 {
-  "activeLanguages": ["de", "tr"],
+  "activeLanguages": [
+    "de",
+    "tr"
+  ],
   "monogramImage": "monogram.png",
   "monogramText": "I & L",
-  "languageSwitcher": { "enabled": true, "x": 80, "y": 6 },
+  "languageSwitcher": {
+    "enabled": true,
+    "x": 80,
+    "y": 6
+  },
   "de": {
     "label": "Deutsch",
     "welcomeTitle": "Willkommen",
