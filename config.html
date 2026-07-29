@@ -163,7 +163,7 @@
   .live-lede { color: var(--ink-soft); line-height: 1.5; margin-top: 0.6rem; }
   .live-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); margin: 1.3rem 0 0.4rem; text-align: left; }
   .live-input { width: 100%; border: 1px solid var(--blush-deep); border-radius: 14px; padding: 0.7rem 1rem; font-family: inherit; font-size: 0.95rem; background: #fff; }
-  .live-btn { width: 100%; margin-top: 0.8rem; border: none; border-radius: 14px; background: var(--rose); color: #fff; padding: 0.8rem; font-family: inherit; }
+  .live-btn { width: 100%; margin-top: 0.8rem; border: none; border-radius: 14px; background: var(--rose); color: #fff; padding: 0.8rem; font-family: inherit; text-align: center; cursor: text; }
   .live-link { margin-top: 1.2rem; color: var(--ink-soft); text-decoration: underline; text-decoration-color: var(--gold-soft); font-size: 0.9rem; display: inline-block; }
   .live-seatbox { margin-top: 1.2rem; background: rgba(244,223,218,0.5); border: 1px solid var(--blush-deep); border-radius: 14px; padding: 1rem; }
   .live-seatbox .live-eyebrow { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); }
@@ -264,7 +264,7 @@
       <p class="live-lede" contenteditable="true" data-field="welcomeText"></p>
       <label class="live-label" contenteditable="true" data-field="nameLabel"></label>
       <input class="live-input" id="live-namePlaceholder" oninput="updateLiveField('namePlaceholder', this.value)" />
-      <button class="live-btn" contenteditable="true" data-field="buttonText"></button>
+      <div class="live-btn" contenteditable="true" data-field="buttonText" role="button" tabindex="0"></div>
     </div>
 
     <div class="live-card" id="live-card-end" style="display:none;">
@@ -459,6 +459,12 @@
       if (d.opacity === undefined) d.opacity = 100;
       if (d.color === undefined) d.color = null;
       if (d.view === undefined) d.view = "start";
+      // Bereits veröffentlichte Fotos stehen als reiner Dateiname im Feld "image".
+      // Das darf nicht mit einem frisch hochgeladenen Foto (data:-URL) verwechselt werden.
+      if (d.image && !d.image.startsWith("data:")) {
+        d.filename = d.image;
+        d.image = null;
+      }
     });
 
     renderRoomCanvas(); renderTray(); renderGuestTable(); renderDecorations();
