@@ -1,5 +1,8 @@
 {
-  "activeLanguages": ["de", "tr"],
+  "activeLanguages": [
+    "de",
+    "tr"
+  ],
   "monogramImage": "monogram.png",
   "monogramText": "I & L",
   "de": {
