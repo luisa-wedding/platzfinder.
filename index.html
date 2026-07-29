@@ -17,6 +17,7 @@
     --rose: #c97b84;
     --rose-deep: #b25f6b;
     --sage: #9caf88;
+    --sage-deep: #7e9370;
     --gold: #c9a05c;
     --gold-soft: #ddbe8c;
     --ink: #3d3436;
@@ -24,11 +25,7 @@
   }
 
   * { box-sizing: border-box; }
-
-  html, body {
-    height: 100%;
-    margin: 0;
-  }
+  html, body { height: 100%; margin: 0; }
 
   body {
     font-family: "Jost", sans-serif;
@@ -46,17 +43,12 @@
     padding: 3rem 1.25rem;
   }
 
-  .display {
-    font-family: "Cormorant Garamond", serif;
-    font-style: italic;
-  }
+  .display { font-family: "Cormorant Garamond", serif; font-style: italic; }
 
-  .wrap {
-    width: 100%;
-    max-width: 26rem;
-  }
+  .wrap { position: relative; width: 100%; max-width: 26rem; }
 
   .card {
+    position: relative;
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.6);
@@ -67,257 +59,97 @@
     animation: fadeUp 0.7s ease-out both;
   }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-  h1.title {
-    font-size: 2.5rem;
-    margin: 0.25rem 0 0;
-  }
-  h2.subtitle {
-    font-size: 1.7rem;
-    margin: 0;
-  }
+  h1.title { font-size: 2.5rem; margin: 0.25rem 0 0; }
+  h2.subtitle { font-size: 1.7rem; margin: 0; }
+  p.lede { color: var(--ink-soft); line-height: 1.55; margin: 0.75rem 0 0; }
 
-  p.lede {
-    color: var(--ink-soft);
-    line-height: 1.55;
-    margin: 0.75rem 0 0;
-  }
-
-  .divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    margin: 1.75rem 0;
-  }
-  .divider .line {
-    height: 1px;
-    width: 2.5rem;
-    background: rgba(221, 190, 140, 0.7);
-  }
+  .divider { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin: 1.75rem 0; }
+  .divider .line { height: 1px; width: 2.5rem; background: rgba(221, 190, 140, 0.7); }
 
   form { text-align: left; }
-
-  label {
-    display: block;
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 0.5rem;
-  }
-
+  label { display: block; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.5rem; }
   input[type="text"] {
-    width: 100%;
-    border: 1px solid rgba(234, 199, 192, 0.6);
-    background: #fff;
-    border-radius: 16px;
-    padding: 0.9rem 1.2rem;
-    font-family: inherit;
-    font-size: 1rem;
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.2s;
+    width: 100%; border: 1px solid rgba(234, 199, 192, 0.6); background: #fff; border-radius: 16px;
+    padding: 0.9rem 1.2rem; font-family: inherit; font-size: 1rem; color: var(--ink); outline: none; transition: border-color 0.2s;
   }
   input[type="text"]::placeholder { color: rgba(122, 111, 106, 0.5); }
   input[type="text"]:focus { border-color: var(--rose); }
 
-  button, .choice-btn {
-    font-family: inherit;
-    cursor: pointer;
-  }
-
+  button { font-family: inherit; cursor: pointer; }
   .btn-primary {
-    width: 100%;
-    margin-top: 1rem;
-    border: none;
-    border-radius: 16px;
-    background: var(--rose);
-    color: #fff;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    padding: 0.9rem 1.2rem;
-    font-size: 1rem;
-    transition: background 0.2s, opacity 0.2s;
+    width: 100%; margin-top: 1rem; border: none; border-radius: 16px; background: var(--rose); color: #fff;
+    font-weight: 500; letter-spacing: 0.02em; padding: 0.9rem 1.2rem; font-size: 1rem; transition: background 0.2s, opacity 0.2s;
   }
   .btn-primary:hover { background: var(--rose-deep); }
   .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .link-btn {
-    background: none;
-    border: none;
-    margin-top: 1.75rem;
-    font-size: 0.9rem;
-    color: var(--ink-soft);
-    text-decoration: underline;
-    text-decoration-color: var(--gold-soft);
-    text-underline-offset: 4px;
-  }
+  .link-btn { background: none; border: none; margin-top: 1.75rem; font-size: 0.9rem; color: var(--ink-soft); text-decoration: underline; text-decoration-color: var(--gold-soft); text-underline-offset: 4px; }
   .link-btn:hover { color: var(--ink); }
 
-  .seat-box {
-    margin-top: 1.5rem;
-    background: rgba(244, 223, 218, 0.5);
-    border: 1px solid rgba(234, 199, 192, 0.5);
-    border-radius: 16px;
-    padding: 1.4rem 1.4rem;
-  }
-  .seat-box .eyebrow {
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(122, 111, 106, 0.8);
-  }
-  .seat-box .seat-name {
-    margin-top: 0.4rem;
-    font-family: "Cormorant Garamond", serif;
-    font-size: 1.7rem;
-  }
+  .seat-box { margin-top: 1.5rem; background: rgba(244, 223, 218, 0.5); border: 1px solid rgba(234, 199, 192, 0.5); border-radius: 16px; padding: 1.4rem 1.4rem; }
+  .seat-box .eyebrow { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(122, 111, 106, 0.8); }
+  .seat-box .seat-name { margin-top: 0.4rem; font-family: "Cormorant Garamond", serif; font-size: 1.7rem; }
 
   .choice-btn {
-    display: block;
-    width: 100%;
-    text-align: left;
-    border: 1px solid rgba(234, 199, 192, 0.6);
-    background: #fff;
-    border-radius: 16px;
-    padding: 0.9rem 1.2rem;
-    font-size: 1rem;
-    color: var(--ink);
-    margin-top: 0.7rem;
-    transition: border-color 0.2s, background 0.2s;
+    display: block; width: 100%; text-align: left; border: 1px solid rgba(234, 199, 192, 0.6); background: #fff;
+    border-radius: 16px; padding: 0.9rem 1.2rem; font-size: 1rem; color: var(--ink); margin-top: 0.7rem; transition: border-color 0.2s, background 0.2s;
   }
-  .choice-btn:hover {
-    border-color: var(--rose);
-    background: rgba(244, 223, 218, 0.3);
-  }
+  .choice-btn:hover { border-color: var(--rose); background: rgba(244, 223, 218, 0.3); }
 
-  .footnote {
-    margin-top: 1.5rem;
-    text-align: center;
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(122, 111, 106, 0.7);
-  }
+  .footnote { margin-top: 1.5rem; text-align: center; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(122, 111, 106, 0.7); }
 
   .view { display: none; }
   .view.active { display: block; animation: fadeIn 0.5s ease-out both; }
 
-  .wreath-stroke {
-    stroke-dasharray: 340;
-    stroke-dashoffset: 340;
-    animation: wreathDraw 1.6s ease-out forwards;
-  }
+  .wreath-stroke { stroke-dasharray: 340; stroke-dashoffset: 340; animation: wreathDraw 1.6s ease-out forwards; }
   .wreath-stroke.delay { animation-delay: 0.15s; }
   @keyframes wreathDraw { to { stroke-dashoffset: 0; } }
 
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.001ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.001ms !important;
-    }
+    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
   }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
 
-  :focus-visible {
-    outline: 2px solid var(--gold);
-    outline-offset: 3px;
-    border-radius: 4px;
-  }
-
-  /* großes Herzfoto oben rechts */
-  .brand-heart {
-    position: fixed;
-    top: 1.25rem;
-    right: 1.25rem;
-    width: 74px;
-    height: 74px;
-    z-index: 20;
+  /* ---------- Dekorationen (Herz/Stern/Blume) ---------- */
+  #decorations-layer { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 15; }
+  .deco {
+    position: absolute; transform: translate(-50%, -50%);
     filter: drop-shadow(0 6px 14px rgba(61, 52, 54, 0.22));
   }
-  .brand-heart svg { width: 100%; height: 100%; display: block; }
-  .brand-heart .heart-fallback {
-    fill: url(#heartGradient);
-  }
+  .deco img, .deco svg { width: 100%; height: 100%; display: block; }
 
-  /* Raumkarte */
+  /* ---------- Raumkarte ---------- */
   .room-map-wrap { margin-top: 1.5rem; text-align: left; }
-  .room-map-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 0.6rem;
-    text-align: center;
-  }
+  .room-map-label { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.6rem; text-align: center; }
   .room-map {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(234, 199, 192, 0.5);
-    border-radius: 18px;
-    overflow: hidden;
+    position: relative; width: 100%; aspect-ratio: 4 / 3; background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(234, 199, 192, 0.5); border-radius: 18px; overflow: hidden;
   }
-  .room-table {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    width: 15%;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    background: rgba(156, 175, 136, 0.25);
-    border: 1.5px solid rgba(156, 175, 136, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.55rem;
-    line-height: 1.15;
-    text-align: center;
-    color: var(--ink-soft);
-    padding: 2px;
+  .room-obj {
+    position: absolute; transform: translate(-50%, -50%);
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    font-size: 0.55rem; line-height: 1.15; padding: 2px; color: var(--ink-soft);
   }
-  .room-table.highlight {
-    background: var(--rose);
-    border-color: var(--rose-deep);
-    color: #fff;
-    font-weight: 500;
-    box-shadow: 0 0 0 6px rgba(201, 123, 132, 0.22);
-    animation: pulseTable 1.8s ease-in-out infinite;
+  .room-obj.table { border-radius: 50%; background: rgba(156, 175, 136, 0.25); border: 1.5px solid rgba(156, 175, 136, 0.6); }
+  .room-obj.table.rect { border-radius: 10px; }
+  .room-obj.table.highlight {
+    background: var(--rose); border-color: var(--rose-deep); color: #fff; font-weight: 500;
+    box-shadow: 0 0 0 6px rgba(201, 123, 132, 0.22); animation: pulseTable 1.8s ease-in-out infinite;
   }
-  @keyframes pulseTable {
-    0%, 100% { box-shadow: 0 0 0 6px rgba(201, 123, 132, 0.22); }
-    50% { box-shadow: 0 0 0 10px rgba(201, 123, 132, 0.12); }
-  }
+  @keyframes pulseTable { 0%, 100% { box-shadow: 0 0 0 6px rgba(201, 123, 132, 0.22); } 50% { box-shadow: 0 0 0 10px rgba(201, 123, 132, 0.12); } }
+  .room-obj.brautpaar { border-radius: 50%; background: rgba(201, 160, 92, 0.18); border: 1.5px solid var(--gold); color: var(--ink); font-weight: 500; }
+  .room-obj.door { border-radius: 6px; background: rgba(122, 111, 106, 0.12); border: 1px dashed var(--ink-soft); }
+  .room-obj.toilet { border-radius: 6px; background: rgba(122, 111, 106, 0.12); border: 1px solid var(--ink-soft); }
 </style>
 </head>
 <body>
 
-<div class="brand-heart" id="brand-heart">
-  <svg viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <clipPath id="heartClip">
-        <path d="M50 85 C 15 60, 0 40, 0 22 C 0 4, 20 -4, 35 8 C 42 14, 50 24, 50 24 C 50 24, 58 14, 65 8 C 80 -4, 100 4, 100 22 C 100 40, 85 60, 50 85 Z"/>
-      </clipPath>
-      <linearGradient id="heartGradient" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#EAC7C0"/>
-        <stop offset="1" stop-color="#C97B84"/>
-      </linearGradient>
-    </defs>
-    <path class="heart-fallback" id="heart-fallback-shape" d="M50 85 C 15 60, 0 40, 0 22 C 0 4, 20 -4, 35 8 C 42 14, 50 24, 50 24 C 50 24, 58 14, 65 8 C 80 -4, 100 4, 100 22 C 100 40, 85 60, 50 85 Z"/>
-    <image id="brand-heart-img" href="./assets/couple-heart.png" x="0" y="0" width="100" height="90" preserveAspectRatio="xMidYMid slice" clip-path="url(#heartClip)" style="display:none" />
-  </svg>
-</div>
-
 <div class="wrap">
+  <div id="decorations-layer"></div>
+
   <div class="card" id="card">
 
     <!-- Willkommen -->
@@ -372,6 +204,7 @@
         <p class="eyebrow">Dein Platz</p>
         <p class="seat-name" id="found-seat"></p>
       </div>
+
       <div class="room-map-wrap" id="room-map-wrap" hidden>
         <p class="room-map-label">Dein Tisch im Raum</p>
         <div class="room-map" id="room-map"></div>
@@ -407,42 +240,98 @@
 </div>
 
 <script>
-  // ---------- Herzfoto laden (mit Fallback auf Farbverlauf) ----------
-  (function loadHeartPhoto() {
-    const img = document.getElementById("brand-heart-img");
-    const fallback = document.getElementById("heart-fallback-shape");
-    const testImg = new Image();
-    testImg.onload = () => {
-      img.style.display = "block";
-      fallback.style.display = "none";
-    };
-    testImg.onerror = () => {
-      // kein Foto hinterlegt -> Farbverlauf-Platzhalter bleibt sichtbar
-    };
-    testImg.src = "./assets/couple-heart.png";
-  })();
+  // ---------- Shape-Pfade (für Platzhalter ohne eigenes Foto) ----------
+  const SHAPE_PATHS = {
+    heart: "M50 92 C15 68,0 48,0 28 C0 10,20 2,35 12 C42 17,50 26,50 26 C50 26,58 17,65 12 C80 2,100 10,100 28 C100 48,85 68,50 92 Z",
+    star: "M50 2 L61.8 33.8 L95.6 35.2 L69 56.2 L78.2 88.9 L50 70 L21.8 88.9 L31 56.2 L4.3 35.2 L38.2 33.8 Z",
+    flower: null // wird als Gruppe aus Kreisen gerendert, siehe renderFlowerPlaceholder
+  };
+
+  function shapeSvg(shape) {
+    if (shape === "flower") {
+      const petals = [];
+      const cx = 50, cy = 50, dist = 26.4, petalR = 20.16, centerR = 16.8;
+      for (let i = 0; i < 6; i++) {
+        const a = (i * 60 * Math.PI) / 180;
+        petals.push(`<circle cx="${cx + dist * Math.cos(a)}" cy="${cy + dist * Math.sin(a)}" r="${petalR}" />`);
+      }
+      return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g-${shape}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#EAC7C0"/><stop offset="1" stop-color="#9CAF88"/>
+        </linearGradient></defs>
+        <g fill="url(#g-${shape})">${petals.join("")}<circle cx="${cx}" cy="${cy}" r="${centerR}" /></g>
+      </svg>`;
+    }
+    return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g-${shape}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#EAC7C0"/><stop offset="1" stop-color="#C97B84"/>
+      </linearGradient></defs>
+      <path d="${SHAPE_PATHS[shape]}" fill="url(#g-${shape})" />
+    </svg>`;
+  }
+
+  // ---------- Dekorationen laden ----------
+  fetch("./decorations.json")
+    .then((res) => (res.ok ? res.json() : []))
+    .then((decos) => {
+      const layer = document.getElementById("decorations-layer");
+      (Array.isArray(decos) ? decos : []).forEach((d) => {
+        const el = document.createElement("div");
+        el.className = "deco";
+        el.style.left = d.x + "%";
+        el.style.top = d.y + "%";
+        el.style.width = d.size + "%";
+        el.style.aspectRatio = "1 / 1";
+        if (d.image) {
+          const img = document.createElement("img");
+          img.src = "./assets/" + d.image;
+          img.onerror = () => { el.innerHTML = shapeSvg(d.shape); };
+          el.appendChild(img);
+        } else {
+          el.innerHTML = shapeSvg(d.shape);
+        }
+        layer.appendChild(el);
+      });
+    })
+    .catch(() => {});
 
   // ---------- Raum-Layout laden ----------
-  let tables = [];
+  let roomObjects = [];
   fetch("./layout.json")
     .then((res) => (res.ok ? res.json() : []))
-    .then((data) => { tables = Array.isArray(data) ? data : []; })
-    .catch(() => { tables = []; });
+    .then((data) => { roomObjects = Array.isArray(data) ? data : []; })
+    .catch(() => { roomObjects = []; });
 
   function renderRoomMap(seatName) {
     const wrap = document.getElementById("room-map-wrap");
     const map = document.getElementById("room-map");
-    if (!tables.length) { wrap.hidden = true; return; }
+    if (!roomObjects.length) { wrap.hidden = true; return; }
 
     map.innerHTML = "";
     const target = normalize(seatName || "");
-    tables.forEach((t) => {
+    roomObjects.forEach((o) => {
       const el = document.createElement("div");
-      el.className = "room-table";
-      if (normalize(t.name) === target) el.classList.add("highlight");
-      el.style.left = t.x + "%";
-      el.style.top = t.y + "%";
-      el.textContent = t.name;
+      el.style.left = o.x + "%";
+      el.style.top = o.y + "%";
+      el.style.width = o.w + "%";
+      el.style.height = o.h + "%";
+
+      if (o.type === "table") {
+        el.className = "room-obj table" + (o.shape === "rect" ? " rect" : "");
+        if (normalize(o.name) === target) el.className += " highlight";
+        el.textContent = o.name;
+      } else if (o.type === "brautpaar") {
+        el.className = "room-obj brautpaar";
+        el.textContent = "💛 " + o.name;
+      } else if (o.type === "door") {
+        el.className = "room-obj door";
+        el.textContent = o.name || "Tür";
+      } else if (o.type === "toilet") {
+        el.className = "room-obj toilet";
+        el.textContent = o.name || "WC";
+      } else {
+        return;
+      }
       map.appendChild(el);
     });
     wrap.hidden = false;
