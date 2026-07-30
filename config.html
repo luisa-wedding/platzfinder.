@@ -309,14 +309,22 @@
     </div>
     <div id="deco-preview-wrap">
       <div id="deco-card-preview">
-        <div class="deco-mock-line" style="width:60%;"></div>
-        <div class="deco-mock-title" id="deco-mock-title">Willkommen</div>
-        <div class="deco-mock-line" style="width:85%;"></div>
-        <div class="deco-mock-line" style="width:70%;"></div>
-        <div class="deco-mock-input" id="deco-mock-input">Textfeld für den Namen</div>
-        <div class="deco-mock-btn" id="deco-mock-btn">Button</div>
-        <div class="deco-mock-seatbox" id="deco-mock-seatbox" style="display:none;"></div>
-        <div class="deco-mock-roommap" id="deco-mock-roommap" style="display:none;">Raumkarte mit Tischen</div>
+        <div id="deco-mock-monogram" style="text-align:center;"></div>
+        <h1 class="live-title" id="deco-mock-title" style="font-size:1.9rem;"></h1>
+        <p class="live-lede" id="deco-mock-lede"></p>
+        <label class="live-label" id="deco-mock-namelabel" style="display:block;"></label>
+        <div class="live-input" id="deco-mock-input" style="color:var(--ink-soft);text-align:left;"></div>
+        <div class="live-btn" id="deco-mock-btn"></div>
+
+        <h2 class="live-title" id="deco-mock-greeting" style="font-size:1.6rem;display:none;"></h2>
+        <p class="live-lede" id="deco-mock-foundtext" style="display:none;"></p>
+        <div class="live-seatbox" id="deco-mock-seatbox" style="display:none;">
+          <p class="live-eyebrow" id="deco-mock-seatlabel"></p>
+          <p class="live-seatname" id="deco-mock-seatname">Tisch 4 - Flieder</p>
+        </div>
+        <p class="live-eyebrow" id="deco-mock-roommaplabel" style="display:none;margin-top:1rem;text-align:center;"></p>
+        <div class="live-roommap" id="deco-mock-roommap" style="display:none;">Raumkarte mit Tischen</div>
+        <div class="live-link" id="deco-mock-resetlink" style="display:none;"></div>
       </div>
       <div class="deco-list" id="deco-list"></div>
     </div>
@@ -477,7 +485,7 @@
 
     renderRoomCanvas(); renderTray(); renderGuestTable(); renderDecorations();
     renderLangCheckboxes(); renderEditLangSelect(); renderMonogramUI(); renderLiveCards(); renderMoreTexts();
-    renderSwitcherCheckbox(); renderLangSwitcherMarker();
+    renderSwitcherCheckbox(); renderLangSwitcherMarker(); populateDecoMockContent();
   }
 
   function readCol(row, keys) { for (const k of Object.keys(row)) if (keys.includes(k.trim().toLowerCase())) return row[k]; return ""; }
@@ -893,10 +901,11 @@
     document.getElementById("live-monogram-slot").innerHTML = monogramPreviewSvg();
 
     document.querySelectorAll('.live-card [contenteditable="true"]').forEach((el) => {
-      el.oninput = () => { ensureLangContent(editLang)[el.dataset.field] = el.textContent; };
+      el.oninput = () => { ensureLangContent(editLang)[el.dataset.field] = el.textContent; populateDecoMockContent(); };
     });
+    populateDecoMockContent();
   }
-  function updateLiveField(field, value) { ensureLangContent(editLang)[field] = value; }
+  function updateLiveField(field, value) { ensureLangContent(editLang)[field] = value; populateDecoMockContent(); }
 
   function renderMoreTexts() {
     const t = ensureLangContent(editLang);
@@ -959,12 +968,31 @@
     currentDecoTab = tab;
     document.getElementById("tab-start").classList.toggle("active", tab === "start");
     document.getElementById("tab-end").classList.toggle("active", tab === "end");
-    document.getElementById("deco-mock-title").textContent = tab === "start" ? "Willkommen" : "Hallo Anna!";
-    document.getElementById("deco-mock-input").style.display = tab === "start" ? "flex" : "none";
-    document.getElementById("deco-mock-btn").style.display = tab === "start" ? "flex" : "none";
-    document.getElementById("deco-mock-seatbox").style.display = tab === "end" ? "block" : "none";
-    document.getElementById("deco-mock-roommap").style.display = tab === "end" ? "flex" : "none";
+
+    const startIds = ["deco-mock-monogram", "deco-mock-title", "deco-mock-lede", "deco-mock-namelabel", "deco-mock-input", "deco-mock-btn"];
+    const endIds = ["deco-mock-greeting", "deco-mock-foundtext", "deco-mock-seatbox", "deco-mock-roommaplabel", "deco-mock-roommap", "deco-mock-resetlink"];
+    startIds.forEach((id) => { document.getElementById(id).style.display = tab === "start" ? "" : "none"; });
+    endIds.forEach((id) => { document.getElementById(id).style.display = tab === "end" ? "" : "none"; });
+
+    populateDecoMockContent();
     renderDecorations();
+  }
+
+  function populateDecoMockContent() {
+    if (!contentData) return;
+    const lang = editLang || (contentData.activeLanguages && contentData.activeLanguages[0]) || "de";
+    const t = ensureLangContent(lang);
+    document.getElementById("deco-mock-monogram").innerHTML = monogramPreviewSvg();
+    document.getElementById("deco-mock-title").textContent = t.welcomeTitle || "";
+    document.getElementById("deco-mock-lede").textContent = t.welcomeText || "";
+    document.getElementById("deco-mock-namelabel").textContent = t.nameLabel || "";
+    document.getElementById("deco-mock-input").textContent = t.namePlaceholder || "";
+    document.getElementById("deco-mock-btn").textContent = t.buttonText || "";
+    document.getElementById("deco-mock-greeting").textContent = (t.foundGreeting || "").replace("{name}", "Anna");
+    document.getElementById("deco-mock-foundtext").textContent = t.foundText || "";
+    document.getElementById("deco-mock-seatlabel").textContent = t.seatLabel || "";
+    document.getElementById("deco-mock-roommaplabel").textContent = t.roomMapLabel || "";
+    document.getElementById("deco-mock-resetlink").textContent = t.resetLink || "";
   }
 
   function deleteDeco(id) {
