@@ -193,9 +193,9 @@
 </div>
 
 <div id="app">
-  <div id="draftBanner" style="display:none;background:#fbeecb;border:1px solid var(--gold-soft);border-radius:12px;padding:0.8rem 1rem;margin-bottom:1.5rem;font-size:0.85rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
-    <span id="draftBannerText"></span>
-    <button class="btn-outline" onclick="discardDraftAndReload()">Veröffentlichten Stand stattdessen laden</button>
+  <div id="draftBanner" style="display:none;font-size:0.75rem;color:var(--ink-soft);margin-bottom:1rem;">
+    <span id="draftBannerText"></span> ·
+    <button onclick="discardDraftAndReload()" style="border:none;background:none;color:var(--ink-soft);text-decoration:underline;cursor:pointer;font-size:0.75rem;padding:0;">zurücksetzen</button>
   </div>
   <header class="top">
     <h1 class="display">Hochzeits-Konfiguration</h1>
@@ -456,6 +456,8 @@
     saveDraftTimeout = setTimeout(saveDraft, 500);
   }
   function saveDraft() {
+    const hasContent = (guests && guests.length) || (roomObjects && roomObjects.length) || (decorations && decorations.length);
+    if (!hasContent) return;
     try {
       localStorage.setItem(DRAFT_KEY, JSON.stringify({
         savedAt: Date.now(), guests, roomObjects, decorations, contentData
@@ -472,8 +474,8 @@
     const el = document.getElementById("draftBanner");
     const d = new Date(savedAt);
     document.getElementById("draftBannerText").textContent =
-      "Du siehst deinen zuletzt bearbeiteten Stand vom " + d.toLocaleString("de-DE") + " (auch wenn er noch nicht veröffentlicht wurde).";
-    el.style.display = "flex";
+      "Nicht veröffentlichter Bearbeitungsstand vom " + d.toLocaleString("de-DE");
+    el.style.display = "block";
   }
   function discardDraftAndReload() {
     if (!confirm("Lokalen Bearbeitungsstand verwerfen und stattdessen den zuletzt veröffentlichten Stand laden?")) return;
@@ -483,7 +485,12 @@
 
   async function init() {
     const draft = loadDraft();
-    if (draft) {
+    const draftHasContent = draft && (
+      (draft.guests && draft.guests.length) ||
+      (draft.roomObjects && draft.roomObjects.length) ||
+      (draft.decorations && draft.decorations.length)
+    );
+    if (draftHasContent) {
       guests = draft.guests || [];
       roomObjects = draft.roomObjects || [];
       decorations = draft.decorations || [];
