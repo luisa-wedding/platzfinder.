@@ -376,7 +376,6 @@
     document.getElementById("publishBar").style.display = "flex";
     init();
   }
-  if (sessionStorage.getItem("cfg_ok") === "1") unlock();
 
   const CACHE_BUST = "?v=" + Date.now();
   function freshFetch(url) { return fetch(url + CACHE_BUST, { cache: "no-store" }); }
@@ -1388,6 +1387,9 @@
     localStorage.removeItem(DRAFT_KEY);
     document.getElementById("draftBanner").style.display = "none";
   }
+
+  // Erst hier, ganz am Ende (nach allen Deklarationen), automatisch entsperren, falls schon eingeloggt.
+  if (sessionStorage.getItem("cfg_ok") === "1") unlock();
 </script>
 </body>
 </html>
