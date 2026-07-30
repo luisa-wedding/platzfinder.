@@ -193,6 +193,10 @@
 </div>
 
 <div id="app">
+  <div id="draftBanner" style="display:none;background:#fbeecb;border:1px solid var(--gold-soft);border-radius:12px;padding:0.8rem 1rem;margin-bottom:1.5rem;font-size:0.85rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <span id="draftBannerText"></span>
+    <button class="btn-outline" onclick="discardDraftAndReload()">Veröffentlichten Stand stattdessen laden</button>
+  </div>
   <header class="top">
     <h1 class="display">Hochzeits-Konfiguration</h1>
     <p>Raum aufbauen, Gäste zuordnen, Gästeliste pflegen, Texte &amp; Sprachen verwalten und Fotos hinterlegen. Unten alles veröffentlichen.</p>
@@ -218,10 +222,9 @@
     <p class="hint">Direkt bearbeiten, Zeilen hinzufügen/löschen oder eine bestehende Excel-Datei importieren (überschreibt die aktuelle Liste).</p>
     <div style="display:flex; gap:0.6rem; margin-bottom:1rem; flex-wrap:wrap;">
       <button class="btn-small" onclick="addGuestRow()">+ Gast hinzufügen</button>
-      <label class="btn-outline" style="display:inline-block;">
-        Excel importieren
-        <input type="file" id="xlsxImport" accept=".xlsx" style="display:none" onchange="importXlsx(event)" />
-      </label>
+      <button class="btn-outline" onclick="triggerImport('append')">Excel importieren (ergänzen)</button>
+      <button class="btn-outline" onclick="triggerImport('replace')">Excel importieren (ersetzen)</button>
+      <input type="file" id="xlsxImport" accept=".xlsx" style="display:none" onchange="importXlsx(event)" />
     </div>
     <div style="overflow-x:auto;">
       <table class="guest-table" id="guestTable">
@@ -446,24 +449,66 @@
     { field: "footnote", label: "Fußzeile" }
   ];
 
-  async function init() {
+  const DRAFT_KEY = "platzfinderConfigDraft";
+  let saveDraftTimeout = null;
+  function saveDraftDebounced() {
+    clearTimeout(saveDraftTimeout);
+    saveDraftTimeout = setTimeout(saveDraft, 500);
+  }
+  function saveDraft() {
     try {
-      const res = await freshFetch("./guests.xlsx");
-      const buf = await res.arrayBuffer();
-      const wb = XLSX.read(new Uint8Array(buf), { type: "array" });
-      const sheet = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
-      guests = rows.map((r) => ({
-        vorname: String(readCol(r, ["vorname"]) || "").trim(),
-        nachname: String(readCol(r, ["nachname", "name"]) || "").trim(),
-        tisch: String(readCol(r, ["tisch", "platz"]) || "").trim(),
-        sprache: String(readCol(r, ["sprache", "language"]) || "de").trim()
-      })).filter((g) => g.vorname || g.nachname);
-    } catch (e) { guests = []; }
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({
+        savedAt: Date.now(), guests, roomObjects, decorations, contentData
+      }));
+    } catch (e) { console.warn("Entwurf konnte nicht lokal gespeichert werden:", e); }
+  }
+  function loadDraft() {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+  function showDraftBanner(savedAt) {
+    const el = document.getElementById("draftBanner");
+    const d = new Date(savedAt);
+    document.getElementById("draftBannerText").textContent =
+      "Du siehst deinen zuletzt bearbeiteten Stand vom " + d.toLocaleString("de-DE") + " (auch wenn er noch nicht veröffentlicht wurde).";
+    el.style.display = "flex";
+  }
+  function discardDraftAndReload() {
+    if (!confirm("Lokalen Bearbeitungsstand verwerfen und stattdessen den zuletzt veröffentlichten Stand laden?")) return;
+    localStorage.removeItem(DRAFT_KEY);
+    location.reload();
+  }
 
-    try { const r2 = await freshFetch("./layout.json"); roomObjects = r2.ok ? await r2.json() : []; } catch (e) { roomObjects = []; }
-    try { const r3 = await freshFetch("./decorations.json"); decorations = r3.ok ? await r3.json() : []; } catch (e) { decorations = []; }
-    try { const r4 = await freshFetch("./content.json"); contentData = r4.ok ? await r4.json() : null; } catch (e) { contentData = null; }
+  async function init() {
+    const draft = loadDraft();
+    if (draft) {
+      guests = draft.guests || [];
+      roomObjects = draft.roomObjects || [];
+      decorations = draft.decorations || [];
+      contentData = draft.contentData || null;
+      showDraftBanner(draft.savedAt);
+    } else {
+      try {
+        const res = await freshFetch("./guests.xlsx");
+        const buf = await res.arrayBuffer();
+        const wb = XLSX.read(new Uint8Array(buf), { type: "array" });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+        guests = rows.map((r) => ({
+          vorname: String(readCol(r, ["vorname"]) || "").trim(),
+          nachname: String(readCol(r, ["nachname", "name"]) || "").trim(),
+          tisch: String(readCol(r, ["tisch", "platz"]) || "").trim(),
+          sprache: String(readCol(r, ["sprache", "language"]) || "de").trim()
+        })).filter((g) => g.vorname || g.nachname);
+      } catch (e) { guests = []; }
+
+      try { const r2 = await freshFetch("./layout.json"); roomObjects = r2.ok ? await r2.json() : []; } catch (e) { roomObjects = []; }
+      try { const r3 = await freshFetch("./decorations.json"); decorations = r3.ok ? await r3.json() : []; } catch (e) { decorations = []; }
+      try { const r4 = await freshFetch("./content.json"); contentData = r4.ok ? await r4.json() : null; } catch (e) { contentData = null; }
+    }
+
     if (!contentData) contentData = { activeLanguages: ["de"], monogramImage: null, monogramText: "I & L", languageSwitcher: { enabled: false, x: 80, y: 6 }, de: {} };
     if (!contentData.activeLanguages || !contentData.activeLanguages.length) contentData.activeLanguages = ["de"];
     if (!contentData.languageSwitcher) contentData.languageSwitcher = { enabled: contentData.activeLanguages.length > 1, x: 80, y: 6 };
@@ -707,6 +752,7 @@
         return { x: r.left + (o.x / 100) * r.width, y: r.top + (o.y / 100) * r.height };
       }, () => applyObjGeometry(el, o), () => renderRoomCanvas());
     });
+    saveDraft();
   }
 
   function makeChip(guest) {
@@ -755,6 +801,7 @@
       `;
       body.appendChild(tr);
     });
+    saveDraft();
   }
   function tischSelectHtml(i, current) {
     let opts = `<option value="">— kein Tisch —</option>`;
@@ -776,21 +823,42 @@
   function updateGuest(i, field, value) { guests[i][field] = value; renderRoomCanvas(); renderTray(); }
   function addGuestRow() { guests.push({ vorname: "", nachname: "", tisch: "", sprache: (contentData.activeLanguages || ["de"])[0] }); renderGuestTable(); renderTray(); }
   function deleteGuestRow(i) { guests.splice(i, 1); renderGuestTable(); renderRoomCanvas(); renderTray(); }
+  let importMode = "replace";
+  function triggerImport(mode) {
+    importMode = mode;
+    document.getElementById("xlsxImport").value = "";
+    document.getElementById("xlsxImport").click();
+  }
   function importXlsx(evt) {
     const file = evt.target.files[0];
     if (!file) return;
-    if (!confirm("Aktuelle Gästeliste durch diese Excel-Datei ersetzen?")) { evt.target.value = ""; return; }
+    if (importMode === "replace" && !confirm("Aktuelle Gästeliste durch diese Excel-Datei ersetzen?")) {
+      evt.target.value = "";
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (e) => {
       const wb = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
       const sheet = wb.Sheets[wb.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
-      guests = rows.map((r) => ({
+      const imported = rows.map((r) => ({
         vorname: String(readCol(r, ["vorname"]) || "").trim(),
         nachname: String(readCol(r, ["nachname", "name"]) || "").trim(),
         tisch: String(readCol(r, ["tisch", "platz"]) || "").trim(),
         sprache: String(readCol(r, ["sprache", "language"]) || "de").trim()
       })).filter((g) => g.vorname || g.nachname);
+
+      if (importMode === "replace") {
+        guests = imported;
+      } else {
+        const existingKeys = new Set(guests.map((g) => guestKey(g)));
+        let added = 0, skipped = 0;
+        imported.forEach((g) => {
+          if (existingKeys.has(guestKey(g))) { skipped++; return; }
+          guests.push(g); existingKeys.add(guestKey(g)); added++;
+        });
+        alert(`${added} neue Gäste hinzugefügt${skipped ? `, ${skipped} bereits vorhandene übersprungen (gleicher Vor- und Nachname)` : ""}.`);
+      }
       renderGuestTable(); renderRoomCanvas(); renderTray();
     };
     reader.readAsArrayBuffer(file);
@@ -828,6 +896,7 @@
       if (editLang === code) editLang = contentData.activeLanguages[0];
     }
     renderEditLangSelect(); renderLiveCards(); renderMoreTexts(); renderGuestTable();
+    saveDraft();
     renderSwitcherCheckbox(); renderLangSwitcherMarker();
   }
   function renderEditLangSelect() {
@@ -848,6 +917,7 @@
   function toggleSwitcherEnabled(checked) {
     contentData.languageSwitcher.enabled = checked;
     renderLangSwitcherMarker();
+    saveDraft();
   }
   function renderLangSwitcherMarker() {
     const old = document.getElementById("lang-switcher-marker");
@@ -901,11 +971,11 @@
     document.getElementById("live-monogram-slot").innerHTML = monogramPreviewSvg();
 
     document.querySelectorAll('.live-card [contenteditable="true"]').forEach((el) => {
-      el.oninput = () => { ensureLangContent(editLang)[el.dataset.field] = el.textContent; populateDecoMockContent(); };
+      el.oninput = () => { ensureLangContent(editLang)[el.dataset.field] = el.textContent; populateDecoMockContent(); saveDraftDebounced(); };
     });
     populateDecoMockContent();
   }
-  function updateLiveField(field, value) { ensureLangContent(editLang)[field] = value; populateDecoMockContent(); }
+  function updateLiveField(field, value) { ensureLangContent(editLang)[field] = value; populateDecoMockContent(); saveDraftDebounced(); }
 
   function renderMoreTexts() {
     const t = ensureLangContent(editLang);
@@ -936,6 +1006,7 @@
     contentData.monogramText = val;
     document.getElementById("monogram-preview-thumb").innerHTML = monogramPreviewSvg();
     renderLiveCards();
+    saveDraftDebounced();
   }
   function onMonogramFileChosen(evt) {
     const file = evt.target.files[0];
@@ -945,6 +1016,7 @@
       pendingMonogramImage = e.target.result;
       document.getElementById("monogram-preview-thumb").innerHTML = monogramPreviewSvg();
       renderLiveCards();
+      saveDraft();
     };
     reader.readAsDataURL(file);
     evt.target.value = "";
@@ -954,6 +1026,7 @@
     contentData.monogramImage = null;
     document.getElementById("monogram-preview-thumb").innerHTML = monogramPreviewSvg();
     renderLiveCards();
+    saveDraft();
   }
 
   function addDeco(shape) {
@@ -1075,6 +1148,7 @@
       `;
       list.appendChild(item);
     });
+    saveDraft();
   }
   function shapeLabel(s) { return { heart: "Herz", star: "Stern", flower: "Blume", wreath: "Kranz", seal: "Siegel" }[s] || s; }
   function decoSupportsPhoto(shape) { return shape !== "seal"; }
@@ -1304,6 +1378,8 @@
     log("✅ Alles veröffentlicht. Vercel deployt in ca. 30–60 Sekunden neu.");
     renderDecorations();
     renderMonogramUI();
+    localStorage.removeItem(DRAFT_KEY);
+    document.getElementById("draftBanner").style.display = "none";
   }
 </script>
 </body>
