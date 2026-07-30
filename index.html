@@ -165,6 +165,12 @@
       <button class="btn-primary" onclick="location.reload()">Seite neu laden</button>
     </div>
 
+    <!-- kleines Gimmick für zwei Gäste, hart codiert -->
+    <div class="view" id="view-gimmick">
+      <img src="./assets/gimmick.jpg" alt="" style="width:100%; border-radius:18px; display:block; margin-bottom:1.2rem;" />
+      <button class="btn-primary" id="gimmick-continue">Weiter zu meinem Platz</button>
+    </div>
+
   </div>
   <p class="footnote" id="t-footnote"></p>
 </div>
@@ -482,13 +488,20 @@
     return { status: "ambiguous", candidates: close.map((c) => c.guest) };
   }
 
-  const views = ["welcome", "loading", "found", "ambiguous", "notfound", "error"];
+  const views = ["welcome", "loading", "found", "ambiguous", "notfound", "error", "gimmick"];
   function showView(name) {
     views.forEach((v) => document.getElementById("view-" + v).classList.remove("active"));
     document.getElementById("view-" + name).classList.add("active");
     const switcherEl = document.getElementById("lang-switcher-el");
     if (switcherEl) switcherEl.style.display = name === "welcome" ? "flex" : "none";
   }
+
+  // Kleines, verstecktes Gimmick für zwei bestimmte Gäste - bewusst nicht über die Config-Seite steuerbar.
+  const GIMMICK_NAMES = ["marvin loeding", "henriette niermann"];
+  function isGimmickGuest(guest) {
+    return GIMMICK_NAMES.includes(normalize(`${guest.vorname} ${guest.nachname}`));
+  }
+
   function resetView() {
     document.getElementById("guest-name").value = "";
     document.getElementById("submit-btn").disabled = true;
@@ -498,6 +511,14 @@
     document.getElementById("guest-name").focus();
   }
   function renderFound(guest) {
+    if (isGimmickGuest(guest)) {
+      showView("gimmick");
+      document.getElementById("gimmick-continue").onclick = () => showFoundDetails(guest);
+      return;
+    }
+    showFoundDetails(guest);
+  }
+  function showFoundDetails(guest) {
     let lang = currentLang;
     if (guest.sprache && content && content[guest.sprache]) lang = guest.sprache;
     currentLang = lang;
