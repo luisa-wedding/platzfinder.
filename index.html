@@ -486,6 +486,8 @@
   function showView(name) {
     views.forEach((v) => document.getElementById("view-" + v).classList.remove("active"));
     document.getElementById("view-" + name).classList.add("active");
+    const switcherEl = document.getElementById("lang-switcher-el");
+    if (switcherEl) switcherEl.style.display = name === "welcome" ? "flex" : "none";
   }
   function resetView() {
     document.getElementById("guest-name").value = "";
