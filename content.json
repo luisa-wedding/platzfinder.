@@ -4,7 +4,7 @@
     "tr"
   ],
   "monogramImage": "monogram.png",
-  "monogramText": "I & L",
+  "monogramText": "L & I",
   "languageSwitcher": {
     "enabled": true,
     "x": 80,
@@ -28,7 +28,7 @@
     "ambiguousText": "Wir haben mehrere ähnliche Namen gefunden. Bitte wähle deinen aus.",
     "ambiguousReset": "Namen neu eingeben",
     "notFoundTitle": "Hmm, den finden wir nicht",
-    "notFoundText": "Wir konnten leider keinen passenden Namen in unserer Gästeliste finden. Prüfe gerne die Schreibweise oder wende dich an unser Empfangsteam – wir helfen dir sofort weiter.",
+    "notFoundText": "Wir konnten leider keinen passenden Namen in unserer Gästeliste finden. Bitte suche dir einen Platz an den Tischen mit den Nummern xy.",
     "retryButton": "Noch einmal versuchen",
     "footnote": "Wir freuen uns auf euch"
   },
