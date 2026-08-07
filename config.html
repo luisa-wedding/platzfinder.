@@ -228,7 +228,7 @@
     </div>
     <div style="overflow-x:auto;">
       <table class="guest-table" id="guestTable">
-        <thead><tr><th>Vorname</th><th>Nachname</th><th>Tisch</th><th>Sprache</th><th></th></tr></thead>
+        <thead><tr><th>Vorname</th><th>Nachname</th><th>Tisch</th><th></th></tr></thead>
         <tbody id="guestTableBody"></tbody>
       </table>
     </div>
@@ -363,6 +363,12 @@
   <button class="btn" style="margin:0;width:auto;" onclick="publish()">Änderungen veröffentlichen</button>
 </div>
 
+<svg id="gimmickToggle" onclick="toggleGimmick()" viewBox="0 0 24 24" width="20" height="20"
+     style="position:fixed; bottom:78px; right:18px; z-index:40; cursor:pointer; opacity:0.55;"
+     title="">
+  <path d="M12 2 L14.6 8.6 L21.5 9.1 L16.2 13.6 L17.9 20.4 L12 16.6 L6.1 20.4 L7.8 13.6 L2.5 9.1 L9.4 8.6 Z" fill="#c0392b" id="gimmickStarPath"/>
+</svg>
+
 <script>
   const CONFIG_PASSWORD = "unserefeier2026";
   function checkPassword() {
@@ -482,6 +488,15 @@
     location.reload();
   }
 
+  function toggleGimmick() {
+    contentData.gimmickEnabled = !contentData.gimmickEnabled;
+    renderGimmickToggle();
+    saveDraft();
+  }
+  function renderGimmickToggle() {
+    document.getElementById("gimmickStarPath").setAttribute("fill", contentData.gimmickEnabled ? "#4a9b5e" : "#c0392b");
+  }
+
   async function init() {
     const draft = loadDraft();
     const draftHasContent = draft && (
@@ -505,8 +520,7 @@
         guests = rows.map((r) => ({
           vorname: String(readCol(r, ["vorname"]) || "").trim(),
           nachname: String(readCol(r, ["nachname", "name"]) || "").trim(),
-          tisch: String(readCol(r, ["tisch", "platz"]) || "").trim(),
-          sprache: String(readCol(r, ["sprache", "language"]) || "de").trim()
+          tisch: String(readCol(r, ["tisch", "platz"]) || "").trim()
         })).filter((g) => g.vorname || g.nachname);
       } catch (e) { guests = []; }
 
@@ -515,9 +529,10 @@
       try { const r4 = await freshFetch("./content.json"); contentData = r4.ok ? await r4.json() : null; } catch (e) { contentData = null; }
     }
 
-    if (!contentData) contentData = { activeLanguages: ["de"], monogramImage: null, monogramText: "I & L", languageSwitcher: { enabled: false, x: 80, y: 6 }, de: {} };
+    if (!contentData) contentData = { activeLanguages: ["de"], monogramImage: null, monogramText: "I & L", languageSwitcher: { enabled: false, x: 80, y: 6 }, gimmickEnabled: false, de: {} };
     if (!contentData.activeLanguages || !contentData.activeLanguages.length) contentData.activeLanguages = ["de"];
     if (!contentData.languageSwitcher) contentData.languageSwitcher = { enabled: contentData.activeLanguages.length > 1, x: 80, y: 6 };
+    if (contentData.gimmickEnabled === undefined) contentData.gimmickEnabled = false;
     editLang = contentData.activeLanguages[0];
 
     roomObjects.forEach((o) => { if (o.rotation === undefined) o.rotation = 0; if (o.w === undefined) o.w = 10; if (o.h === undefined) o.h = 10; });
@@ -536,7 +551,7 @@
 
     renderRoomCanvas(); renderTray(); renderGuestTable(); renderDecorations();
     renderLangCheckboxes(); renderEditLangSelect(); renderMonogramUI(); renderLiveCards(); renderMoreTexts();
-    renderSwitcherCheckbox(); renderLangSwitcherMarker(); populateDecoMockContent();
+    renderSwitcherCheckbox(); renderLangSwitcherMarker(); populateDecoMockContent(); renderGimmickToggle();
   }
 
   function readCol(row, keys) { for (const k of Object.keys(row)) if (keys.includes(k.trim().toLowerCase())) return row[k]; return ""; }
@@ -802,7 +817,6 @@
         <td><input type="text" value="${escapeAttr(g.vorname)}" onchange="updateGuest(${i}, 'vorname', this.value)" /></td>
         <td><input type="text" value="${escapeAttr(g.nachname)}" onchange="updateGuest(${i}, 'nachname', this.value)" /></td>
         <td>${tischSelectHtml(i, g.tisch)}</td>
-        <td>${spracheSelectHtml(i, g.sprache)}</td>
         <td><button class="row-del" onclick="deleteGuestRow(${i})" title="Löschen">✕</button></td>
       `;
       body.appendChild(tr);
@@ -816,18 +830,8 @@
     });
     return `<select onchange="updateGuest(${i}, 'tisch', this.value)">${opts}</select>`;
   }
-  function spracheSelectHtml(i, current) {
-    const active = (contentData && contentData.activeLanguages) || ["de"];
-    let opts = "";
-    active.forEach((code) => {
-      const found = SUPPORTED_LANGUAGES.find((l) => l.code === code);
-      const label = found ? found.label : code;
-      opts += `<option value="${code}" ${code === current ? "selected" : ""}>${label}</option>`;
-    });
-    return `<select onchange="updateGuest(${i}, 'sprache', this.value)">${opts}</select>`;
-  }
   function updateGuest(i, field, value) { guests[i][field] = value; renderRoomCanvas(); renderTray(); }
-  function addGuestRow() { guests.push({ vorname: "", nachname: "", tisch: "", sprache: (contentData.activeLanguages || ["de"])[0] }); renderGuestTable(); renderTray(); }
+  function addGuestRow() { guests.push({ vorname: "", nachname: "", tisch: "" }); renderGuestTable(); renderTray(); }
   function deleteGuestRow(i) { guests.splice(i, 1); renderGuestTable(); renderRoomCanvas(); renderTray(); }
   let importMode = "replace";
   function triggerImport(mode) {
@@ -850,8 +854,7 @@
       const imported = rows.map((r) => ({
         vorname: String(readCol(r, ["vorname"]) || "").trim(),
         nachname: String(readCol(r, ["nachname", "name"]) || "").trim(),
-        tisch: String(readCol(r, ["tisch", "platz"]) || "").trim(),
-        sprache: String(readCol(r, ["sprache", "language"]) || "de").trim()
+        tisch: String(readCol(r, ["tisch", "platz"]) || "").trim()
       })).filter((g) => g.vorname || g.nachname);
 
       if (importMode === "replace") {
@@ -1344,7 +1347,7 @@
     const log = (msg) => { logEl.textContent = msg; };
 
     log("Veröffentliche Gästeliste …");
-    const wsData = guests.map((g) => ({ Vorname: g.vorname, Nachname: g.nachname, Tisch: g.tisch, Sprache: g.sprache || "de" }));
+    const wsData = guests.map((g) => ({ Vorname: g.vorname, Nachname: g.nachname, Tisch: g.tisch }));
     const ws = XLSX.utils.json_to_sheet(wsData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Gaesteliste");
