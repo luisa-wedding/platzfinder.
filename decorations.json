@@ -10,29 +10,5 @@
     "color": "#658443",
     "image": "decoration-deco1785317269789.png",
     "view": "end"
-  },
-  {
-    "id": "deco1785318576124",
-    "shape": "star",
-    "x": 91.83333333333334,
-    "y": 7.558139534883736,
-    "size": 14.333333333333314,
-    "rotation": 0,
-    "opacity": 100,
-    "color": "#827dca",
-    "image": null,
-    "view": "start"
-  },
-  {
-    "id": "deco1785318700332",
-    "shape": "heart",
-    "x": 15.166666666666671,
-    "y": 10.813953488372086,
-    "size": 19.66666666666667,
-    "rotation": 0,
-    "opacity": 100,
-    "color": null,
-    "image": "decoration-deco1785318700332.png",
-    "view": "start"
   }
 ]
