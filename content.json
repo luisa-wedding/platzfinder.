@@ -10,7 +10,7 @@
     "x": 80,
     "y": 6
   },
-  "gimmickEnabled": true,
+  "gimmickEnabled": false,
   "de": {
     "label": "Deutsch",
     "welcomeTitle": "Willkommen",
