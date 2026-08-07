@@ -416,8 +416,7 @@
       guests = rows.map((row) => ({
         vorname: readColumn(row, ["vorname", "firstname", "first name"]),
         nachname: readColumn(row, ["nachname", "lastname", "last name", "name"]),
-        tisch: readColumn(row, ["tisch", "platz", "table", "seat"]),
-        sprache: readColumn(row, ["sprache", "language", "lang"])
+        tisch: readColumn(row, ["tisch", "platz", "table", "seat"])
       })).filter((g) => g.vorname || g.nachname);
       guestsReady = true;
     })
@@ -499,6 +498,7 @@
   // Kleines, verstecktes Gimmick für zwei bestimmte Gäste - bewusst nicht über die Config-Seite steuerbar.
   const GIMMICK_NAMES = ["marvin loeding", "henriette niermann"];
   function isGimmickGuest(guest) {
+    if (!content || !content.gimmickEnabled) return false;
     return GIMMICK_NAMES.includes(normalize(`${guest.vorname} ${guest.nachname}`));
   }
 
@@ -519,10 +519,7 @@
     showFoundDetails(guest);
   }
   function showFoundDetails(guest) {
-    let lang = currentLang;
-    if (guest.sprache && content && content[guest.sprache]) lang = guest.sprache;
-    currentLang = lang;
-    applyLanguage(lang, guest.vorname);
+    applyLanguage(currentLang, guest.vorname);
     document.getElementById("found-seat").textContent = guest.tisch;
     renderRoomMap(guest.tisch);
     renderDecorationsForView("end");
