@@ -521,7 +521,11 @@
   function showFoundDetails(guest) {
     applyLanguage(currentLang, guest.vorname);
     document.getElementById("found-seat").textContent = guest.tisch;
-    renderRoomMap(guest.tisch);
+    if (content && content.roomMapEnabled) {
+      renderRoomMap(guest.tisch);
+    } else {
+      document.getElementById("room-map-wrap").hidden = true;
+    }
     renderDecorationsForView("end");
     showView("found");
   }
