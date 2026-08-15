@@ -204,6 +204,10 @@
 
   <section class="panel">
     <h2>Raum &amp; Sitzordnung</h2>
+    <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; margin-bottom:1rem;">
+      <input type="checkbox" id="roomMapEnabledCheckbox" onchange="toggleRoomMapEnabled(this.checked)" />
+      Raumkarte auf der Ergebnis-Seite der Gäste anzeigen (Standard: aus – Gäste sehen dann nur den Tischnamen als Text, kein Raumplan)
+    </label>
     <p class="hint">Objekt zum Verschieben direkt anfassen und ziehen. Rosa Punkt unten rechts = Größe ändern. Goldener Punkt oben = Drehen (rastet bei 15°-Schritten leicht ein). Gäste aus dem Vorrat irgendwo auf einen Tisch ziehen.</p>
     <div class="room-toolbar">
       <button class="btn-small" onclick="addObject('table','round')">+ Runder Tisch</button>
@@ -215,6 +219,13 @@
     <div id="room-canvas"></div>
     <label class="small" style="margin-top:1rem;">Noch nicht zugeordnete Gäste</label>
     <div id="tray"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Tische verwalten</h2>
+    <p class="hint">Tische heißen automatisch "Tisch 1", "Tisch 2" usw. Hier umbenennen oder löschen – unabhängig vom Raumplan oben, praktisch falls du die Raumkarte gar nicht nutzen willst.</p>
+    <div id="table-list" style="margin-bottom:1rem;"></div>
+    <button class="btn-small" onclick="addSimpleTable()">+ Tisch hinzufügen</button>
   </section>
 
   <section class="panel">
@@ -529,9 +540,10 @@
       try { const r4 = await freshFetch("./content.json"); contentData = r4.ok ? await r4.json() : null; } catch (e) { contentData = null; }
     }
 
-    if (!contentData) contentData = { activeLanguages: ["de"], monogramImage: null, monogramText: "I & L", languageSwitcher: { enabled: false, x: 80, y: 6 }, gimmickEnabled: false, de: {} };
+    if (!contentData) contentData = { activeLanguages: ["de"], monogramImage: null, monogramText: "I & L", languageSwitcher: { enabled: false, x: 80, y: 6 }, roomMapEnabled: false, gimmickEnabled: false, de: {} };
     if (!contentData.activeLanguages || !contentData.activeLanguages.length) contentData.activeLanguages = ["de"];
     if (!contentData.languageSwitcher) contentData.languageSwitcher = { enabled: contentData.activeLanguages.length > 1, x: 80, y: 6 };
+    if (contentData.roomMapEnabled === undefined) contentData.roomMapEnabled = false;
     if (contentData.gimmickEnabled === undefined) contentData.gimmickEnabled = false;
     editLang = contentData.activeLanguages[0];
 
@@ -552,6 +564,7 @@
     renderRoomCanvas(); renderTray(); renderGuestTable(); renderDecorations();
     renderLangCheckboxes(); renderEditLangSelect(); renderMonogramUI(); renderLiveCards(); renderMoreTexts();
     renderSwitcherCheckbox(); renderLangSwitcherMarker(); populateDecoMockContent(); renderGimmickToggle();
+    document.getElementById("roomMapEnabledCheckbox").checked = !!contentData.roomMapEnabled;
   }
 
   function readCol(row, keys) { for (const k of Object.keys(row)) if (keys.includes(k.trim().toLowerCase())) return row[k]; return ""; }
@@ -673,11 +686,18 @@
   const FIXED_SIZE = { brautpaar: { w: 11, h: 7 }, door: { w: 8, h: 8 }, toilet: { w: 8, h: 8 } };
   const DEFAULT_LABEL = { door: "Tür", toilet: "WC", brautpaar: "Brautpaar" };
 
+  function nextTableName() {
+    const tables = roomObjects.filter((o) => o.type === "table");
+    const existingNames = new Set(tables.map((t) => t.name));
+    let n = tables.length + 1;
+    while (existingNames.has(`Tisch ${n}`)) n++;
+    return `Tisch ${n}`;
+  }
+
   function addObject(type, shape) {
     let name = DEFAULT_LABEL[type] || "Tisch";
     if (type === "table") {
-      name = prompt("Name des Tisches (z. B. \"Tisch 8 - Ranunkel\"):", "Neuer Tisch");
-      if (!name) return;
+      name = nextTableName();
     }
     const size = type === "table" ? { w: DEFAULT_SIZE.table, h: DEFAULT_SIZE.table } : FIXED_SIZE[type];
     roomObjects.push({
@@ -714,6 +734,43 @@
     if (count <= 5) return "0.54rem";
     if (count <= 8) return "0.46rem";
     return "0.4rem";
+  }
+
+  function toggleRoomMapEnabled(checked) {
+    contentData.roomMapEnabled = checked;
+    saveDraft();
+  }
+
+  function addSimpleTable() {
+    roomObjects.push({
+      id: "table" + Date.now() + (objCounter++), type: "table", shape: "round", name: nextTableName(),
+      x: 50, y: 50, w: DEFAULT_SIZE.table, h: DEFAULT_SIZE.table, rotation: 0
+    });
+    renderRoomCanvas(); renderTray();
+  }
+  function renameTableSimple(id, newName) {
+    const o = roomObjects.find((x) => x.id === id);
+    if (!o) return;
+    if (!newName.trim()) { renderTableList(); return; }
+    const oldName = o.name;
+    o.name = newName.trim();
+    guests.forEach((g) => { if (g.tisch === oldName) g.tisch = o.name; });
+    renderRoomCanvas(); renderGuestTable();
+  }
+  function renderTableList() {
+    const el = document.getElementById("table-list");
+    if (!el) return;
+    const tables = roomObjects.filter((o) => o.type === "table");
+    if (!tables.length) {
+      el.innerHTML = `<p style="color:var(--ink-soft);font-size:0.85rem;">Noch keine Tische angelegt.</p>`;
+      return;
+    }
+    el.innerHTML = tables.map((o) => `
+      <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+        <input type="text" value="${escapeAttr(o.name)}" onchange="renameTableSimple('${o.id}', this.value)" style="flex:1;" />
+        <button class="row-del" onclick="deleteObject('${o.id}')" title="Löschen">✕</button>
+      </div>
+    `).join("");
   }
 
   function applyObjGeometry(el, o) {
@@ -773,6 +830,7 @@
         return { x: r.left + (o.x / 100) * r.width, y: r.top + (o.y / 100) * r.height };
       }, () => applyObjGeometry(el, o), () => renderRoomCanvas());
     });
+    renderTableList();
     saveDraft();
   }
 
