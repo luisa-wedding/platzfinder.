@@ -1,12 +1,120 @@
 [
-  { "id": "t1", "type": "table", "shape": "round", "name": "Tisch 1", "x": 18, "y": 25, "w": 16, "h": 16, "rotation": 0 },
-  { "id": "t2", "type": "table", "shape": "round", "name": "Tisch 2", "x": 39, "y": 20, "w": 16, "h": 16, "rotation": 0 },
-  { "id": "t3", "type": "table", "shape": "round", "name": "Tisch 3", "x": 61, "y": 20, "w": 16, "h": 16, "rotation": 0 },
-  { "id": "t4", "type": "table", "shape": "round", "name": "Tisch 4", "x": 82, "y": 25, "w": 16, "h": 16, "rotation": 0 },
-  { "id": "t5", "type": "table", "shape": "round", "name": "Tisch 5", "x": 27, "y": 66, "w": 16, "h": 16, "rotation": 0 },
-  { "id": "t6", "type": "table", "shape": "round", "name": "Tisch 6", "x": 50, "y": 70, "w": 16, "h": 16, "rotation": 0 },
-  { "id": "t7", "type": "table", "shape": "round", "name": "Tisch 7", "x": 73, "y": 66, "w": 16, "h": 16, "rotation": 0 },
-  { "id": "brautpaar1", "type": "brautpaar", "name": "Brautpaar", "x": 50, "y": 44, "w": 11, "h": 7, "rotation": 0 },
-  { "id": "door1", "type": "door", "name": "Tür", "x": 10, "y": 92, "w": 8, "h": 8, "rotation": 0 },
-  { "id": "toilet1", "type": "toilet", "name": "WC", "x": 92, "y": 8, "w": 8, "h": 8, "rotation": 0 }
+  {
+    "id": "t1",
+    "type": "table",
+    "shape": "round",
+    "name": "Tisch 1",
+    "x": 18,
+    "y": 25,
+    "w": 16,
+    "h": 16,
+    "rotation": 0
+  },
+  {
+    "id": "t2",
+    "type": "table",
+    "shape": "round",
+    "name": "Tisch 2",
+    "x": 80.35546038543897,
+    "y": 58.83391327623126,
+    "w": 17.126338329764458,
+    "h": 10.86982512491078,
+    "rotation": 0
+  },
+  {
+    "id": "t3",
+    "type": "table",
+    "shape": "round",
+    "name": "Tisch 3",
+    "x": 50.50963597430407,
+    "y": 24.287160956459672,
+    "w": 16.218415417558887,
+    "h": 13.153907922912207,
+    "rotation": 0
+  },
+  {
+    "id": "t4",
+    "type": "table",
+    "shape": "round",
+    "name": "Tisch 4",
+    "x": 76.21841541755889,
+    "y": 27.712348322626696,
+    "w": 16,
+    "h": 16,
+    "rotation": 0
+  },
+  {
+    "id": "t5",
+    "type": "table",
+    "shape": "round",
+    "name": "Tisch 5",
+    "x": 24.21627408993576,
+    "y": 70.13990007137758,
+    "w": 16,
+    "h": 16,
+    "rotation": 0
+  },
+  {
+    "id": "t6",
+    "type": "table",
+    "shape": "round",
+    "name": "Tisch 6",
+    "x": 58.5,
+    "y": 85.68973054960742,
+    "w": 18.867237687366178,
+    "h": 14.545770877944335,
+    "rotation": 0
+  },
+  {
+    "id": "t7",
+    "type": "table",
+    "shape": "round",
+    "name": "Tisch 7",
+    "x": 53.49665010986199,
+    "y": 51.94905322400119,
+    "w": 19.653281084150827,
+    "h": 16.519222756673024,
+    "rotation": 0
+  },
+  {
+    "id": "brautpaar1",
+    "type": "brautpaar",
+    "name": "Brautpaar",
+    "x": 23.82922912205566,
+    "y": 62.948295860099925,
+    "w": 9.193790149892926,
+    "h": 4.925142755174875,
+    "rotation": 0
+  },
+  {
+    "id": "door1",
+    "type": "door",
+    "name": "Tür",
+    "x": 3.187505051357636,
+    "y": 93.73426582739312,
+    "w": 10.970021413276232,
+    "h": 9.102516059957182,
+    "rotation": 0
+  },
+  {
+    "id": "toilet1",
+    "type": "toilet",
+    "name": "WC",
+    "x": 92.95610278372591,
+    "y": 9.937410778015703,
+    "w": 9.269807280513916,
+    "h": 11.01829050678087,
+    "rotation": 0
+  },
+  {
+    "id": "toilet17853186529721",
+    "type": "toilet",
+    "shape": null,
+    "name": "WC",
+    "x": 94.01177730192718,
+    "y": 86.32641862955032,
+    "w": 9.299785867237688,
+    "h": 10.988311920057093,
+    "rotation": 0
+  }
 ]
