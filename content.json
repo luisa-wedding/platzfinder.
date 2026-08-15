@@ -1,9 +1,15 @@
 {
-  "activeLanguages": ["de", "tr"],
+  "activeLanguages": [
+    "de",
+    "tr"
+  ],
   "monogramImage": "monogram.png",
-  "monogramText": "I & L",
-  "languageSwitcher": { "enabled": true, "x": 80, "y": 6 },
-  "roomMapEnabled": false,
+  "monogramText": "L & I",
+  "languageSwitcher": {
+    "enabled": true,
+    "x": 80,
+    "y": 6
+  },
   "gimmickEnabled": false,
   "de": {
     "label": "Deutsch",
@@ -22,7 +28,7 @@
     "ambiguousText": "Wir haben mehrere ähnliche Namen gefunden. Bitte wähle deinen aus.",
     "ambiguousReset": "Namen neu eingeben",
     "notFoundTitle": "Hmm, den finden wir nicht",
-    "notFoundText": "Wir konnten leider keinen passenden Namen in unserer Gästeliste finden. Prüfe gerne die Schreibweise oder wende dich an unser Empfangsteam – wir helfen dir sofort weiter.",
+    "notFoundText": "Wir konnten leider keinen passenden Namen in unserer Gästeliste finden. Bitte suche dir einen Platz an den Tischen mit den Nummern xy.",
     "retryButton": "Noch einmal versuchen",
     "footnote": "Wir freuen uns auf euch"
   },
@@ -130,5 +136,6 @@
     "notFoundText": "We couldn't find a matching name on our guest list. Please check the spelling or ask our welcome team – they'll help right away.",
     "retryButton": "Try again",
     "footnote": "We can't wait to celebrate with you"
-  }
+  },
+  "roomMapEnabled": false
 }
